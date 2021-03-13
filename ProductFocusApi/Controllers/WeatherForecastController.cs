@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ProductFocusApi.Controllers
+namespace ProductFocus.Api.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]

@@ -13,9 +13,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ProductFocus.AuthorizationPolicies;
+using ProductFocus.Api.AuthorizationPolicies;
 
-namespace ProductFocusApi
+namespace ProductFocus.Api
 {
     public class Startup
     {
