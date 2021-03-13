@@ -11,7 +11,7 @@ namespace ProductFocus.Domain.Model
         public string Description { get; set; }
         public string Status { get; set; }
         public string AssignedTo { get; set; }
-        public int FeatureId { get; set; }
+        public long FeatureId { get; set; }
         public Feature Feature { get; set; }
     }
 }

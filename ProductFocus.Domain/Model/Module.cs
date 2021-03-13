@@ -9,7 +9,7 @@ namespace ProductFocus.Domain.Model
     public class Module : Entity<long>
     {
         public string Name { get; set; }
-        public int ProductId { get; set; }
+        public long ProductId { get; set; }
         public Product Product { get; set; }
         public List<Feature> Features { get; set; }
     }
