@@ -11,6 +11,5 @@ namespace ProductFocus.Domain.Model
         public string Name { get; set; }
         public long ProductId { get; set; }
         public Product Product { get; set; }
-        public List<Feature> Features { get; set; }
     }
 }
