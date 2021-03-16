@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ProductFocus.Domain.Model
 {
-    public class Feature : Entity<long>
+    public class Feature : AggregateRoot<long>
     {
         public string Title { get; set; }
         public List<Task> Tasks { get; set; }

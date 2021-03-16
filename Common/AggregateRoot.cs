@@ -7,33 +7,34 @@ using System.Threading.Tasks;
 
 namespace Common
 {
-    //public abstract class AggregateRoot<TId> : Entity<TId>, IDomainEventManager
-    //{
+    public abstract class AggregateRoot<TId> : Entity<TId>, IDomainEventManager
+    {
 
-    //    private readonly List<IDomainEvent> _domainEvents; 
+        private readonly List<IDomainEvent> _domainEvents;
 
-    //    [NotMapped]
-    //    public IReadOnlyList<IDomainEvent> DomainEvents {
-    //        get
-    //        {
-    //            return _domainEvents;
-    //        }
-    //        private set { }
-    //    }
-       
-    //    public AggregateRoot()
-    //    {
-    //        _domainEvents = new List<IDomainEvent>();
-    //    }
+        [NotMapped]
+        public IReadOnlyList<IDomainEvent> DomainEvents
+        {
+            get
+            {
+                return _domainEvents;
+            }
+            private set { }
+        }
 
-    //    protected void AddDomainEvent(IDomainEvent newEvent)
-    //    {
-    //        _domainEvents.Add(newEvent);
-    //    }
+        public AggregateRoot()
+        {
+            _domainEvents = new List<IDomainEvent>();
+        }
 
-    //    public virtual void ClearEvents()
-    //    {
-    //        _domainEvents.Clear();
-    //    }
-    //}
+        protected void AddDomainEvent(IDomainEvent newEvent)
+        {
+            _domainEvents.Add(newEvent);
+        }
+
+        public virtual void ClearEvents()
+        {
+            _domainEvents.Clear();
+        }
+    }
 }

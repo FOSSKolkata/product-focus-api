@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ProductFocus.Domain.Model
 {
-    public class Permission : Entity<long>
+    public class Permission : AggregateRoot<long>
     {
         public string Description { get; set; }
     }

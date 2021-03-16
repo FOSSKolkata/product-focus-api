@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ProductFocus.Domain.Model
 {
-    public class User : Entity<long>
+    public class User : AggregateRoot<long>
     {
         public string Name { get; set; }
         public string Email { get; set; }
