@@ -15,6 +15,8 @@ namespace Common
         void Update(TEntity entity);
         void Delete(TId id);
         void Delete(TEntity id);
-        IQueryable<TEntity>  GetAllWith(params Expression<Func<TEntity, object>>[] includes);
+        IEnumerable<TEntity> GetAllWith(Expression<Func<TEntity, bool>> filter = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            params Expression<Func<TEntity, object>>[] includes);
     }
 }
