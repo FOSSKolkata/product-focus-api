@@ -8,7 +8,7 @@ using ProductFocus.Domain.Model;
 
 namespace ProductFocus.Domain.Repositories
 {
-    public interface IPermissionRepository : IRepository<Permission, long>
+    public interface IPermissionRepository<TEntity, TId> where TEntity : AggregateRoot<TId>
     {
     }
 }

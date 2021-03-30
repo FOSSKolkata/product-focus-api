@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ProductFocus.Domain.Model
 {
-    public class Feature : AggregateRoot<long>
+    public class Feature : AggregateRoot<long>, ISoftDeletable
     {
         public string Title { get; set; }
         public List<Task> Tasks { get; set; }
@@ -20,5 +20,8 @@ namespace ProductFocus.Domain.Model
         public string Status { get; set; }
         public int ModuleId { get; set; }
         public Module Module { get; set; }
+        public bool IsDeleted { get; set; }
+        public DateTime DeletedOn { get; set; }
+        public string DeletedBy { get; set; }
     }
 }

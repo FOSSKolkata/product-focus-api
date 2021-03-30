@@ -8,7 +8,7 @@ using ProductFocus.Domain.Model;
 
 namespace ProductFocus.Domain.Repositories
 {
-    public interface IUserRepository : IRepository<User, long>
+    public interface IUserRepository<TEntity, TId> where TEntity : AggregateRoot<TId>
     {
     }
 }

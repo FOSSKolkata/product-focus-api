@@ -1,4 +1,5 @@
-﻿using ProductFocus.Domain.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
 using System;
 using System.Collections.Generic;
@@ -8,12 +9,14 @@ using System.Threading.Tasks;
 
 namespace ProductFocus.Persistence.Repositories
 {
-    public class PermissionRepository : Repository<Permission, long>, IPermissionRepository
+    public class PermissionRepository : IPermissionRepository<Permission, long>
     {
-        public PermissionRepository(ProductFocusDbContext context) : base(context)
+        private readonly DbContext _context;
+        public PermissionRepository(ProductFocusDbContext context)
         {
-
+            _context = context;
         }
 
     }
+
 }

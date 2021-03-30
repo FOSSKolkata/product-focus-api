@@ -13,8 +13,8 @@ namespace Common
         TEntity GetById(TId id);
         void Insert(TEntity entity);
         void Update(TEntity entity);
-        void Delete(TId id);
-        void Delete(TEntity id);
+        void Delete(TId id, string currentUserId);
+        void Delete(TEntity id, string currentUserId);
         IEnumerable<TEntity> GetAllWith(Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             params Expression<Func<TEntity, object>>[] includes);

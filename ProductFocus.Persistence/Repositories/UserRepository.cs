@@ -1,4 +1,5 @@
-﻿using ProductFocus.Domain.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
 using System;
 using System.Collections.Generic;
@@ -8,11 +9,12 @@ using System.Threading.Tasks;
 
 namespace ProductFocus.Persistence.Repositories
 {
-    public class UserRepository : Repository<User, long>, IUserRepository
+    public class UserRepository : IUserRepository<User, long>
     {
-        public UserRepository(ProductFocusDbContext context) : base(context)
+        private readonly DbContext _context;
+        public UserRepository(ProductFocusDbContext context)
         {
-
+            _context = context;
         }
 
     }

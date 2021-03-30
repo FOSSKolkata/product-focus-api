@@ -18,13 +18,13 @@ namespace ProductFocus.Persistence.Repositories
             _context = context;
             _dbSet = _context.Set<TEntity>();
         }
-        public virtual void Delete(TId id)
+        public virtual void Delete(TId id, string currentUserId)
         {
             TEntity entityToDelete = _dbSet.Find(id);
-            Delete(entityToDelete);
+            Delete(entityToDelete, currentUserId);
         }
 
-        public virtual void Delete(TEntity entityToDelete)
+        public virtual void Delete(TEntity entityToDelete, string currentUserId)
         {
             if (_context.Entry(entityToDelete).State == EntityState.Detached)
             {
@@ -32,7 +32,16 @@ namespace ProductFocus.Persistence.Repositories
             }
 
             // TODO : Implement soft delete
-            _dbSet.Remove(entityToDelete);
+            if (entityToDelete is ISoftDeletable softDeletable)
+            {
+                softDeletable.IsDeleted = true;
+                softDeletable.DeletedOn = DateTime.UtcNow;
+                softDeletable.DeletedBy = currentUserId;
+            }
+            else
+            {
+                _dbSet.Remove(entityToDelete);
+            }
         }
 
         public IEnumerable<TEntity> GetAll()

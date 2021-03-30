@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ProductFocus.Domain.Repositories
 {
-    public interface IProductRepository : IRepository<Product, long>
+    public interface IProductRepository<TEntity, TId> where TEntity : AggregateRoot<TId>
     {
     }
 }
