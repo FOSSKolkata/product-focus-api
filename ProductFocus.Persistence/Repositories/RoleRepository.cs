@@ -11,10 +11,11 @@ namespace ProductFocus.Persistence.Repositories
 {
     public class RoleRepository : IRoleRepository<Role, long>
     {
-        private readonly DbContext _context;
-        public RoleRepository(ProductFocusDbContext context)
+        private readonly UnitOfWork _unitOfWork;
+
+        public RoleRepository(UnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
 
     }

@@ -11,10 +11,11 @@ namespace ProductFocus.Persistence.Repositories
 {
     public class OrganizationRepository : IOrganizationRepository<Organization, long>
     {
-        private readonly DbContext _context;
-        public OrganizationRepository(ProductFocusDbContext context)
+        private readonly UnitOfWork _unitOfWork;
+
+        public OrganizationRepository(UnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
 
     }

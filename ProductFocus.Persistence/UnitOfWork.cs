@@ -1,4 +1,5 @@
-﻿using ProductFocus.Domain;
+﻿using Microsoft.EntityFrameworkCore;
+using ProductFocus.Domain;
 using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
 using ProductFocus.Persistence.Repositories;
@@ -17,21 +18,27 @@ namespace ProductFocus.Persistence
         public UnitOfWork(ProductFocusDbContext context)
         {
             _context = context;
-            Features = new FeatureRepository(_context);
-            Oragnizations = new OrganizationRepository(_context);
-            Permissions = new PermissionRepository(_context);
-            Products = new ProductRepository(_context);
-            Roles = new RoleRepository(_context);
-            Users = new UserRepository(_context);
         }
 
-        public IFeatureRepository<Feature, long> Features { get; private set; }
-        public IOrganizationRepository<Organization, long> Oragnizations { get; private set; }
-        public IPermissionRepository<Permission, long> Permissions { get; private set; }
-        public IProductRepository<Product, long> Products { get; private set; }
-        public IRoleRepository<Role, long> Roles { get; private set; }
-        public IUserRepository<User, long> Users { get; private set; }
+        internal T Get<T>(long id)
+            where T : class
+        {
+            return _context.Set<T>().Find(id);
+        }
 
+        internal void Insert<T>(T entity) where T: class
+        {
+            _context.Set<T>().Add(entity);
+        }
+        internal void Update<T>(T entity) where T : class
+        {
+            _context.Set<T>().Attach(entity);
+            _context.Entry(entity).State = EntityState.Modified;
+        }        
+        internal IQueryable<T> Query<T>() where T : class
+        {
+            return _context.Set<T>();
+        }        
         public int Complete()
         {
             return _context.SaveChanges();

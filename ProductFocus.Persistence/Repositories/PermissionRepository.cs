@@ -11,10 +11,11 @@ namespace ProductFocus.Persistence.Repositories
 {
     public class PermissionRepository : IPermissionRepository<Permission, long>
     {
-        private readonly DbContext _context;
-        public PermissionRepository(ProductFocusDbContext context)
+        private readonly UnitOfWork _unitOfWork;
+
+        public PermissionRepository(UnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
 
     }

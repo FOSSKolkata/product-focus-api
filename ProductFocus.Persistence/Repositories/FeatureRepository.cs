@@ -11,10 +11,11 @@ namespace ProductFocus.Persistence.Repositories
 {
     public class FeatureRepository : IFeatureRepository<Feature, long>
     {
-        private readonly DbContext _context;
-        public FeatureRepository(ProductFocusDbContext context)
+        private readonly UnitOfWork _unitOfWork;
+
+        public FeatureRepository(UnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
 
     }
