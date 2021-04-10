@@ -7,13 +7,13 @@ using CSharpFunctionalExtensions;
 
 namespace Common
 {
-    public interface ICommand
-    {
-    }
+    //public interface ICommand
+    //{
+    //}
 
-    public interface ICommandHandler<TCommand>
-        where TCommand : ICommand
-    {
-        Result Handle(TCommand command);
-    }
+    //public interface ICommandHandler<TCommand>
+    //    where TCommand : ICommand
+    //{
+    //    Result Handle(TCommand command);
+    //}
 }

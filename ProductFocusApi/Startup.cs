@@ -14,6 +14,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ProductFocus.Api.AuthorizationPolicies;
+using Common;
+using ProductFocus.Persistence;
+using Microsoft.EntityFrameworkCore;
+using ProductFocusApi.Utils;
+using ProductFocus.Persistence.Common;
+using ProductFocus.Domain.Repositories;
+using ProductFocus.Persistence.Repositories;
+using ProductFocus.Domain;
 
 namespace ProductFocus.Api
 {
@@ -49,6 +57,12 @@ namespace ProductFocus.Api
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Product_Focus_API", Version = "v1" });
             });
+
+            services.AddDbContext<ProductFocusDbContext>(x => x.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddHandlers();
+            services.AddSingleton<Messages>();
+            services.AddTransient<IOrganizationRepository, OrganizationRepository>();
+            services.AddTransient<UnitOfWork>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

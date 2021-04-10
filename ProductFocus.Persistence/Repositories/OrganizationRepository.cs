@@ -9,13 +9,18 @@ using System.Threading.Tasks;
 
 namespace ProductFocus.Persistence.Repositories
 {
-    public class OrganizationRepository : IOrganizationRepository<Organization, long>
+    public class OrganizationRepository : IOrganizationRepository
     {
         private readonly UnitOfWork _unitOfWork;
 
         public OrganizationRepository(UnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
+        }
+
+        public void AddOrganization(Organization organization)
+        {
+            _unitOfWork.Insert<Organization>(organization);
         }
 
     }

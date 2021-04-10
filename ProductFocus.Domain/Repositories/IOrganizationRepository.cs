@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace ProductFocus.Domain.Repositories
 {
-    public interface IOrganizationRepository<TEntity, TId> where TEntity : AggregateRoot<TId>
+    public interface IOrganizationRepository
     {
+        void AddOrganization(Organization organization);
     }
 }

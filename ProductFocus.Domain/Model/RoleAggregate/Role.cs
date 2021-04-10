@@ -8,5 +8,6 @@ namespace ProductFocus.Domain.Model
     public class Role : AggregateRoot<long>
     {
         public string Name { get; set; }
+        public List<RolePermission> RolePermissions { get; set; }
     }
 }
