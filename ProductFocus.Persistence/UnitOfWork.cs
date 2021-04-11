@@ -20,15 +20,15 @@ namespace ProductFocus.Persistence
             _context = context;
         }
 
-        internal T Get<T>(long id)
+        internal async Task<T> GetAsync<T>(long id)
             where T : class
         {
-            return _context.Set<T>().Find(id);
+            return await _context.Set<T>().FindAsync(id);
         }
 
-        internal void Insert<T>(T entity) where T: class
+        internal async void InsertAsync<T>(T entity) where T: class
         {
-            _context.Set<T>().Add(entity);
+            await _context.Set<T>().AddAsync(entity);
         }
         internal void Update<T>(T entity) where T : class
         {
@@ -39,14 +39,14 @@ namespace ProductFocus.Persistence
         {
             return _context.Set<T>();
         }        
-        public int Complete()
+        public async Task<int> CompleteAsync()
         {
-            return _context.SaveChanges();
+            return await _context.SaveChangesAsync();
         }
 
-        public void Dispose()
+        public async void Dispose()
         {
-            _context.Dispose();
+            await _context.DisposeAsync();
         }
     }
 }

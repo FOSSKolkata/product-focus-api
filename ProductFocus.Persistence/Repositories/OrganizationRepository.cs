@@ -20,7 +20,7 @@ namespace ProductFocus.Persistence.Repositories
 
         public void AddOrganization(Organization organization)
         {
-            _unitOfWork.Insert<Organization>(organization);
+            _unitOfWork.InsertAsync<Organization>(organization);
         }
 
     }

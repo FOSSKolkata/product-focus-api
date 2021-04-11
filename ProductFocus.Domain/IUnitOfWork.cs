@@ -16,6 +16,6 @@ namespace ProductFocus.Domain
         //IProductRepository<Product, long> Products { get; }
         //IRoleRepository<Role, long> Roles { get; }
         //IUserRepository<User, long> Users { get; }
-        int Complete();
+        Task<int> CompleteAsync();
     }
 }

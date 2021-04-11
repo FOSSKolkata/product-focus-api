@@ -14,6 +14,6 @@ namespace ProductFocus.Domain
     public interface ICommandHandler<TCommand>
         where TCommand : ICommand
     {
-        Result Handle(TCommand command);
+        Task<Result> Handle(TCommand command);
     }
 }

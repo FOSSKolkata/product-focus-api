@@ -23,6 +23,7 @@ using ProductFocus.Domain;
 using ProductFocus.DI.Utils;
 using ProductFocus.AppServices;
 using ProductFocus.ConnectionString;
+using ProductFocus.Services;
 
 namespace ProductFocus.Api
 {
@@ -67,6 +68,7 @@ namespace ProductFocus.Api
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             var queriesConnectionString = new QueriesConnectionString(Configuration.GetConnectionString("QueriesConnectionString"));
             services.AddSingleton(queriesConnectionString);
+            services.AddTransient<IEmailService, EmailService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

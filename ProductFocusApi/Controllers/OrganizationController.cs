@@ -5,6 +5,7 @@ using ProductFocus.Dtos;
 using CSharpFunctionalExtensions;
 using ProductFocus.Domain;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ProductFocusApi.Controllers
 {
@@ -20,18 +21,18 @@ namespace ProductFocusApi.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetOrganizationList()
+        public async Task<IActionResult> GetOrganizationList()
         {
-            List<GetOrganizationDto> organizationList = _messages.Dispatch(new GetOrganizationListQuery());
+            List<GetOrganizationDto> organizationList = await _messages.Dispatch(new GetOrganizationListQuery());
             return Ok(organizationList);
         }
 
         [HttpPost]
-        public IActionResult AddOrganization([FromBody] AddOrganizationDto dto)
+        public async Task<IActionResult> AddOrganization([FromBody] AddOrganizationDto dto)
         {
             var command = new AddOrganizationCommand(dto.Name);
-            Result result = _messages.Dispatch(command);
-            return Ok();
+            Result result = await _messages.Dispatch(command);
+            return result.IsSuccess ? Ok() : NotFound();
         }
     }
 }
