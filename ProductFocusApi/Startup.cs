@@ -22,6 +22,7 @@ using ProductFocus.Persistence.Repositories;
 using ProductFocus.Domain;
 using ProductFocus.DI.Utils;
 using ProductFocus.AppServices;
+using ProductFocus.ConnectionString;
 
 namespace ProductFocus.Api
 {
@@ -64,6 +65,8 @@ namespace ProductFocus.Api
             services.AddTransient<IOrganizationRepository, OrganizationRepository>();
             services.AddTransient<UnitOfWork>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+            var queriesConnectionString = new QueriesConnectionString(Configuration.GetConnectionString("QueriesConnectionString"));
+            services.AddSingleton(queriesConnectionString);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

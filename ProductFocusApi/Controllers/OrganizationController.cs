@@ -4,6 +4,7 @@ using ProductFocus.AppServices;
 using ProductFocus.Dtos;
 using CSharpFunctionalExtensions;
 using ProductFocus.Domain;
+using System.Collections.Generic;
 
 namespace ProductFocusApi.Controllers
 {
@@ -21,8 +22,8 @@ namespace ProductFocusApi.Controllers
         [HttpGet]
         public IActionResult GetOrganizationList()
         {
-
-            return Ok("Test message from product focus");
+            List<GetOrganizationDto> organizationList = _messages.Dispatch(new GetOrganizationListQuery());
+            return Ok(organizationList);
         }
 
         [HttpPost]
