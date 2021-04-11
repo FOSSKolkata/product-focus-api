@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace ProductFocus.Dtos
 {
-    public sealed class OrganizationDto
+    public sealed class AddOrganizationDto
     {
-        public long Id { get; set; }
         public string Name { get; set; }
     }
 }

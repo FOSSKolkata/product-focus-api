@@ -26,7 +26,7 @@ namespace ProductFocusApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddOrganization([FromBody] OrganizationDto dto)
+        public IActionResult AddOrganization([FromBody] AddOrganizationDto dto)
         {
             var command = new AddOrganizationCommand(dto.Name);
             Result result = _messages.Dispatch(command);
