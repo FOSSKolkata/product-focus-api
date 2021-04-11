@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProductFocus.Domain.Dtos
+namespace ProductFocus.Dtos
 {
     public sealed class OrganizationDto
     {

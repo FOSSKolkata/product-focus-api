@@ -1,13 +1,9 @@
 ﻿using Common;
 using Microsoft.AspNetCore.Mvc;
-using ProductFocus.Persistence.AppServices;
-using ProductFocus.Domain.Dtos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using ProductFocus.AppServices;
+using ProductFocus.Dtos;
 using CSharpFunctionalExtensions;
-using ProductFocus.Persistence.Common;
+using ProductFocus.Domain;
 
 namespace ProductFocusApi.Controllers
 {

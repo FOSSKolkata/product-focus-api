@@ -17,11 +17,11 @@ using ProductFocus.Api.AuthorizationPolicies;
 using Common;
 using ProductFocus.Persistence;
 using Microsoft.EntityFrameworkCore;
-using ProductFocusApi.Utils;
-using ProductFocus.Persistence.Common;
 using ProductFocus.Domain.Repositories;
 using ProductFocus.Persistence.Repositories;
 using ProductFocus.Domain;
+using ProductFocus.DI.Utils;
+using ProductFocus.AppServices;
 
 namespace ProductFocus.Api
 {
@@ -63,6 +63,7 @@ namespace ProductFocus.Api
             services.AddSingleton<Messages>();
             services.AddTransient<IOrganizationRepository, OrganizationRepository>();
             services.AddTransient<UnitOfWork>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

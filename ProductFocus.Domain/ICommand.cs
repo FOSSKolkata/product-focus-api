@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProductFocus.Persistence.Common
+namespace ProductFocus.Domain
 {
     public interface ICommand
     {

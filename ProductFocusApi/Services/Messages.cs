@@ -5,8 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Common;
 using CSharpFunctionalExtensions;
+using ProductFocus.Domain;
 
-namespace ProductFocus.Persistence.Common
+namespace ProductFocus.AppServices
 {
     public sealed class Messages
     {

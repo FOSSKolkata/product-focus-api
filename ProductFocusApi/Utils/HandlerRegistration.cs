@@ -2,19 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Common;
-using Microsoft.Extensions.DependencyInjection;
-using ProductFocus.Persistence.Common;
 
-namespace ProductFocusApi.Utils
+using Microsoft.Extensions.DependencyInjection;
+using ProductFocus.Domain;
+
+namespace ProductFocus.DI.Utils
 {
     public static class HandlerRegistration
     {
         public static void AddHandlers(this IServiceCollection services)
         {
-            List<Type> handlerTypes = typeof(ICommand).Assembly.GetTypes()
+            List<Type> handlerTypes = Assembly
+                .GetEntryAssembly().GetTypes()
                 .Where(x => x.GetInterfaces().Any(y => IsHandlerInterface(y)))
                 .Where(x => x.Name.EndsWith("Handler"))
                 .ToList();
