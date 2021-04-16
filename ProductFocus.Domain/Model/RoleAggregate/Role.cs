@@ -9,5 +9,9 @@ namespace ProductFocus.Domain.Model
     {
         public string Name { get; set; }
         public List<RolePermission> RolePermissions { get; set; }
+        protected Role()
+        {
+
+        }
     }
 }

@@ -47,6 +47,7 @@ namespace ProductFocus.Persistence
         public async void Dispose()
         {
             await _context.DisposeAsync();
+            GC.SuppressFinalize(this);
         }
     }
 }

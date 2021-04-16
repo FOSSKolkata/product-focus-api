@@ -9,5 +9,9 @@ namespace ProductFocus.Domain.Model
     {
         public string Name { get; set; }
         public string Email { get; set; }
+        protected User()
+        {
+
+        }
     }
 }

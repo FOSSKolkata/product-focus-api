@@ -34,5 +34,20 @@ namespace ProductFocusApi.Controllers
             Result result = await _messages.Dispatch(command);
             return result.IsSuccess ? Ok() : NotFound();
         }
+
+        [HttpPost("{id}/[Action]")]
+        public async Task<IActionResult> AddProduct(long id, [FromBody] AddProductDto dto)
+        {
+            var command = new AddProductCommand(id, dto.Name);
+            Result result = await _messages.Dispatch(command);
+            return result.IsSuccess ? Ok() : NotFound();
+        }
+
+        [HttpGet("{id}/[Action]")]
+        public async Task<IActionResult> GetProductsById(long id)
+        {
+            List<GetProductDto> organizationList = await _messages.Dispatch(new GetProductListQuery(id));
+            return Ok(organizationList);
+        }
     }
 }

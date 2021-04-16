@@ -11,5 +11,6 @@ namespace ProductFocus.Domain.Repositories
     public interface IOrganizationRepository
     {
         void AddOrganization(Organization organization);
+        Task<Organization> GetById(long id);
     }
 }

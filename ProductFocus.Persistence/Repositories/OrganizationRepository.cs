@@ -23,5 +23,9 @@ namespace ProductFocus.Persistence.Repositories
             _unitOfWork.InsertAsync<Organization>(organization);
         }
 
+        public async Task<Organization> GetById(long id)
+        {
+            return await _unitOfWork.GetAsync<Organization>(id);
+        }
     }
 }
