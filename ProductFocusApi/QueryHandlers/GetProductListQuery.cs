@@ -33,7 +33,7 @@ namespace ProductFocus.AppServices
             {
                 List<GetProductDto> productList = new List<GetProductDto>();
                 string sql = @"
-                    SELECT name 
+                    SELECT id, name 
                     from [product-focus].[dbo].[Products]
                     WHERE organizationid = @OrgId";
                 using (IDbConnection con = new SqlConnection(_queriesConnectionString.Value))
