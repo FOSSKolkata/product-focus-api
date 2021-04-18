@@ -24,6 +24,7 @@ using ProductFocus.DI.Utils;
 using ProductFocus.AppServices;
 using ProductFocus.ConnectionString;
 using ProductFocus.Services;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace ProductFocus.Api
 {
@@ -58,6 +59,14 @@ namespace ProductFocus.Api
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Product_Focus_API", Version = "v1" });
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "Standard authorization using bearer token. Example: Bearer <token>",
+                    In = ParameterLocation.Header,
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey
+                });
+                c.OperationFilter<SecurityRequirementsOperationFilter>();
             });
 
             services.AddDbContext<ProductFocusDbContext>(x => x.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
