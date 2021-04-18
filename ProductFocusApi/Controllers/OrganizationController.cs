@@ -6,11 +6,13 @@ using CSharpFunctionalExtensions;
 using ProductFocus.Domain;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProductFocusApi.Controllers
 {
     [ApiController]
     [Route("[Controller]/[Action]")]
+    [Authorize]
     public class OrganizationController : ControllerBase
     {
         private readonly Messages _messages;
@@ -43,7 +45,7 @@ namespace ProductFocusApi.Controllers
             return result.IsSuccess ? Ok() : NotFound();
         }
 
-        [HttpGet("{id}/[Action]")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetProductsById(long id)
         {
             List<GetProductDto> organizationList = await _messages.Dispatch(new GetProductListQuery(id));
