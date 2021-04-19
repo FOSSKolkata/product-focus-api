@@ -10,7 +10,8 @@ namespace ProductFocus.Domain.Model
     {
         public string Name { get; set; }
         public Organization Organization { get; set; }
-        public List<Module> Modules { get; set; }
+        private IList<Module> _modules = new List<Module>();
+        public IReadOnlyList<Module> Modules => _modules.ToList();
         protected Product()
         {
 
@@ -19,6 +20,12 @@ namespace ProductFocus.Domain.Model
         {
             Name = name;
             Organization = organization;
+        }
+
+        public void AddModule(string name)
+        {
+            var module = new Module(this, name);
+            _modules.Add(module);
         }
     }
 }

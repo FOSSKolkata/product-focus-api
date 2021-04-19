@@ -27,5 +27,10 @@ namespace ProductFocus.Persistence.Repositories
         {
             return await _unitOfWork.GetAsync<Organization>(id);
         }
+
+        public Organization GetByName(string name)
+        {
+            return _unitOfWork.Query<Organization>().SingleOrDefault(x => x.Name == name);
+        }
     }
 }

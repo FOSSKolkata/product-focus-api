@@ -12,5 +12,6 @@ namespace ProductFocus.Domain.Repositories
     {
         void AddOrganization(Organization organization);
         Task<Organization> GetById(long id);
+        Organization GetByName(string name);
     }
 }

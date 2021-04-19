@@ -1,10 +1,12 @@
 ﻿using Common;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace ProductFocus.Domain.Model
 {
+    [Table("Members")]
     public class Member : Entity<long>
     {
         public Organization Organization { get; set; }

@@ -9,13 +9,18 @@ using System.Threading.Tasks;
 
 namespace ProductFocus.Persistence.Repositories
 {
-    public class ProductRepository : IProductRepository<Product, long>
+    public class ProductRepository : IProductRepository
     {
         private readonly UnitOfWork _unitOfWork;
 
         public ProductRepository(UnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
+        }
+
+        public async Task<Product> GetById(long id)
+        {
+            return await _unitOfWork.GetAsync<Product>(id);
         }
 
     }

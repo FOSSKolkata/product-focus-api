@@ -3,6 +3,7 @@ using ProductFocus.Domain;
 using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
 using ProductFocus.Services;
+using System;
 using System.Threading.Tasks;
 
 namespace ProductFocus.AppServices
@@ -39,6 +40,7 @@ namespace ProductFocus.AppServices
                 await _unitOfWork.CompleteAsync();
                 _emailService.send();
                 return Result.Success();
+                
             }
 
         }

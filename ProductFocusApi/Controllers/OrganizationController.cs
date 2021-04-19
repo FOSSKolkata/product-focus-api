@@ -34,15 +34,15 @@ namespace ProductFocusApi.Controllers
         {
             var command = new AddOrganizationCommand(dto.Name);
             Result result = await _messages.Dispatch(command);
-            return result.IsSuccess ? Ok() : NotFound();
+            return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }
 
-        [HttpPost("{id}/[Action]")]
+        [HttpPost("{id}")]
         public async Task<IActionResult> AddProduct(long id, [FromBody] AddProductDto dto)
         {
             var command = new AddProductCommand(id, dto.Name);
             Result result = await _messages.Dispatch(command);
-            return result.IsSuccess ? Ok() : NotFound();
+            return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }
 
         [HttpGet("{id}")]
