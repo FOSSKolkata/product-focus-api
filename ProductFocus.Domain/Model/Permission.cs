@@ -7,7 +7,7 @@ namespace ProductFocus.Domain.Model
 {
     public class Permission : AggregateRoot<long>
     {
-        public string Description { get; set; }
+        public virtual string Description { get; set; }
         protected Permission()
         {
 

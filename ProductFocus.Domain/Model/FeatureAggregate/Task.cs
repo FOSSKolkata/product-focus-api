@@ -10,10 +10,10 @@ namespace ProductFocus.Domain.Model
     [Table("Tasks")]
     public class Task : Entity<long>
     {
-        public string Description { get; set; }
-        public string Status { get; set; }
-        public string AssignedTo { get; set; }
-        public long FeatureId { get; set; }
-        public Feature Feature { get; set; }
+        public virtual string Description { get; set; }
+        public virtual string Status { get; set; }
+        public virtual string AssignedTo { get; set; }
+        public virtual long FeatureId { get; set; }
+        public virtual Feature Feature { get; set; }
     }
 }

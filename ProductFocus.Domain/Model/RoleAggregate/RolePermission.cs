@@ -9,8 +9,8 @@ namespace ProductFocus.Domain.Model
     [Table("RolePermissions")]
     public class RolePermission : Entity<long>
     {
-        public Role Role { get; set; }
-        public Permission Permission { get; set; }
+        public virtual Role Role { get; set; }
+        public virtual Permission Permission { get; set; }
         protected RolePermission()
         {
 

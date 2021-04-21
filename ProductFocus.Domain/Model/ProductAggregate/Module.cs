@@ -10,9 +10,9 @@ namespace ProductFocus.Domain.Model
     [Table("Modules")]
     public class Module : Entity<long>
     {
-        public string Name { get; set; }
-        public long ProductId { get; set; }
-        public Product Product { get; set; }
+        public virtual string Name { get; set; }
+        public virtual long ProductId { get; set; }
+        public virtual Product Product { get; set; }
         protected Module()
         {
 

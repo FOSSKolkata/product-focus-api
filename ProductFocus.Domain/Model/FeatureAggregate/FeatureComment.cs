@@ -9,8 +9,8 @@ namespace ProductFocus.Domain.Model
     [Table("FeatureComments")]
     public class FeatureComment : Entity<long>
     {
-        public string Comment { get; set; }
-        public long FeatureId { get; set; }
-        public Feature Feature { get; set; }
+        public virtual string Comment { get; set; }
+        public virtual long FeatureId { get; set; }
+        public virtual Feature Feature { get; set; }
     }
 }

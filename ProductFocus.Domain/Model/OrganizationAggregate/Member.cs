@@ -9,10 +9,10 @@ namespace ProductFocus.Domain.Model
     [Table("Members")]
     public class Member : Entity<long>
     {
-        public Organization Organization { get; set; }
-        public User User { get; set; }
-        public List<Role> Roles { get; set; }
-        public bool IsOwner { get; set; }
+        public virtual Organization Organization { get; set; }
+        public virtual User User { get; set; }
+        public virtual List<Role> Roles { get; set; }
+        public virtual bool IsOwner { get; set; }
         protected Member()
         {
 

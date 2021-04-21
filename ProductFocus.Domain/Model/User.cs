@@ -7,8 +7,8 @@ namespace ProductFocus.Domain.Model
 {
     public class User : AggregateRoot<long>
     {
-        public string Name { get; set; }
-        public string Email { get; set; }
+        public virtual string Name { get; set; }
+        public virtual string Email { get; set; }
         protected User()
         {
 

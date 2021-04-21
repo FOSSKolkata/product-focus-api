@@ -8,20 +8,20 @@ namespace ProductFocus.Domain.Model
 {
     public class Feature : AggregateRoot<long>, ISoftDeletable
     {
-        public string Title { get; set; }
-        public List<Task> Tasks { get; set; }
-        public List<FeatureComment> FeatureComments { get; set; }
-        public string Owner { get; set; }
-        public DateTime PlannedStartDate { get; set; }
-        public DateTime PlannedEndDate { get; set; }
-        public DateTime ActualStartDate { get; set; }
-        public DateTime ActualEndDate { get; set; }
-        public int WorkPgressIndicator { get; set; }
-        public string Status { get; set; }
-        public int ModuleId { get; set; }
-        public Module Module { get; set; }
-        public bool IsDeleted { get; set; }
-        public DateTime DeletedOn { get; set; }
-        public string DeletedBy { get; set; }
+        public virtual string Title { get; set; }
+        public virtual List<Task> Tasks { get; set; }
+        public virtual List<FeatureComment> FeatureComments { get; set; }
+        public virtual string Owner { get; set; }
+        public virtual DateTime PlannedStartDate { get; set; }
+        public virtual DateTime PlannedEndDate { get; set; }
+        public virtual DateTime ActualStartDate { get; set; }
+        public virtual DateTime ActualEndDate { get; set; }
+        public virtual int WorkPgressIndicator { get; set; }
+        public virtual string Status { get; set; }
+        public virtual int ModuleId { get; set; }
+        public virtual Module Module { get; set; }
+        public virtual bool IsDeleted { get; set; }
+        public virtual DateTime DeletedOn { get; set; }
+        public virtual string DeletedBy { get; set; }
     }
 }

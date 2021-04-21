@@ -8,10 +8,10 @@ namespace ProductFocus.Domain.Model
 {
     public class Product : AggregateRoot<long>
     {
-        public string Name { get; set; }
-        public Organization Organization { get; set; }
+        public virtual string Name { get; set; }
+        public virtual Organization Organization { get; set; }
         private IList<Module> _modules = new List<Module>();
-        public IReadOnlyList<Module> Modules => _modules.ToList();
+        public virtual IReadOnlyList<Module> Modules => _modules.ToList();
         protected Product()
         {
 
@@ -22,7 +22,7 @@ namespace ProductFocus.Domain.Model
             Organization = organization;
         }
 
-        public void AddModule(string name)
+        public virtual void AddModule(string name)
         {
             var module = new Module(this, name);
             _modules.Add(module);

@@ -69,7 +69,9 @@ namespace ProductFocus.Api
                 c.OperationFilter<SecurityRequirementsOperationFilter>();
             });
 
-            services.AddDbContext<ProductFocusDbContext>(x => x.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<ProductFocusDbContext>(
+                x => x.UseLazyLoadingProxies()
+                .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddHandlers();
             services.AddSingleton<Messages>();
             services.AddTransient<IOrganizationRepository, OrganizationRepository>();

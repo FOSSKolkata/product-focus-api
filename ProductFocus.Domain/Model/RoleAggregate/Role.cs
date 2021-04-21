@@ -7,8 +7,8 @@ namespace ProductFocus.Domain.Model
 {
     public class Role : AggregateRoot<long>
     {
-        public string Name { get; set; }
-        public List<RolePermission> RolePermissions { get; set; }
+        public virtual string Name { get; set; }
+        public virtual List<RolePermission> RolePermissions { get; set; }
         protected Role()
         {
 
