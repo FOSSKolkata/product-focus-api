@@ -36,11 +36,17 @@ namespace ProductFocus.AppServices
                 Organization organization = await _organizationRepository.GetById(command.Id);
                 if (organization == null)
                     return Result.Failure($"No Organization found with Id '{command.Id}'");
-                organization.AddProduct(command.Name);
-                await _unitOfWork.CompleteAsync();
-                _emailService.send();
-                return Result.Success();
-                
+                try
+                {
+                    organization.AddProduct(command.Name);
+                    await _unitOfWork.CompleteAsync();
+                    _emailService.send();
+                    return Result.Success();
+                }
+                catch (Exception ex)
+                {
+                    return Result.Failure(ex.Message);
+                }            
             }
 
         }

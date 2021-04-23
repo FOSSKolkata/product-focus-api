@@ -29,7 +29,10 @@ namespace ProductFocus.Domain.Model
             _members.Add(member);
         }
         public virtual void AddProduct(string name)
-        {            
+        {
+            var fetchExistingPoductWithSameName = Products.FirstOrDefault(x => x.Name == name);
+            if (fetchExistingPoductWithSameName != null)
+                throw new Exception($"Product '{name}' already present");
             var product = new Product(this, name);
             _products.Add(product);
         }
