@@ -20,7 +20,7 @@ namespace ProductFocus.Domain.Model
         public virtual DateTime ActualEndDate { get; set; }
         public virtual int WorkCompletionPercentage { get; set; }
         public virtual Status Status { get; set; }
-        public virtual int ModuleId { get; set; }
+        public virtual long ModuleId { get; set; }
         public virtual Module Module { get; set; }
         public virtual bool IsDeleted { get; set; }
         public virtual DateTime DeletedOn { get; set; }
