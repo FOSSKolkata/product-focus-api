@@ -31,13 +31,18 @@ namespace ProductFocus.AppServices
             }
             public async Task<Result> Handle(AddOrganizationCommand command)
             {
-                Organization seachExisingOrganization = _organizationRepository.GetByName(command.Name);
-                if (seachExisingOrganization != null)
+                Organization existingOrganizationWithSameName = _organizationRepository.GetByName(command.Name);
+
+                if (existingOrganizationWithSameName != null)
                     return Result.Failure($"Organization '{command.Name}' already exists");
+                
                 var organization = new Organization(command.Name);
                 _organizationRepository.AddOrganization(organization);
+                
                 await _unitOfWork.CompleteAsync();
+                
                 _emailService.send();
+                
                 return Result.Success();
             }
 

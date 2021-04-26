@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ProductFocus.Persistence.Repositories
 {
-    public class FeatureRepository : IFeatureRepository<Feature, long>
+    public class FeatureRepository : IFeatureRepository
     {
         private readonly UnitOfWork _unitOfWork;
 
@@ -18,5 +18,9 @@ namespace ProductFocus.Persistence.Repositories
             _unitOfWork = unitOfWork;
         }
 
+        public void AddFeature(Feature feature)
+        {
+            _unitOfWork.InsertAsync<Feature>(feature);
+        }
     }
 }

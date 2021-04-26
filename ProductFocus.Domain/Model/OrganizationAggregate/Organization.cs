@@ -28,13 +28,15 @@ namespace ProductFocus.Domain.Model
             var member = new Member(this, user, isOwner);
             _members.Add(member);
         }
-        public virtual void AddProduct(string name)
+
+        public virtual bool IfProductExists (string name)
         {
             var fetchExistingPoductWithSameName = Products.FirstOrDefault(x => x.Name == name);
+
             if (fetchExistingPoductWithSameName != null)
-                throw new Exception($"Product '{name}' already present");
-            var product = new Product(this, name);
-            _products.Add(product);
+                return true;
+            else
+                return false;            
         }
     }
 }

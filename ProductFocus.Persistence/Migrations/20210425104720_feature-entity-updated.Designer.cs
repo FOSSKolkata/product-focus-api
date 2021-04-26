@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProductFocus.Persistence;
 
 namespace ProductFocus.Persistence.Migrations
 {
     [DbContext(typeof(ProductFocusDbContext))]
-    partial class ProductFocusDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210425104720_feature-entity-updated")]
+    partial class featureentityupdated
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,16 +73,13 @@ namespace ProductFocus.Persistence.Migrations
                     b.Property<DateTime>("PlannedStartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UniqueWorkItemNumber")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WorkCompletionPercentage")
+                    b.Property<int>("WorkPgressIndicator")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

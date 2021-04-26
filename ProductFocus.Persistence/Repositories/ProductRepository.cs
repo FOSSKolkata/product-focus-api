@@ -18,10 +18,19 @@ namespace ProductFocus.Persistence.Repositories
             _unitOfWork = unitOfWork;
         }
 
+        public void AddProduct(Product product)
+        {
+            _unitOfWork.InsertAsync<Product>(product);
+        }
+
         public async Task<Product> GetById(long id)
         {
             return await _unitOfWork.GetAsync<Product>(id);
         }
 
+        public async Task<Module> GetModuleById(long id)
+        {
+            return await _unitOfWork.GetAsync<Module>(id);
+        }
     }
 }

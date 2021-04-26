@@ -13,6 +13,8 @@ namespace ProductFocus.Domain.Model
         public virtual string Name { get; set; }
         public virtual long ProductId { get; set; }
         public virtual Product Product { get; set; }
+        private readonly IList<Feature> _features = new List<Feature>();
+        public virtual IReadOnlyList<Feature> Features => _features.ToList();
         protected Module()
         {
 
@@ -22,6 +24,15 @@ namespace ProductFocus.Domain.Model
         {
             Product = product;
             Name = name;
+        }
+
+        public virtual void AddFeature(string title, string description, int progress)
+        {
+            var fetchExistingFeatureWithSameName = Features.FirstOrDefault(x => x.Title == title);
+            if (fetchExistingFeatureWithSameName != null)
+                throw new Exception($"Feature '{title}' already exists in this module");
+            var feature = new Feature(this, title, description, progress);
+            _features.Add(feature);
         }
     }
 }

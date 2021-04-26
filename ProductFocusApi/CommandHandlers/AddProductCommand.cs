@@ -21,32 +21,37 @@ namespace ProductFocus.AppServices
         internal sealed class AddProductCommandHandler : ICommandHandler<AddProductCommand>
         {
             private readonly IOrganizationRepository _organizationRepository;
+            private readonly IProductRepository _productRepository;
             private readonly IUnitOfWork _unitOfWork;
             private readonly IEmailService _emailService;
 
             public AddProductCommandHandler(
-                IOrganizationRepository organizationRepository, IUnitOfWork unitOfWork, IEmailService emailService)
+                IOrganizationRepository organizationRepository, IUnitOfWork unitOfWork, IEmailService emailService,
+                IProductRepository productRepository)
             {
                 _organizationRepository = organizationRepository;
+                _productRepository = productRepository;
                 _unitOfWork = unitOfWork;
                 _emailService = emailService;
             }
             public async Task<Result> Handle(AddProductCommand command)
             {
-                Organization organization = await _organizationRepository.GetById(command.Id);
+                Organization organization = await _organizationRepository.GetById(command.Id);                
                 if (organization == null)
                     return Result.Failure($"No Organization found with Id '{command.Id}'");
-                try
-                {
-                    organization.AddProduct(command.Name);
-                    await _unitOfWork.CompleteAsync();
-                    _emailService.send();
-                    return Result.Success();
-                }
-                catch (Exception ex)
-                {
-                    return Result.Failure(ex.Message);
-                }            
+
+                bool ifProductExists = organization.IfProductExists(command.Name);
+                if (ifProductExists)
+                    return Result.Failure($"Product '{command.Name}' already present");
+
+                var product = new Product(organization, command.Name);
+                _productRepository.AddProduct(product);
+                await _unitOfWork.CompleteAsync();
+                
+                _emailService.send();
+                
+                return Result.Success();
+                            
             }
 
         }

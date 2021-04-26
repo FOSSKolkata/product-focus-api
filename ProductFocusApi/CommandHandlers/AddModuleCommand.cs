@@ -36,10 +36,20 @@ namespace ProductFocus.AppServices
                 Product product = await _productRepository.GetById(command.Id);
                 if (product == null)
                     return Result.Failure($"No product found with Id '{command.Id}'");
-                product.AddModule(command.Name);
-                await _unitOfWork.CompleteAsync();
-                _emailService.send();
-                return Result.Success();
+                
+                try
+                {
+                    product.AddModule(command.Name);
+                    await _unitOfWork.CompleteAsync();
+                
+                    _emailService.send();
+                    
+                    return Result.Success();
+                }
+                catch(Exception ex)
+                {
+                    return Result.Failure(ex.Message);
+                }
                 
             }
 

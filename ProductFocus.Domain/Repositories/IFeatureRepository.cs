@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace ProductFocus.Domain.Repositories
 {
-    public interface IFeatureRepository <TEntity, TId> where TEntity: AggregateRoot<TId>
+    public interface IFeatureRepository
     {
-
+        void AddFeature(Feature feature);
     }
 }
