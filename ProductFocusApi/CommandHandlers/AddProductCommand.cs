@@ -44,13 +44,20 @@ namespace ProductFocus.AppServices
                 if (ifProductExists)
                     return Result.Failure($"Product '{command.Name}' already present");
 
-                var product = new Product(organization, command.Name);
-                _productRepository.AddProduct(product);
-                await _unitOfWork.CompleteAsync();
-                
-                _emailService.send();
-                
-                return Result.Success();
+                try
+                {
+                    var product = Product.CreateInstance(organization, command.Name);
+                    _productRepository.AddProduct(product);
+                    await _unitOfWork.CompleteAsync();
+
+                    _emailService.send();
+
+                    return Result.Success();
+                }
+                catch(Exception ex)
+                {
+                    return Result.Failure(ex.Message);
+                }       
                             
             }
 

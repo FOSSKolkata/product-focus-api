@@ -8,32 +8,43 @@ namespace ProductFocus.Domain.Model
 {
     public class Organization : AggregateRoot<long>
     {
-        public virtual string Name { get; set; }
+        public virtual string Name { get; private set; }
         
         private readonly IList<Member> _members = new List<Member>();
         public virtual IReadOnlyList<Member> Members => _members.ToList();
 
         private readonly IList<Product> _products = new List<Product>();
         public virtual IReadOnlyList<Product> Products => _products.ToList();
-        protected Organization()
+
+        private Organization()
         {
-            
+
         }
-        public Organization(string name) : this()
+        private Organization(string name)
         {
             Name = name;
         }
+
+        public static Organization CreateInstance(string name)
+        {
+            if (String.IsNullOrEmpty(name))
+                throw new Exception("Organization name can't be null or empty");
+
+            var organization = new Organization(name);
+            return organization;
+        }
+
         public virtual void AddMember(User user, bool isOwner)
         {
-            var member = new Member(this, user, isOwner);
+            var member = Member.CreateInstance(this, user, isOwner);
             _members.Add(member);
         }
 
         public virtual bool IfProductExists (string name)
         {
-            var fetchExistingPoductWithSameName = Products.FirstOrDefault(x => x.Name == name);
+            var existingPoductWithSameName = Products.FirstOrDefault(x => x.Name == name);
 
-            if (fetchExistingPoductWithSameName != null)
+            if (existingPoductWithSameName != null)
                 return true;
             else
                 return false;            

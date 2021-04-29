@@ -4,6 +4,7 @@ using ProductFocus.Domain;
 using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
 using ProductFocus.Services;
+using System;
 using System.Threading.Tasks;
 
 namespace ProductFocus.AppServices
@@ -35,15 +36,23 @@ namespace ProductFocus.AppServices
 
                 if (existingOrganizationWithSameName != null)
                     return Result.Failure($"Organization '{command.Name}' already exists");
+
+                try
+                {
+                    var organization = Organization.CreateInstance(command.Name);
+                    _organizationRepository.AddOrganization(organization);
+
+                    await _unitOfWork.CompleteAsync();
+
+                    _emailService.send();
+
+                    return Result.Success();
+                }
+                catch(Exception ex)
+                {
+                    return Result.Failure(ex.Message);
+                }
                 
-                var organization = new Organization(command.Name);
-                _organizationRepository.AddOrganization(organization);
-                
-                await _unitOfWork.CompleteAsync();
-                
-                _emailService.send();
-                
-                return Result.Success();
             }
 
         }

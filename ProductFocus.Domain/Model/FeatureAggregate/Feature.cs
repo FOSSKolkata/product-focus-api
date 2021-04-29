@@ -8,20 +8,22 @@ namespace ProductFocus.Domain.Model
 {
     public class Feature : AggregateRoot<long>, ISoftDeletable
     {
-        public virtual string Title { get; set; }
-        public virtual int UniqueWorkItemNumber { get; set; }
-        public virtual string Description { get; set; }
-        public virtual List<Task> Tasks { get; set; }
-        public virtual List<FeatureComment> FeatureComments { get; set; }
-        public virtual string Owner { get; set; }
-        public virtual DateTime PlannedStartDate { get; set; }
-        public virtual DateTime PlannedEndDate { get; set; }
-        public virtual DateTime ActualStartDate { get; set; }
-        public virtual DateTime ActualEndDate { get; set; }
-        public virtual int WorkCompletionPercentage { get; set; }
-        public virtual Status Status { get; set; }
-        public virtual long ModuleId { get; set; }
-        public virtual Module Module { get; set; }
+        public virtual string Title { get; protected set; }
+        public virtual int UniqueWorkItemNumber { get; protected set; }
+        public virtual string Description { get; protected set; }
+        private readonly IList<Task> _tasks = new List<Task>();
+        public virtual IReadOnlyList<Task> Tasks => _tasks.ToList();
+        private readonly IList<FeatureComment> _featureComments = new List<FeatureComment>();
+        public virtual IReadOnlyList<FeatureComment> FeatureComments => _featureComments.ToList();
+        public virtual string Owner { get; protected set; }
+        public virtual DateTime PlannedStartDate { get; protected set; }
+        public virtual DateTime PlannedEndDate { get; protected set; }
+        public virtual DateTime ActualStartDate { get; protected set; }
+        public virtual DateTime ActualEndDate { get; protected set; }
+        public virtual int WorkCompletionPercentage { get; protected set; }
+        public virtual Status Status { get; protected set; }
+        public virtual long ModuleId { get; protected set; }
+        public virtual Module Module { get; protected set; }
         public virtual bool IsDeleted { get; set; }
         public virtual DateTime DeletedOn { get; set; }
         public virtual string DeletedBy { get; set; }
@@ -43,9 +45,9 @@ namespace ProductFocus.Domain.Model
 
     public enum Status
     {
-        New,
-        InProgress,
-        OnHold,
-        Complete
+        New = 1,
+        InProgress = 2,
+        OnHold = 3,
+        Complete = 4
     }
 }

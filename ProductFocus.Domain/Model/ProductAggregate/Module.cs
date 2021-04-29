@@ -10,29 +10,25 @@ namespace ProductFocus.Domain.Model
     [Table("Modules")]
     public class Module : Entity<long>
     {
-        public virtual string Name { get; set; }
-        public virtual long ProductId { get; set; }
-        public virtual Product Product { get; set; }
-        private readonly IList<Feature> _features = new List<Feature>();
-        public virtual IReadOnlyList<Feature> Features => _features.ToList();
-        protected Module()
+        public virtual string Name { get; private set; }
+        public virtual long ProductId { get; private set; }
+        public virtual Product Product { get; private set; }
+        
+        private Module()
         {
 
         }
 
-        public Module(Product product, string name)
+        private Module(Product product, string name)
         {
             Product = product;
             Name = name;
         }
 
-        public virtual void AddFeature(string title, string description, int progress)
+        public static Module CreateInstance(Product product, string name)
         {
-            var fetchExistingFeatureWithSameName = Features.FirstOrDefault(x => x.Title == title);
-            if (fetchExistingFeatureWithSameName != null)
-                throw new Exception($"Feature '{title}' already exists in this module");
-            var feature = new Feature(this, title, description, progress);
-            _features.Add(feature);
+            var module = new Module(product, name);
+            return module;
         }
     }
 }
