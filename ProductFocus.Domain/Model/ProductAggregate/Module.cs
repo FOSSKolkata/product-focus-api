@@ -14,7 +14,7 @@ namespace ProductFocus.Domain.Model
         public virtual long ProductId { get; private set; }
         public virtual Product Product { get; private set; }
         
-        private Module()
+        protected Module()
         {
 
         }

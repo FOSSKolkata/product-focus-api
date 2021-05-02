@@ -26,7 +26,7 @@ namespace ProductFocusApi.Controllers
         [HttpPost("{id}")]
         public async Task<IActionResult> AddFeature(long id, [FromBody] AddFeatureDto dto)
         {
-            var command = new AddFeatureCommand(id, dto.Title, dto.Description, dto.Progress);
+            var command = new AddFeatureCommand(id, dto.Title, dto.WorkItemType);
             Result result = await _messages.Dispatch(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }        

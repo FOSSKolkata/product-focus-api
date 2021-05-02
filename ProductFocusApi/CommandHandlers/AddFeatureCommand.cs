@@ -12,14 +12,13 @@ namespace ProductFocus.AppServices
     {
         public long Id { get; }
         public string Title { get; }
-        public string Description { get; set; }
-        public int Progress { get; set; }
-        public AddFeatureCommand(long id, string title, string description, int progress)
+        public string WorkItemType { get; set; }
+        
+        public AddFeatureCommand(long id, string title, string workItemType)
         {
             Id = id;
             Title = title;
-            Description = description;
-            Progress = progress;
+            WorkItemType = workItemType;
         }
 
         internal sealed class AddFeatureCommandHandler : ICommandHandler<AddFeatureCommand>
@@ -44,13 +43,24 @@ namespace ProductFocus.AppServices
                 if (module == null)
                     return Result.Failure($"No module found with Module Id '{command.Id}'");
 
-                var feature = new Feature(module, command.Title, command.Description, command.Progress);
-                _featureRepository.AddFeature(feature);
-                await _unitOfWork.CompleteAsync();
+                bool success = Enum.TryParse(command.WorkItemType, out WorkItemType workItemType);
+                if (!success)
+                    return Result.Failure($"Work item type '{command.WorkItemType}' is incorrect");
 
-                _emailService.send();
+                try
+                {
+                    var feature = Feature.CreateInstance(module, command.Title, workItemType);
+                    _featureRepository.AddFeature(feature);
+                    await _unitOfWork.CompleteAsync();
 
-                return Result.Success();
+                    _emailService.send();
+
+                    return Result.Success();
+                }
+                catch (Exception ex)
+                {
+                    return Result.Failure(ex.Message);
+                }             
                 
             }
 
