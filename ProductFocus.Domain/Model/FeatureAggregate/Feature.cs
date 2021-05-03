@@ -47,7 +47,7 @@ namespace ProductFocus.Domain.Model
         {
             Module = module;
             Title = title;
-            WorkItemType = WorkItemType;
+            WorkItemType = workItemType;
         }
 
         public static Feature CreateInstance(Module module, string title, WorkItemType workItemType)

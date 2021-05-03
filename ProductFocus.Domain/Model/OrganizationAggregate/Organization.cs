@@ -16,7 +16,7 @@ namespace ProductFocus.Domain.Model
         private readonly IList<Product> _products = new List<Product>();
         public virtual IReadOnlyList<Product> Products => _products.ToList();
 
-        private Organization()
+        protected Organization()
         {
 
         }

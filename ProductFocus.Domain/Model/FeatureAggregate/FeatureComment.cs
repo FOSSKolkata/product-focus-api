@@ -12,5 +12,10 @@ namespace ProductFocus.Domain.Model
         public virtual string Comment { get; set; }
         public virtual long FeatureId { get; set; }
         public virtual Feature Feature { get; set; }
+
+        protected FeatureComment()
+        {
+
+        }
     }
 }

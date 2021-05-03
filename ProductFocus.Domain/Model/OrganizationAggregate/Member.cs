@@ -13,7 +13,7 @@ namespace ProductFocus.Domain.Model
         public virtual User User { get; private set; }
         public virtual List<Role> Roles { get; private set; }
         public virtual bool IsOwner { get; private set; }
-        private Member()
+        protected Member()
         {
 
         }
