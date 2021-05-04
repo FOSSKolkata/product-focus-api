@@ -8,7 +8,9 @@ using ProductFocus.Domain.Model;
 
 namespace ProductFocus.Domain.Repositories
 {
-    public interface IUserRepository<TEntity, TId> where TEntity : AggregateRoot<TId>
+    public interface IUserRepository
     {
+        void RegisterUser(User user);
+        User GetByEmail(string name);
     }
 }

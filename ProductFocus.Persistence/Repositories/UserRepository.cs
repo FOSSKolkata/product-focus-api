@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ProductFocus.Persistence.Repositories
 {
-    public class UserRepository : IUserRepository<User, long>
+    public class UserRepository : IUserRepository
     {
         private readonly UnitOfWork _unitOfWork;
 
@@ -18,5 +18,14 @@ namespace ProductFocus.Persistence.Repositories
             _unitOfWork = unitOfWork;
         }
 
+        public User GetByEmail(string email)
+        {
+            return _unitOfWork.Query<User>().SingleOrDefault(x => x.Email == email);
+        }
+
+        public void RegisterUser(User user)
+        {
+            _unitOfWork.InsertAsync<User>(user);
+        }
     }
 }

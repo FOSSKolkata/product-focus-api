@@ -13,5 +13,23 @@ namespace ProductFocus.Domain.Model
         {
 
         }
+
+        private User(string name, string email)
+        {
+            Name = name;
+            Email = email;
+        }
+
+        public static User CreateInstance (string name, string email)
+        {
+            if (String.IsNullOrEmpty(name))
+                throw new Exception("Name cannot be null or empty");
+            
+            if (String.IsNullOrWhiteSpace(email))
+                throw new Exception("Not a valid email address");
+
+            var user = new User(name, email);
+            return user;
+        }
     }
 }

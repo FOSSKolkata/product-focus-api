@@ -53,7 +53,7 @@ namespace ProductFocus.Domain.Model
         public static Feature CreateInstance(Module module, string title, WorkItemType workItemType)
         {
             if (String.IsNullOrEmpty(title))
-                throw new Exception("Feature Title name can't be null or blank");
+                throw new Exception("Feature Title name can't be null or empty");
 
             var feature = new Feature(module, title, workItemType);
             return feature;
