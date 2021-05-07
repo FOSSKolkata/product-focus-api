@@ -37,5 +37,12 @@ namespace ProductFocusApi.Controllers
             List<GetModuleDto> moduleList = await _messages.Dispatch(new GetModuleListQuery(id));
             return Ok(moduleList);
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetKanbanViewByProductId(long id)
+        {
+            List<GetKanbanViewDto> kanbanViewList = await _messages.Dispatch(new GetKanbanViewQuery(id));
+            return Ok(kanbanViewList);
+        }
     }
 }
