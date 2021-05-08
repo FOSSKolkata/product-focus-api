@@ -32,33 +32,32 @@ namespace ProductFocus.AppServices
             public async Task<List<GetKanbanViewDto>> Handle(GetKanbanViewQuery query)
             {
                 List<GetKanbanViewDto> kanbanViewList = new List<GetKanbanViewDto>();
-                string sql1 = @"
+                string sql = @"
                     SELECT id, name 
                     from [product-focus].[dbo].[Modules]
-                    WHERE productid = @PrdId";
-
-                string sql2 = @"
+                    WHERE productid = @PrdId
+                    ;
                     SELECT id, moduleid, title 
                     from [product-focus].[dbo].[Features]
                     WHERE moduleid in (
                         select id from Modules where productid = @PrdId)";
                 using (IDbConnection con = new SqlConnection(_queriesConnectionString.Value))
                 {
-                    kanbanViewList = (await con.QueryAsync<GetKanbanViewDto>(sql1, new
+                    var result = await con.QueryMultipleAsync(sql, new
                     {
                         PrdId = query.Id
-                    })).ToList();                                
-                    
-                    
-                    var featureDetails = (await con.QueryAsync<FeatureDetail>(sql2, new
-                    {
-                        PrdId = query.Id
-                    })).ToList();
+                    });
 
-                    foreach (var kanbanView in kanbanViewList)
+                    
+                    var kanbanViews = result.Read<GetKanbanViewDto>();
+                    var featureDetails = result.Read<FeatureDetail>();
+
+                    foreach (var kanbanView in kanbanViews)
                     {
-                        kanbanView.FeatureDetails = featureDetails.Where(a => a.ModuleId == kanbanView.ModuleId).ToList();
-                    }                    
+                        kanbanView.FeatureDetails = featureDetails.Where(a => a.ModuleId == kanbanView.Id).ToList();
+                    }
+
+                    kanbanViewList = kanbanViews.ToList();
                 }
 
                 _emailService.send();

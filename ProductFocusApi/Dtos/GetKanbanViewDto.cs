@@ -8,8 +8,8 @@ namespace ProductFocus.Dtos
 {
     public sealed class GetKanbanViewDto
     {
-        public long ModuleId { get; set; }
-        public string ModuleName { get; set; }
+        public long Id { get; set; }
+        public string Name { get; set; }
         public IList<FeatureDetail> FeatureDetails { get; set; }
     }
 
