@@ -22,6 +22,12 @@ namespace ProductFocusApi.Controllers
             _messages = messages;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetUserByEmail(string email)
+        {
+            List<GetUserDto> userDetails = await _messages.Dispatch(new GetUserDetailsQuery(email));
+            return Ok(userDetails);
+        }
 
         [HttpPost]
         public async Task<IActionResult> RegisterUser([FromBody] RegisterUserDto dto)

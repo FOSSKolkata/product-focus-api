@@ -11,44 +11,44 @@ using System.Threading.Tasks;
 
 namespace ProductFocus.AppServices
 {
-    public sealed class GetModuleListQuery : IQuery<List<GetModuleDto>>
+    public sealed class GetUserDetailsQuery : IQuery<List<GetUserDto>>
     {
-        public long Id { get; }
-        public GetModuleListQuery(long id)
+        public string Email { get; }
+        public GetUserDetailsQuery(string email)
         {
-            Id = id;
+            Email = email;
         }
 
-        internal sealed class GetModuleListQueryHandler : IQueryHandler<GetModuleListQuery, List<GetModuleDto>>
+        internal sealed class GetUserDetailsQueryHandler : IQueryHandler<GetUserDetailsQuery, List<GetUserDto>>
         {
             private readonly QueriesConnectionString _queriesConnectionString;
             private readonly IEmailService _emailService;
 
-            public GetModuleListQueryHandler(QueriesConnectionString queriesConnectionString, IEmailService emailService)
+            public GetUserDetailsQueryHandler(QueriesConnectionString queriesConnectionString, IEmailService emailService)
             {
                 _queriesConnectionString = queriesConnectionString;
                 _emailService = emailService;
             }
-            public async Task<List<GetModuleDto>> Handle(GetModuleListQuery query)
+            public async Task<List<GetUserDto>> Handle(GetUserDetailsQuery query)
             {
-                List<GetModuleDto> moduleList = new List<GetModuleDto>();
+                List<GetUserDto> userDetails = new List<GetUserDto>();
                 
                 string sql = @"
-                    SELECT id, name 
-                    from [product-focus].[dbo].[Modules]
-                    WHERE productid = @PrdId";
-                
+                    select id, name, email 
+                    from users
+                    where email = @Email";
+
                 using (IDbConnection con = new SqlConnection(_queriesConnectionString.Value))
                 {
-                    moduleList = (await con.QueryAsync<GetModuleDto>(sql, new
+                    userDetails = (await con.QueryAsync<GetUserDto>(sql, new
                     {
-                        PrdId = query.Id
+                        Email = query.Email
                     })).ToList();
                 }
                 
                 _emailService.send();
                 
-                return moduleList;
+                return userDetails;
             }
         }
     }

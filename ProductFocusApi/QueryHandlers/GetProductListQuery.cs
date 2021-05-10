@@ -32,10 +32,12 @@ namespace ProductFocus.AppServices
             public async Task<List<GetProductDto>> Handle(GetProductListQuery query)
             {
                 List<GetProductDto> productList = new List<GetProductDto>();
+                
                 string sql = @"
                     SELECT id, name 
                     from [product-focus].[dbo].[Products]
                     WHERE organizationid = @OrgId";
+                
                 using (IDbConnection con = new SqlConnection(_queriesConnectionString.Value))
                 {
                     productList = (await con.QueryAsync<GetProductDto>(sql, new
@@ -43,7 +45,9 @@ namespace ProductFocus.AppServices
                         OrgId = query.Id
                     })).ToList();
                 }
+                
                 _emailService.send();
+                
                 return productList;
             }
         }

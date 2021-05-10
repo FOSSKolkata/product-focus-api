@@ -32,7 +32,7 @@ namespace ProductFocusApi.Controllers
         [HttpPost]
         public async Task<IActionResult> AddOrganization([FromBody] AddOrganizationDto dto)
         {
-            var command = new AddOrganizationCommand(dto.Name);
+            var command = new AddOrganizationCommand(dto.OrganizationName, dto.Email);
             Result result = await _messages.Dispatch(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }

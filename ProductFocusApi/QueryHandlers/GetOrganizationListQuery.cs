@@ -36,7 +36,9 @@ namespace ProductFocus.AppServices
                 {
                     organizationsList = (await con.QueryAsync<GetOrganizationDto>("select id, name from [product-focus].[dbo].[Organizations]")).ToList();
                 }
+                
                 _emailService.send();
+                
                 return organizationsList;
             }
         }

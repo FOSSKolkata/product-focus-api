@@ -49,8 +49,8 @@ namespace ProductFocus.AppServices
                     });
 
                     
-                    var kanbanViews = result.Read<GetKanbanViewDto>();
-                    var featureDetails = result.Read<FeatureDetail>();
+                    var kanbanViews = await result.ReadAsync<GetKanbanViewDto>();
+                    var featureDetails = await result.ReadAsync<FeatureDetail>();
 
                     foreach (var kanbanView in kanbanViews)
                     {

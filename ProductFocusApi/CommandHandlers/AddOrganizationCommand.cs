@@ -11,36 +11,48 @@ namespace ProductFocus.AppServices
 {
     public sealed class AddOrganizationCommand : ICommand
     {
-        public string Name { get; }
-        public AddOrganizationCommand(string name)
+        public string OrganizationName { get; }      
+        public string Email { get; set; }
+        public AddOrganizationCommand(string name, string email)
         {
-            Name = name;
+            OrganizationName = name;
+            Email = email;
         }
 
         internal sealed class AddOrganizationCommandHandler : ICommandHandler<AddOrganizationCommand>
         {
             private readonly IOrganizationRepository _organizationRepository;
+            private readonly IUserRepository _userRepository;
             private readonly IUnitOfWork _unitOfWork;
             private readonly IEmailService _emailService;
 
             public AddOrganizationCommandHandler(
-                IOrganizationRepository organizationRepository, IUnitOfWork unitOfWork, IEmailService emailService)
+                IOrganizationRepository organizationRepository, IUserRepository userRepository,
+                IUnitOfWork unitOfWork, IEmailService emailService)
             {
                 _organizationRepository = organizationRepository;
+                _userRepository = userRepository;
                 _unitOfWork = unitOfWork;
                 _emailService = emailService;
             }
             public async Task<Result> Handle(AddOrganizationCommand command)
             {
-                Organization existingOrganizationWithSameName = _organizationRepository.GetByName(command.Name);
+                Organization existingOrganizationWithSameName = _organizationRepository.GetByName(command.OrganizationName);
 
                 if (existingOrganizationWithSameName != null)
-                    return Result.Failure($"Organization '{command.Name}' already exists");
+                    return Result.Failure($"Organization '{command.OrganizationName}' already exists");
+                
+                var user = _userRepository.GetByEmail(command.Email);
+
+                if (user == null)
+                    return Result.Failure($"User with email '{command.Email}' doesn't exist");
 
                 try
                 {
-                    var organization = Organization.CreateInstance(command.Name);
+                    var organization = Organization.CreateInstance(command.OrganizationName);
                     _organizationRepository.AddOrganization(organization);
+                    
+                    organization.AddMember(user, true);
 
                     await _unitOfWork.CompleteAsync();
 
