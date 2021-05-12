@@ -29,6 +29,13 @@ namespace ProductFocusApi.Controllers
             return Ok(organizationList);
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetOrganizationListByUser(long id)
+        {
+            List<GetOrganizationByUserDto> organizationList = await _messages.Dispatch(new GetOrganizationListByUserQuery(id));
+            return Ok(organizationList);
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddOrganization([FromBody] AddOrganizationDto dto)
         {
