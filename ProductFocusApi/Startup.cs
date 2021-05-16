@@ -71,7 +71,8 @@ namespace ProductFocus.Api
 
             services.AddDbContext<ProductFocusDbContext>(
                 x => x.UseLazyLoadingProxies()
-                .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                    .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddHandlers();
             services.AddSingleton<Messages>();
             services.AddTransient<IOrganizationRepository, OrganizationRepository>();
