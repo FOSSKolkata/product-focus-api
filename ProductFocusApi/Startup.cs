@@ -70,11 +70,8 @@ namespace ProductFocus.Api
             });
 
             services.AddDbContext<ProductFocusDbContext>(
-                x =>
-                {
-                    x.UseLazyLoadingProxies()
-                    .UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-                }, ServiceLifetime.Transient);
+                x => x.UseLazyLoadingProxies()
+                    .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddHandlers();
             services.AddSingleton<Messages>();
