@@ -13,10 +13,12 @@ namespace ProductFocus.AppServices
     {
         public string Name { get; }
         public string Email { get; set; }
-        public RegisterUserCommand(string name, string email)
+        public string ObjectId { get; set; }
+        public RegisterUserCommand(string name, string email, string objectid)
         {
             Name = name;
             Email = email;
+            ObjectId = objectid;
         }
 
         internal sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand>
@@ -41,7 +43,7 @@ namespace ProductFocus.AppServices
 
                 try
                 {
-                    var user = User.CreateInstance(command.Name, command.Email);
+                    var user = User.CreateInstance(command.Name, command.Email, command.ObjectId);
                     _userRepository.RegisterUser(user);
 
                     await _unitOfWork.CompleteAsync();

@@ -7,6 +7,8 @@ using ProductFocus.Domain;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using System.Linq;
 
 namespace ProductFocusApi.Controllers
 {
@@ -29,10 +31,12 @@ namespace ProductFocusApi.Controllers
             return Ok(organizationList);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetOrganizationListByUser(long id)
+        [HttpGet]
+        public async Task<IActionResult> GetOrganizationListByUser()
         {
-            List<GetOrganizationByUserDto> organizationList = await _messages.Dispatch(new GetOrganizationListByUserQuery(id));
+            string objectId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;                      
+
+            List<GetOrganizationByUserDto> organizationList = await _messages.Dispatch(new GetOrganizationListByUserQuery(objectId));
             return Ok(organizationList);
         }
 

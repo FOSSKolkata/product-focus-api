@@ -7,6 +7,8 @@ using ProductFocus.Domain;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using System.Linq;
+using System.Security.Claims;
 
 namespace ProductFocusApi.Controllers
 {
@@ -31,9 +33,12 @@ namespace ProductFocusApi.Controllers
 
         [HttpPost]
         public async Task<IActionResult> RegisterUser([FromBody] RegisterUserDto dto)
-        {
-            var command = new RegisterUserCommand(dto.Name, dto.Email);
+        {            
+            string objectId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            
+            var command = new RegisterUserCommand(dto.Name, dto.Email, objectId);
             Result result = await _messages.Dispatch(command);
+            
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }        
     }

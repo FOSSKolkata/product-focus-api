@@ -26,6 +26,7 @@ namespace ProductFocus.Domain.Model
         public virtual long ModuleId { get; private set; }
         public virtual Module Module { get; private set; }
         public virtual bool IsDeleted { get; set; }
+        public virtual Sprint Sprint { get; set; }
         public virtual DateTime DeletedOn { get; set; }
         public virtual string DeletedBy { get; set; }
 

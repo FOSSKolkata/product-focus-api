@@ -13,10 +13,10 @@ namespace ProductFocus.AppServices
 {
     public sealed class GetOrganizationListByUserQuery : IQuery<List<GetOrganizationByUserDto>>
     {
-        public long UserId { get; }
-        public GetOrganizationListByUserQuery(long userId)
+        public string ObjectId { get; }
+        public GetOrganizationListByUserQuery(string objectId)
         {
-            UserId = userId;
+            ObjectId = objectId;
         }
 
         internal sealed class GetOrganizationListByUserQueryHandler : IQueryHandler<GetOrganizationListByUserQuery, List<GetOrganizationByUserDto>>
@@ -31,19 +31,29 @@ namespace ProductFocus.AppServices
             }
             public async Task<List<GetOrganizationByUserDto>> Handle(GetOrganizationListByUserQuery query)
             {
-                List<GetOrganizationByUserDto> organizationList = new List<GetOrganizationByUserDto>();
-                
-                string sql = @"
+                List<GetOrganizationByUserDto> organizationList = new List<GetOrganizationByUserDto>();                
+
+                string sql1 = @"
+                    select Id 
+                    from Users
+                    where ObjectId = @ObjectId";
+
+                string sql2 = @"
                     select o.Id, o.Name, m.IsOwner 
-                    from organizations o, members m
-                    where o.id = m.organizationid
-                    and userid = @UserId";
+                    from Organizations o, Members m
+                    where o.Id = m.OrganizationId
+                    and UserId = @UserId";
                 
                 using (IDbConnection con = new SqlConnection(_queriesConnectionString.Value))
                 {
-                    organizationList = (await con.QueryAsync<GetOrganizationByUserDto>(sql, new
+                    var userId = (await con.QueryAsync<long>(sql1, new
                     {
-                        UserId = query.UserId
+                        ObjectId = query.ObjectId
+                    }));
+
+                    organizationList = (await con.QueryAsync<GetOrganizationByUserDto>(sql2, new
+                    {
+                        UserId = userId
                     })).ToList();
                 }
                 
