@@ -25,6 +25,7 @@ namespace ProductFocusApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetOrganizationList()
         {
+           
             List<GetOrganizationDto> organizationList = await _messages.Dispatch(new GetOrganizationListQuery());
             return Ok(organizationList);
         }
