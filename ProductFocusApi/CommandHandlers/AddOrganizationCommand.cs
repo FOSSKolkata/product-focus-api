@@ -12,11 +12,11 @@ namespace ProductFocus.AppServices
     public sealed class AddOrganizationCommand : ICommand
     {
         public string OrganizationName { get; }      
-        public string Email { get; set; }
-        public AddOrganizationCommand(string name, string email)
+        public string IdpUserId { get; set; }
+        public AddOrganizationCommand(string name, string idpUserId)
         {
             OrganizationName = name;
-            Email = email;
+            IdpUserId = idpUserId;
         }
 
         internal sealed class AddOrganizationCommandHandler : ICommandHandler<AddOrganizationCommand>
@@ -42,10 +42,10 @@ namespace ProductFocus.AppServices
                 if (existingOrganizationWithSameName != null)
                     return Result.Failure($"Organization '{command.OrganizationName}' already exists");
                 
-                var user = _userRepository.GetByEmail(command.Email);
+                var user = _userRepository.GetByIdpUserId(command.IdpUserId);
 
                 if (user == null)
-                    return Result.Failure($"User with email '{command.Email}' doesn't exist");
+                    return Result.Failure($"User with IdpUserId '{command.IdpUserId}' doesn't exist");
 
                 try
                 {

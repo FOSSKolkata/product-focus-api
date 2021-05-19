@@ -12,5 +12,6 @@ namespace ProductFocus.Domain.Repositories
     {
         void RegisterUser(User user);
         User GetByEmail(string name);
+        User GetByIdpUserId(string ipdUserId);
     }
 }
