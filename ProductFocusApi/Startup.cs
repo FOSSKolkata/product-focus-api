@@ -79,6 +79,7 @@ namespace ProductFocus.Api
             services.AddTransient<IProductRepository, ProductRepository>();
             services.AddTransient<IFeatureRepository, FeatureRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<ISprintRepository, SprintRepository>();
             services.AddTransient<UnitOfWork>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             var queriesConnectionString = new QueriesConnectionString(Configuration.GetConnectionString("QueriesConnectionString"));
