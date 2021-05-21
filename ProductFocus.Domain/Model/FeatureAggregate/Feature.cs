@@ -17,11 +17,15 @@ namespace ProductFocus.Domain.Model
         private readonly IList<FeatureComment> _featureComments = new List<FeatureComment>();
         public virtual IReadOnlyList<FeatureComment> FeatureComments => _featureComments.ToList();
         public virtual string Owner { get; private set; }
+        private readonly IList<User> _assignees = new List<User>();
+        public virtual IReadOnlyList<User> Assignees => _assignees.ToList();
         public virtual DateTime PlannedStartDate { get; private set; }
         public virtual DateTime PlannedEndDate { get; private set; }
         public virtual DateTime ActualStartDate { get; private set; }
         public virtual DateTime ActualEndDate { get; private set; }
         public virtual int WorkCompletionPercentage { get; private set; }
+        public virtual int StoryPoint { get; private set; }
+        public virtual bool IsBlocked { get; set; }
         public virtual Status Status { get; private set; }
         public virtual long ModuleId { get; private set; }
         public virtual Module Module { get; private set; }
@@ -58,6 +62,35 @@ namespace ProductFocus.Domain.Model
 
             var feature = new Feature(module, title, workItemType);
             return feature;
+        }
+
+        public virtual void UpdateTitle(string title)
+        {
+            Title = title;
+        }
+
+        public virtual void UpdateDescription(string description)
+        {
+            Description = description;
+        }
+
+        public virtual void UpdateWorkCompletionPercentage(int workCompletionPercentage)
+        {
+            WorkCompletionPercentage = workCompletionPercentage;
+        }
+
+        public virtual void UpdateStatus(Status status)
+        {
+            Status = status;
+        }
+
+        public virtual void UpdateStoryPoint(int storyPoint)
+        {
+            StoryPoint = storyPoint;
+        }
+        public virtual void UpdateBlockedStatus(bool isBlocked)
+        {
+            IsBlocked = isBlocked;
         }
     }
 

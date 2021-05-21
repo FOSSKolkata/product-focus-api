@@ -22,5 +22,10 @@ namespace ProductFocus.Persistence.Repositories
         {
             _unitOfWork.InsertAsync<Feature>(feature);
         }
+
+        public async Task<Feature> GetById(long id)
+        {
+            return await _unitOfWork.GetAsync<Feature>(id);
+        }
     }
 }
