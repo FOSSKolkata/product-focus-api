@@ -37,7 +37,9 @@ namespace ProductFocus.AppServices
                     from [product-focus].[dbo].[Modules]
                     WHERE productid = @PrdId
                     ;
-                    SELECT id, moduleid, title 
+                    SELECT Id, ModuleId, Title, Status,  WorkItemType, 
+                            PlannedStartDate, PlannedEndDate, 
+                            ActualStartDate, ActualEndDate
                     from [product-focus].[dbo].[Features]
                     WHERE moduleid in (
                         select id from Modules where productid = @PrdId)";
