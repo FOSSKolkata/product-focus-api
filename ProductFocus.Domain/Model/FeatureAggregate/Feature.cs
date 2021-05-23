@@ -12,8 +12,13 @@ namespace ProductFocus.Domain.Model
         public virtual WorkItemType WorkItemType { get; private set;}
         public virtual int UniqueWorkItemNumber { get; private set; }
         public virtual string Description { get; private set; }
+
+        private readonly IList<UserToFeatureAssignment> _assignees = new List<UserToFeatureAssignment>();
+        public virtual IReadOnlyList<UserToFeatureAssignment> Assignees => _assignees.ToList();
+        
         private readonly IList<Task> _tasks = new List<Task>();
         public virtual IReadOnlyList<Task> Tasks => _tasks.ToList();
+
         private readonly IList<FeatureComment> _featureComments = new List<FeatureComment>();
         public virtual IReadOnlyList<FeatureComment> FeatureComments => _featureComments.ToList();
         public virtual string Owner { get; private set; }        
@@ -94,6 +99,12 @@ namespace ProductFocus.Domain.Model
         public virtual void UpdateSprint(Sprint sprint)
         {
             Sprint = sprint;
+        }
+
+        public virtual void IncludeAssignee(User user)
+        {
+            UserToFeatureAssignment newAssignee = UserToFeatureAssignment.CreateInstance(this, user);
+            _assignees.Add(newAssignee);
         }
     }
 

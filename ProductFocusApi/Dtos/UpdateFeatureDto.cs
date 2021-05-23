@@ -17,6 +17,7 @@ namespace ProductFocus.Dtos
         public string SprintName { get; set; }
         public int StoryPoint { get; set; }
         public bool IsBlocked { get; set; }
+        public string EmailOfAssignee { get; set; }
         public UpdateColumnIdentifier FieldName { get; set; }
     }
 
@@ -27,8 +28,9 @@ namespace ProductFocus.Dtos
         WorkCompletionPercentage = 3,
         Status = 4,
         Sprint = 5,
-        StoryPoint = 6,
-        Assignees = 7,
-        IsBlocked = 8
+        StoryPoint = 6,        
+        IsBlocked = 7,
+        IncludeAssignee = 8,
+        ExcludeAssignee = 9
     }
 }

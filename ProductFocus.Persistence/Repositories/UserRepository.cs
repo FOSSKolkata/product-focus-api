@@ -18,9 +18,9 @@ namespace ProductFocus.Persistence.Repositories
             _unitOfWork = unitOfWork;
         }
 
-        public User GetByIdpUserId(string ipdUserId)
+        public User GetByIdpUserId(string idpUserId)
         {
-            return _unitOfWork.Query<User>().SingleOrDefault(x => x.ObjectId == ipdUserId);
+            return _unitOfWork.Query<User>().SingleOrDefault(x => x.ObjectId == idpUserId);
         }
 
         public User GetByEmail(string email)

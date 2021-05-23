@@ -23,15 +23,18 @@ namespace ProductFocus.AppServices
         {            
             private readonly IFeatureRepository _featureRepository;
             private readonly ISprintRepository _sprintRepository;
+            private readonly IUserRepository _userRepository;
             private readonly IUnitOfWork _unitOfWork;
             private readonly IEmailService _emailService;
 
             public UpdateFeatureCommandHandler(
                 IProductRepository productRepository, IFeatureRepository featureRepository,
-                ISprintRepository sprintRepository, IUnitOfWork unitOfWork, IEmailService emailService)
+                ISprintRepository sprintRepository, IUserRepository userRepository, 
+                IUnitOfWork unitOfWork, IEmailService emailService)
             {                
                 _featureRepository = featureRepository;
                 _sprintRepository = sprintRepository;
+                _userRepository = userRepository;
                 _unitOfWork = unitOfWork;
                 _emailService = emailService;
             }
@@ -41,37 +44,49 @@ namespace ProductFocus.AppServices
                 
                 if (feature == null)
                     return Result.Failure($"No feature found with Feature Id '{command.UpdateFeatureDto.Id}'");                
-
-                if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.Title)
-                    feature.UpdateTitle(command.UpdateFeatureDto.Title);
-
-                if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.Description)
-                    feature.UpdateTitle(command.UpdateFeatureDto.Description);
-
-                if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.WorkCompletionPercentage)
-                    feature.UpdateWorkCompletionPercentage(command.UpdateFeatureDto.WorkCompletionPercentage);
-
-                if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.Status)
-                    feature.UpdateStatus(command.UpdateFeatureDto.Status);
-
-                if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.Sprint)
-                {
-                    Sprint sprintDetails = _sprintRepository.GetByName(command.UpdateFeatureDto.SprintName);
-
-                    if (sprintDetails == null)
-                        return Result.Failure($"Sprint with name '{command.UpdateFeatureDto.SprintName}' doesn't exist");
-
-                    feature.UpdateSprint(sprintDetails);
-                }
-
-                if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.StoryPoint)
-                    feature.UpdateStoryPoint(command.UpdateFeatureDto.StoryPoint);
-
-                if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.IsBlocked)
-                    feature.UpdateBlockedStatus(command.UpdateFeatureDto.IsBlocked);
+                                
 
                 try
-                {                    
+                {
+                    if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.Title)
+                        feature.UpdateTitle(command.UpdateFeatureDto.Title);
+
+                    if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.Description)
+                        feature.UpdateDescription(command.UpdateFeatureDto.Description);
+
+                    if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.WorkCompletionPercentage)
+                        feature.UpdateWorkCompletionPercentage(command.UpdateFeatureDto.WorkCompletionPercentage);
+
+                    if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.Status)
+                        feature.UpdateStatus(command.UpdateFeatureDto.Status);
+
+                    if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.Sprint)
+                    {
+                        Sprint sprintDetails = _sprintRepository.GetByName(command.UpdateFeatureDto.SprintName);
+
+                        if (sprintDetails == null)
+                            return Result.Failure($"Sprint with name '{command.UpdateFeatureDto.SprintName}' doesn't exist");
+
+                        feature.UpdateSprint(sprintDetails);
+                    }
+
+                    if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.StoryPoint)
+                        feature.UpdateStoryPoint(command.UpdateFeatureDto.StoryPoint);
+
+                    if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.IsBlocked)
+                        feature.UpdateBlockedStatus(command.UpdateFeatureDto.IsBlocked);
+
+                    if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.IncludeAssignee)
+                    {
+                        User userDetails = _userRepository.GetByEmail(command.UpdateFeatureDto.EmailOfAssignee);
+
+                        if (userDetails == null)
+                            return Result.Failure($"User with email '{command.UpdateFeatureDto.EmailOfAssignee}' doesn't exist");
+
+                        feature.IncludeAssignee(userDetails);
+                    }
+
+
                     await _unitOfWork.CompleteAsync();
 
                     _emailService.send();
