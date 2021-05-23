@@ -29,6 +29,13 @@ namespace ProductFocusApi.Controllers
             var command = new UpdateFeatureCommand(dto);
             Result result = await _messages.Dispatch(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
-        }        
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetFeatureDetailsById(long id)
+        {
+            List<GetFeatureDetailsDto> featureDetails = await _messages.Dispatch(new GetFeatureDetailsQuery(id));
+            return Ok(featureDetails);
+        }
     }
 }
