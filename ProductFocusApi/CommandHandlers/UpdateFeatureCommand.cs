@@ -22,14 +22,16 @@ namespace ProductFocus.AppServices
         internal sealed class UpdateFeatureCommandHandler : ICommandHandler<UpdateFeatureCommand>
         {            
             private readonly IFeatureRepository _featureRepository;
+            private readonly ISprintRepository _sprintRepository;
             private readonly IUnitOfWork _unitOfWork;
             private readonly IEmailService _emailService;
 
             public UpdateFeatureCommandHandler(
                 IProductRepository productRepository, IFeatureRepository featureRepository,
-                IUnitOfWork unitOfWork, IEmailService emailService)
+                ISprintRepository sprintRepository, IUnitOfWork unitOfWork, IEmailService emailService)
             {                
                 _featureRepository = featureRepository;
+                _sprintRepository = sprintRepository;
                 _unitOfWork = unitOfWork;
                 _emailService = emailService;
             }
@@ -51,6 +53,16 @@ namespace ProductFocus.AppServices
 
                 if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.Status)
                     feature.UpdateStatus(command.UpdateFeatureDto.Status);
+
+                if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.Sprint)
+                {
+                    Sprint sprintDetails = _sprintRepository.GetByName(command.UpdateFeatureDto.SprintName);
+
+                    if (sprintDetails == null)
+                        return Result.Failure($"Sprint with name '{command.UpdateFeatureDto.SprintName}' doesn't exist");
+
+                    feature.UpdateSprint(sprintDetails);
+                }
 
                 if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.StoryPoint)
                     feature.UpdateStoryPoint(command.UpdateFeatureDto.StoryPoint);

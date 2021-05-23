@@ -16,9 +16,7 @@ namespace ProductFocus.Domain.Model
         public virtual IReadOnlyList<Task> Tasks => _tasks.ToList();
         private readonly IList<FeatureComment> _featureComments = new List<FeatureComment>();
         public virtual IReadOnlyList<FeatureComment> FeatureComments => _featureComments.ToList();
-        public virtual string Owner { get; private set; }
-        private readonly IList<User> _assignees = new List<User>();
-        public virtual IReadOnlyList<User> Assignees => _assignees.ToList();
+        public virtual string Owner { get; private set; }        
         public virtual DateTime PlannedStartDate { get; private set; }
         public virtual DateTime PlannedEndDate { get; private set; }
         public virtual DateTime ActualStartDate { get; private set; }
@@ -91,6 +89,11 @@ namespace ProductFocus.Domain.Model
         public virtual void UpdateBlockedStatus(bool isBlocked)
         {
             IsBlocked = isBlocked;
+        }
+
+        public virtual void UpdateSprint(Sprint sprint)
+        {
+            Sprint = sprint;
         }
     }
 

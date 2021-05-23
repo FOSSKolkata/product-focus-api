@@ -14,7 +14,7 @@ namespace ProductFocus.Dtos
         public string Description { get; set; }
         public int WorkCompletionPercentage { get; set; }
         public Status Status { get; set; }
-        public Sprint Sprint { get; set; }
+        public string SprintName { get; set; }
         public int StoryPoint { get; set; }
         public bool IsBlocked { get; set; }
         public UpdateColumnIdentifier FieldName { get; set; }
