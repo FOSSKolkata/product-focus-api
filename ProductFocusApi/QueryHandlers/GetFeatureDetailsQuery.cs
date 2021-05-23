@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ProductFocus.AppServices
 {
-    public sealed class GetFeatureDetailsQuery : IQuery<List<GetFeatureDetailsDto>>
+    public sealed class GetFeatureDetailsQuery : IQuery<GetFeatureDetailsDto>
     {
         public long Id { get; set; }
         
@@ -20,7 +20,7 @@ namespace ProductFocus.AppServices
             Id = id;
         }
 
-        internal sealed class GetFeatureDetailsQueryHandler : IQueryHandler<GetFeatureDetailsQuery, List<GetFeatureDetailsDto>>
+        internal sealed class GetFeatureDetailsQueryHandler : IQueryHandler<GetFeatureDetailsQuery, GetFeatureDetailsDto>
         {
             private readonly QueriesConnectionString _queriesConnectionString;
             private readonly IEmailService _emailService;
@@ -30,9 +30,9 @@ namespace ProductFocus.AppServices
                 _queriesConnectionString = queriesConnectionString;
                 _emailService = emailService;
             }
-            public async Task<List<GetFeatureDetailsDto>> Handle(GetFeatureDetailsQuery query)
+            public async Task<GetFeatureDetailsDto> Handle(GetFeatureDetailsQuery query)
             {
-                List<GetFeatureDetailsDto> featureDetails = new List<GetFeatureDetailsDto>();
+                GetFeatureDetailsDto featureDetails = new GetFeatureDetailsDto();
                 
                 string sql = @"
                     select Id, Title, Description, WorkCompletionPercentage, Status, StoryPoint, IsBlocked 
@@ -41,14 +41,15 @@ namespace ProductFocus.AppServices
 
                 using (IDbConnection con = new SqlConnection(_queriesConnectionString.Value))
                 {
-                    featureDetails = (await con.QueryAsync<GetFeatureDetailsDto>(sql, new
+                    var resultSet = await con.QueryAsync<GetFeatureDetailsDto>(sql, new
                     {
                         Id = query.Id
-                    })).ToList();
+                    });
+                    featureDetails = resultSet.FirstOrDefault();
                 }
                 
-                _emailService.send();
-                
+                _emailService.send();                
+
                 return featureDetails;
             }
         }

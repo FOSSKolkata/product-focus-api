@@ -34,7 +34,7 @@ namespace ProductFocusApi.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetFeatureDetailsById(long id)
         {
-            List<GetFeatureDetailsDto> featureDetails = await _messages.Dispatch(new GetFeatureDetailsQuery(id));
+            GetFeatureDetailsDto featureDetails = await _messages.Dispatch(new GetFeatureDetailsQuery(id));
             return Ok(featureDetails);
         }
     }
