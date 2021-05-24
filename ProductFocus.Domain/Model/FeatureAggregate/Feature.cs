@@ -12,6 +12,7 @@ namespace ProductFocus.Domain.Model
         public virtual WorkItemType WorkItemType { get; private set;}
         public virtual int UniqueWorkItemNumber { get; private set; }
         public virtual string Description { get; private set; }
+        public string AcceptanceCriteria { get; set; }
 
         private readonly IList<UserToFeatureAssignment> _assignees = new List<UserToFeatureAssignment>();
         public virtual IReadOnlyList<UserToFeatureAssignment> Assignees => _assignees.ToList();
@@ -99,6 +100,11 @@ namespace ProductFocus.Domain.Model
         public virtual void UpdateSprint(Sprint sprint)
         {
             Sprint = sprint;
+        }
+
+        public virtual void UpdateAcceptanceCriteria(string acceptanceCriteria)
+        {
+            AcceptanceCriteria = acceptanceCriteria;
         }
 
         public virtual void IncludeAssignee(User user)

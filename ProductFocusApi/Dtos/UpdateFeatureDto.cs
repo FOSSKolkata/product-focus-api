@@ -18,6 +18,7 @@ namespace ProductFocus.Dtos
         public int StoryPoint { get; set; }
         public bool IsBlocked { get; set; }
         public string EmailOfAssignee { get; set; }
+        public string AcceptanceCriteria { get; set; }
         public UpdateColumnIdentifier FieldName { get; set; }
     }
 
@@ -31,6 +32,7 @@ namespace ProductFocus.Dtos
         StoryPoint = 6,        
         IsBlocked = 7,
         IncludeAssignee = 8,
-        ExcludeAssignee = 9
+        ExcludeAssignee = 9,
+        AcceptanceCriteria = 10
     }
 }

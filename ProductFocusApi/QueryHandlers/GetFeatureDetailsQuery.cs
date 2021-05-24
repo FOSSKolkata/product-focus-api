@@ -35,7 +35,10 @@ namespace ProductFocus.AppServices
                 GetFeatureDetailsDto featureDetails = new GetFeatureDetailsDto();
                 
                 string sql = @"
-                    select Id, Title, Description, WorkCompletionPercentage, Status, StoryPoint, IsBlocked 
+                    select Id, Title, Description, WorkCompletionPercentage, 
+                            Status, StoryPoint, IsBlocked,
+                            AcceptanceCriteria, PlannedStartDate, PlannedEndDate,
+							ActualStartDate, ActualEndDate
                     from Features 
                     where Id = @Id";
 

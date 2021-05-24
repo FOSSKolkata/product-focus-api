@@ -86,6 +86,9 @@ namespace ProductFocus.AppServices
                         feature.IncludeAssignee(userDetails);
                     }
 
+                    if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.AcceptanceCriteria)
+                        feature.UpdateAcceptanceCriteria(command.UpdateFeatureDto.AcceptanceCriteria);
+
 
                     await _unitOfWork.CompleteAsync();
 
