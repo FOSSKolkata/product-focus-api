@@ -40,15 +40,25 @@ namespace ProductFocus.AppServices
                             AcceptanceCriteria, PlannedStartDate, PlannedEndDate,
 							ActualStartDate, ActualEndDate
                     from Features 
-                    where Id = @Id";
+                    where Id = @Id
+                    ;
+                    select Id, Name, Email, ObjectId from users 
+                    where id in (select userid from UserToFeatureAssignments 
+                    where featureid = @Id)";
 
                 using (IDbConnection con = new SqlConnection(_queriesConnectionString.Value))
                 {
-                    var resultSet = await con.QueryAsync<GetFeatureDetailsDto>(sql, new
+                    var result = await con.QueryMultipleAsync(sql, new
                     {
                         Id = query.Id
                     });
-                    featureDetails = resultSet.FirstOrDefault();
+
+                    var featureInformation = await result.ReadAsync<GetFeatureDetailsDto>();
+                    var assignees = await result.ReadAsync<Assignee>();
+                                        
+                    featureInformation.SingleOrDefault().Assignees = assignees.ToList();
+                    
+                    featureDetails = featureInformation.SingleOrDefault();
                 }
                 
                 _emailService.send();                

@@ -20,6 +20,7 @@ namespace ProductFocus.Dtos
         public long ModuleId { get; set; }
         public string Title { get; set; }
         public Status Status { get; set; }
+        public bool IsBlocked { get; set; }
         public WorkItemType WorkItemType { get; set; }
         public DateTime PlannedStartDate { get; set; }
         public DateTime PlannedEndDate { get; set; }

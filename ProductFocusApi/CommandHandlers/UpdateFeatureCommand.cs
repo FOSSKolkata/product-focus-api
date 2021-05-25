@@ -86,6 +86,16 @@ namespace ProductFocus.AppServices
                         feature.IncludeAssignee(userDetails);
                     }
 
+                    if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.ExcludeAssignee)
+                    {
+                        User userDetails = _userRepository.GetByEmail(command.UpdateFeatureDto.EmailOfAssignee);
+
+                        if (userDetails == null)
+                            return Result.Failure($"User with email '{command.UpdateFeatureDto.EmailOfAssignee}' doesn't exist");
+
+                        feature.ExcludeAssignee(userDetails);
+                    }
+
                     if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.AcceptanceCriteria)
                         feature.UpdateAcceptanceCriteria(command.UpdateFeatureDto.AcceptanceCriteria);
 

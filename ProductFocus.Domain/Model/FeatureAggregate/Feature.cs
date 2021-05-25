@@ -113,6 +113,12 @@ namespace ProductFocus.Domain.Model
             _assignees.Add(newAssignee);
         }
 
+        public virtual void ExcludeAssignee(User user)
+        {
+            UserToFeatureAssignment assigneeToExclude = Assignees.SingleOrDefault(x => x.User == user);
+            _assignees.Remove(assigneeToExclude);
+        }
+
         public virtual void UpdatePlannedStartDate(DateTime plannedStartDate)
         {
             PlannedStartDate = plannedStartDate;
