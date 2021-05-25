@@ -89,6 +89,17 @@ namespace ProductFocus.AppServices
                     if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.AcceptanceCriteria)
                         feature.UpdateAcceptanceCriteria(command.UpdateFeatureDto.AcceptanceCriteria);
 
+                    if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.PlannedStartDate)
+                        feature.UpdatePlannedStartDate(command.UpdateFeatureDto.PlannedStartDate);
+
+                    if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.PlannedEndDate)
+                        feature.UpdatePlannedEndDate(command.UpdateFeatureDto.PlannedEndDate);
+
+                    if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.ActualStartDate)
+                        feature.UpdateActualStartDate(command.UpdateFeatureDto.ActualStartDate);
+
+                    if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.ActualEndDate)
+                        feature.UpdateActualEndDate(command.UpdateFeatureDto.ActualEndDate);
 
                     await _unitOfWork.CompleteAsync();
 

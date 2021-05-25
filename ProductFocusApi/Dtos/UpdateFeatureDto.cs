@@ -19,6 +19,10 @@ namespace ProductFocus.Dtos
         public bool IsBlocked { get; set; }
         public string EmailOfAssignee { get; set; }
         public string AcceptanceCriteria { get; set; }
+        public DateTime PlannedStartDate { get; set; }
+        public DateTime PlannedEndDate { get; set; }
+        public DateTime ActualStartDate { get; set; }
+        public DateTime ActualEndDate { get; set; }
         public UpdateColumnIdentifier FieldName { get; set; }
     }
 
@@ -33,6 +37,10 @@ namespace ProductFocus.Dtos
         IsBlocked = 7,
         IncludeAssignee = 8,
         ExcludeAssignee = 9,
-        AcceptanceCriteria = 10
+        AcceptanceCriteria = 10,
+        PlannedStartDate = 11,
+        PlannedEndDate = 12,
+        ActualStartDate = 13,
+        ActualEndDate = 14
     }
 }

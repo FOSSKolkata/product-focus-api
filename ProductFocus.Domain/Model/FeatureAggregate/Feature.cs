@@ -112,6 +112,23 @@ namespace ProductFocus.Domain.Model
             UserToFeatureAssignment newAssignee = UserToFeatureAssignment.CreateInstance(this, user);
             _assignees.Add(newAssignee);
         }
+
+        public virtual void UpdatePlannedStartDate(DateTime plannedStartDate)
+        {
+            PlannedStartDate = plannedStartDate;
+        }
+        public virtual void UpdatePlannedEndDate(DateTime plannedEndDate)
+        {
+            PlannedEndDate = plannedEndDate;
+        }
+        public virtual void UpdateActualStartDate(DateTime actualStartDate)
+        {
+            ActualStartDate = actualStartDate;
+        }
+        public virtual void UpdateActualEndDate(DateTime actualEndDate)
+        {
+            ActualEndDate = actualEndDate;
+        }
     }
 
     public enum Status
