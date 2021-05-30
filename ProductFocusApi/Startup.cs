@@ -25,6 +25,10 @@ using ProductFocus.AppServices;
 using ProductFocus.ConnectionString;
 using ProductFocus.Services;
 using Swashbuckle.AspNetCore.Filters;
+using FluentValidation.AspNetCore;
+using ProductFocusApi.Validations;
+using Autofac;
+using ProductFocusApi.AutofacModules;
 
 namespace ProductFocus.Api
 {
@@ -49,13 +53,17 @@ namespace ProductFocus.Api
                     },
             options => { Configuration.Bind("AzureAdB2C", options); });
 
-            services.AddControllers();
+            services.AddControllers()
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<AddSprintCommandValidator>());
+        
+            
             services.AddAuthorization(options =>
             {
                 // Create policy to check for the scope 'read'
                 options.AddPolicy("ReadScope",
                     policy => policy.Requirements.Add(new ScopesRequirement("demo.read")));
             });
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Product_Focus_API", Version = "v1" });
@@ -75,16 +83,17 @@ namespace ProductFocus.Api
 
             services.AddHandlers();
             services.AddSingleton<Messages>();
-            services.AddTransient<IOrganizationRepository, OrganizationRepository>();
-            services.AddTransient<IProductRepository, ProductRepository>();
-            services.AddTransient<IFeatureRepository, FeatureRepository>();
-            services.AddTransient<IUserRepository, UserRepository>();
-            services.AddTransient<ISprintRepository, SprintRepository>();
             services.AddTransient<UnitOfWork>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             var queriesConnectionString = new QueriesConnectionString(Configuration.GetConnectionString("QueriesConnectionString"));
             services.AddSingleton(queriesConnectionString);
             services.AddTransient<IEmailService, EmailService>();
+        }
+
+        // Register your own things directly with Autofac
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.RegisterModule(new ApplicationModule());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

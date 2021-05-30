@@ -26,9 +26,9 @@ namespace ProductFocusApi.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> AddSprint([FromBody] AddSprintDto dto)
+        public async Task<IActionResult> AddSprint([FromBody] AddSprintCommand command)
         {
-            var command = new AddSprintCommand(dto.Name, dto.StartTime, dto.EndTime);
+
             Result result = await _messages.Dispatch(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }

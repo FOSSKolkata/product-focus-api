@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Common;
+using Microsoft.EntityFrameworkCore;
 using ProductFocus.Domain;
 using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
@@ -26,16 +27,19 @@ namespace ProductFocus.Persistence
             return await _context.Set<T>().FindAsync(id);
         }
 
-        internal async void InsertAsync<T>(T entity) where T: class
+        internal async void InsertAsync<T>(T entity) 
+            where T: class, IAggregateRoot
         {
             await _context.Set<T>().AddAsync(entity);
         }
-        internal void Update<T>(T entity) where T : class
+        internal void Update<T>(T entity) 
+            where T : class, IAggregateRoot
         {
             _context.Set<T>().Attach(entity);
             _context.Entry(entity).State = EntityState.Modified;
         }        
-        internal IQueryable<T> Query<T>() where T : class
+        internal IQueryable<T> Query<T>() 
+            where T : class
         {
             return _context.Set<T>();
         }        

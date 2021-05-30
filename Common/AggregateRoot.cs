@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Common
 {
-    public abstract class AggregateRoot<TId> : Entity<TId>, IDomainEventManager
+    public abstract class AggregateRoot<TId> : Entity<TId>, IAggregateRoot, IDomainEventManager
     {
 
         private readonly List<IDomainEvent> _domainEvents;

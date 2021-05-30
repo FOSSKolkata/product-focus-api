@@ -1,3 +1,4 @@
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -23,6 +24,7 @@ namespace ProductFocus.Api
                     webBuilder.UseStartup<Startup>()
                     .UseDefaultServiceProvider(options =>
                         options.ValidateScopes = false);
-                });
+                })
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory());
     }
 }

@@ -9,6 +9,7 @@ namespace ProductFocus.Domain.Model
     {
         public virtual string Name { get; private set; }
         public virtual Organization Organization { get; private set; }
+        
         private readonly IList<Module> _modules = new List<Module>();
         public virtual IReadOnlyList<Module> Modules => _modules.ToList();
         protected Product()

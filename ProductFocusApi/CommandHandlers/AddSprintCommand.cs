@@ -14,9 +14,10 @@ namespace ProductFocusApi.CommandHandlers
         public virtual string Name { get; set; }
         public virtual DateTime StartDate { get; set; }
         public virtual DateTime EndDate { get; set; }
-
-        public AddSprintCommand(string name, DateTime startDate, DateTime endDate)
+        public long ProductId { get; set; }
+        public AddSprintCommand(long productId, string name, DateTime startDate, DateTime endDate)
         {
+            ProductId = productId;
             Name = name;
             StartDate = startDate;
             EndDate = endDate;
@@ -25,25 +26,33 @@ namespace ProductFocusApi.CommandHandlers
         internal sealed class AddSprintCommandHandler : ICommandHandler<AddSprintCommand>
         {
             private readonly ISprintRepository _sprintRepository;
+            private readonly IProductRepository _productRepository;
             private readonly IUnitOfWork _unitOfWork;
 
             public AddSprintCommandHandler(
                 ISprintRepository sprintRepository,
+                IProductRepository productRepository,
                 IUnitOfWork unitOfWork)
             {
                 _sprintRepository = sprintRepository;
+                _productRepository = productRepository;
                 _unitOfWork = unitOfWork;
             }
+
             public async Task<Result> Handle(AddSprintCommand command)
             {
                 Sprint sprintWithSameName = _sprintRepository.GetByName(command.Name);
 
-
                 if (sprintWithSameName != null)
                     return Result.Failure($"Sprint '{command.Name}' already exists");
-                
-                var sprintResult = Sprint.CreateInstance(command.Name, command.StartDate, command.EndDate);
 
+                Product product = await _productRepository.GetById(command.ProductId);
+
+                if (product == null)
+                    return Result.Failure("Invalid product id");
+
+                var sprintResult = Sprint.CreateInstance(product, command.Name, command.StartDate, command.EndDate);
+                
                 if (sprintResult.IsFailure)
                     return Result.Failure(sprintResult.Error);
 
