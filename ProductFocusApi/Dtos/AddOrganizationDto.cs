@@ -8,7 +8,6 @@ namespace ProductFocus.Dtos
 {
     public sealed class AddOrganizationDto
     {
-        public string OrganizationName { get; set; }        
-        public string Email { get; set; }
+        public string OrganizationName { get; set; }                
     }
 }

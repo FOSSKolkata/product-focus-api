@@ -44,7 +44,8 @@ namespace ProductFocusApi.Controllers
         [HttpPost]
         public async Task<IActionResult> AddOrganization([FromBody] AddOrganizationDto dto)
         {
-            var command = new AddOrganizationCommand(dto.OrganizationName, dto.Email);
+            string objectId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            var command = new AddOrganizationCommand(dto.OrganizationName, objectId);
             Result result = await _messages.Dispatch(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }
