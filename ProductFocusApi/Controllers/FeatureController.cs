@@ -31,10 +31,10 @@ namespace ProductFocusApi.Controllers
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetFeatureDetailsById(long id)
+        [HttpGet("{orgid}/{id}")]
+        public async Task<IActionResult> GetFeatureDetailsById(long orgid, long id)
         {
-            GetFeatureDetailsDto featureDetails = await _messages.Dispatch(new GetFeatureDetailsQuery(id));
+            GetFeatureDetailsDto featureDetails = await _messages.Dispatch(new GetFeatureDetailsQuery(orgid, id));
             return Ok(featureDetails);
         }
     }

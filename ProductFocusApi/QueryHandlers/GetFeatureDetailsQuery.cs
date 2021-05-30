@@ -13,11 +13,13 @@ namespace ProductFocus.AppServices
 {
     public sealed class GetFeatureDetailsQuery : IQuery<GetFeatureDetailsDto>
     {
+        public long OrgId { get; set; }
         public long Id { get; set; }
         
-        public GetFeatureDetailsQuery(long id)
+        public GetFeatureDetailsQuery(long orgId, long id)
         {
             Id = id;
+            OrgId = orgId;
         }
 
         internal sealed class GetFeatureDetailsQueryHandler : IQueryHandler<GetFeatureDetailsQuery, GetFeatureDetailsDto>
@@ -44,20 +46,27 @@ namespace ProductFocus.AppServices
                     ;
                     select Id, Name, Email, ObjectId from users 
                     where id in (select userid from UserToFeatureAssignments 
-                    where featureid = @Id)";
+                    where featureid = @Id)
+                    ;
+                    select u.Name, u.Email, u.ObjectId from Members m, Users u
+                    where m.UserId = u.Id
+                    and m.OrganizationId = @OrgId";
 
                 using (IDbConnection con = new SqlConnection(_queriesConnectionString.Value))
                 {
                     var result = await con.QueryMultipleAsync(sql, new
                     {
-                        Id = query.Id
+                        Id = query.Id,
+                        OrgId = query.OrgId
                     });
 
                     var featureInformation = await result.ReadAsync<GetFeatureDetailsDto>();
                     var assignees = await result.ReadAsync<Assignee>();
+                    var members = await result.ReadAsync<OrganizationMember>();
                                         
                     featureInformation.SingleOrDefault().Assignees = assignees.ToList();
-                    
+                    featureInformation.SingleOrDefault().Members = members.ToList();
+
                     featureDetails = featureInformation.SingleOrDefault();
                 }
                 

@@ -21,12 +21,20 @@ namespace ProductFocus.Dtos
         public DateTime PlannedEndDate { get; set; }
         public DateTime ActualStartDate { get; set; }
         public DateTime ActualEndDate { get; set; }
+        public IList<OrganizationMember> Members { get; set; }
         public IList<Assignee> Assignees { get; set; }
     }
 
     public sealed class Assignee
     {
         public long Id { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string ObjectId { get; set; }
+    }
+
+    public sealed class OrganizationMember
+    {
         public string Name { get; set; }
         public string Email { get; set; }
         public string ObjectId { get; set; }
