@@ -20,7 +20,7 @@ namespace ProductFocus.Persistence.Repositories
 
         public void AddFeature(Feature feature)
         {
-            _unitOfWork.InsertAsync<Feature>(feature);
+            _unitOfWork.Insert<Feature>(feature);
         }
 
         public async Task<Feature> GetById(long id)

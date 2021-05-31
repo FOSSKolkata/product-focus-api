@@ -20,7 +20,7 @@ namespace ProductFocus.Persistence.Repositories
 
         public void AddProduct(Product product)
         {
-            _unitOfWork.InsertAsync<Product>(product);
+            _unitOfWork.Insert<Product>(product);
         }
 
         public async Task<Product> GetById(long id)

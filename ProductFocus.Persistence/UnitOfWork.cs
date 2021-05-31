@@ -32,6 +32,12 @@ namespace ProductFocus.Persistence
         {
             await _context.Set<T>().AddAsync(entity);
         }
+        internal void Insert<T>(T entity)
+            where T : class, IAggregateRoot
+        {
+            _context.Set<T>().Add(entity);
+        }
+
         internal void Update<T>(T entity) 
             where T : class, IAggregateRoot
         {

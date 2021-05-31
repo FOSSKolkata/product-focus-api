@@ -20,7 +20,7 @@ namespace ProductFocus.Persistence.Repositories
 
         public void AddSprint(Sprint sprint)
         {
-            _unitOfWork.InsertAsync<Sprint>(sprint);
+            _unitOfWork.Insert<Sprint>(sprint);
         }
 
         public Sprint GetByName(string name)

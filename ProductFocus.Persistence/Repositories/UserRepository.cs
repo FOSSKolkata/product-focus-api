@@ -30,7 +30,7 @@ namespace ProductFocus.Persistence.Repositories
 
         public void RegisterUser(User user)
         {
-            _unitOfWork.InsertAsync<User>(user);
+            _unitOfWork.Insert<User>(user);
         }
     }
 }
