@@ -19,6 +19,8 @@ namespace ProductFocus.Dtos
         public long Id { get; set; }
         public long ModuleId { get; set; }
         public string Title { get; set; }
+        public long SprintId { get; set; }
+        public string Name { get; set; }
         public Status Status { get; set; }
         public bool IsBlocked { get; set; }
         public WorkItemType WorkItemType { get; set; }

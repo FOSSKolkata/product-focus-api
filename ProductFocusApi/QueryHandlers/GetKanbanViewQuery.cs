@@ -37,11 +37,12 @@ namespace ProductFocus.AppServices
                     from [product-focus].[dbo].[Modules]
                     WHERE productid = @PrdId
                     ;
-                    SELECT Id, ModuleId, Title, Status,  IsBlocked, WorkItemType, 
+                    SELECT f.Id, ModuleId, Title, SprintId, Name, Status, IsBlocked, WorkItemType, 
                             PlannedStartDate, PlannedEndDate, 
                             ActualStartDate, ActualEndDate
-                    from [product-focus].[dbo].[Features]
-                    WHERE moduleid in (
+                    from [product-focus].[dbo].[Features] f, Sprint s
+                    WHERE f.SprintId = s.Id
+					and moduleid in (
                         select id from Modules where productid = @PrdId)";
                 using (IDbConnection con = new SqlConnection(_queriesConnectionString.Value))
                 {
