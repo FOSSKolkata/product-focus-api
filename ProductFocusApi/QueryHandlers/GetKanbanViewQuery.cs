@@ -40,9 +40,9 @@ namespace ProductFocus.AppServices
                     SELECT f.Id, ModuleId, Title, SprintId, Name, Status, IsBlocked, WorkItemType, 
                             PlannedStartDate, PlannedEndDate, 
                             ActualStartDate, ActualEndDate
-                    from [product-focus].[dbo].[Features] f, Sprint s
-                    WHERE f.SprintId = s.Id
-					and moduleid in (
+                    FROM Features f left outer join Sprint s
+                    ON f.SprintId = s.Id
+					WHERE moduleid in (
                         select id from Modules where productid = @PrdId)";
                 using (IDbConnection con = new SqlConnection(_queriesConnectionString.Value))
                 {
