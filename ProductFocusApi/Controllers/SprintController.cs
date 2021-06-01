@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using ProductFocusApi.CommandHandlers;
 using ProductFocusApi.Dtos;
 using Microsoft.AspNetCore.Authorization;
+using ProductFocus.Dtos;
 
 namespace ProductFocusApi.Controllers
 {
@@ -31,6 +32,13 @@ namespace ProductFocusApi.Controllers
 
             Result result = await _messages.Dispatch(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetSprintsByProductId(long id)
+        {
+            List<GetSprintDto> sprintList = await _messages.Dispatch(new GetSprintDetailsQuery(id));
+            return Ok(sprintList);
         }
     }
 }
