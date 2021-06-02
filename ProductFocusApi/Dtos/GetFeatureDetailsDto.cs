@@ -23,6 +23,7 @@ namespace ProductFocus.Dtos
         public DateTime ActualEndDate { get; set; }
         public IList<OrganizationMember> Members { get; set; }
         public IList<Assignee> Assignees { get; set; }
+        public SprintDetails Sprint { get; set; }
     }
 
     public sealed class Assignee
@@ -38,6 +39,14 @@ namespace ProductFocus.Dtos
         public string Name { get; set; }
         public string Email { get; set; }
         public string ObjectId { get; set; }
+    }
+
+    public sealed class SprintDetails
+    {
+        public long Id { get; set; }
+        public string Name { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
     }
 
 }

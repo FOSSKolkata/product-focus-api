@@ -50,7 +50,12 @@ namespace ProductFocus.AppServices
                     ;
                     select u.Name, u.Email, u.ObjectId from Members m, Users u
                     where m.UserId = u.Id
-                    and m.OrganizationId = @OrgId";
+                    and m.OrganizationId = @OrgId
+                    ;
+                    select s.Id , s.Name, s.StartDate, s.EndDate
+                    from Features f left outer join Sprint s
+					on f.SprintId = s.Id
+                    where f.Id = @Id";
 
                 using (IDbConnection con = new SqlConnection(_queriesConnectionString.Value))
                 {
@@ -63,9 +68,11 @@ namespace ProductFocus.AppServices
                     var featureInformation = await result.ReadAsync<GetFeatureDetailsDto>();
                     var assignees = await result.ReadAsync<Assignee>();
                     var members = await result.ReadAsync<OrganizationMember>();
+                    var sprint = await result.ReadAsync<SprintDetails>();
                                         
                     featureInformation.SingleOrDefault().Assignees = assignees.ToList();
                     featureInformation.SingleOrDefault().Members = members.ToList();
+                    featureInformation.SingleOrDefault().Sprint = sprint.SingleOrDefault();
 
                     featureDetails = featureInformation.SingleOrDefault();
                 }
