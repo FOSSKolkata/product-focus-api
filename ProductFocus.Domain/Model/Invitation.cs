@@ -6,8 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace ProductFocus.Domain.Model
-{
-    [Table("Invitations")]
+{    
     public class Invitation : AggregateRoot<long>
     {        
         public virtual string Email { get; set; }
@@ -15,6 +14,7 @@ namespace ProductFocus.Domain.Model
         public virtual DateTime InvitedOn { get; set; }
         public virtual DateTime LastResentOn { get; set; }
         public virtual DateTime ActionedOn { get; set; }
+
         
         protected Invitation()
         {
