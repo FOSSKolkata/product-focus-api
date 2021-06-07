@@ -14,23 +14,25 @@ namespace ProductFocus.Domain.Model
         public virtual DateTime InvitedOn { get; set; }
         public virtual DateTime LastResentOn { get; set; }
         public virtual DateTime ActionedOn { get; set; }
+        public virtual Organization Organization { get; set; }
 
-        
+
         protected Invitation()
         {
             // this protected constructor is for lazy loading to work
         }
 
-        private Invitation(string email)
+        private Invitation(Organization organization, string email)
         {
             Email = email;
             InvitedOn = DateTime.UtcNow;
             Status = InvitationStatus.New;
+            Organization = organization;
         }
 
-        public static Invitation CreateInstance(string email)
+        public static Invitation CreateInstance(Organization organization, string email)
         {
-            var invitation = new Invitation(email);
+            var invitation = new Invitation(organization, email);
             return invitation;
         }
     }

@@ -49,5 +49,15 @@ namespace ProductFocus.Domain.Model
             else
                 return false;            
         }
+
+        public virtual bool IfAlreadyMember (User user)
+        {
+            var existingMemberWithSameUser = Members.FirstOrDefault(x => x.User == user);
+
+            if (existingMemberWithSameUser != null)
+                return true;
+            else
+                return false;
+        }
     }
 }

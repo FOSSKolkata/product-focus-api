@@ -23,9 +23,11 @@ namespace ProductFocus.Persistence.Repositories
             _unitOfWork.Insert<Invitation>(invitation);
         }
 
-        public Invitation GetByEmail(string email)
-        {
-            return _unitOfWork.Query<Invitation>().SingleOrDefault(x => x.Email == email);
+        public Invitation GetActiveInvitation(Organization organization, string email)
+        {         
+            return _unitOfWork.Query<Invitation>()
+                .Where(y => y.Status == InvitationStatus.New || y.Status == InvitationStatus.Resent)
+                .FirstOrDefault(x => x.Email == email && x.Organization == organization);
         }
     }
 }

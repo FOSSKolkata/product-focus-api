@@ -23,11 +23,18 @@ namespace ProductFocusApi.Controllers
         {
             _messages = messages;
         }
-       
+
+        [HttpGet]
+        public async Task<IActionResult> GetPendingInvitationList()
+        {
+            List<GetPendingInvitationDto> pendingInvitationList = await _messages.Dispatch(new GetPendingInvitationListQuery());
+            return Ok(pendingInvitationList);
+        }
+
         [HttpPost]
         public async Task<IActionResult> SendInvitation([FromBody] SendInvitationDto dto)
         {            
-            var command = new SendInvitationCommand(dto.Email);
+            var command = new SendInvitationCommand(dto.OrgId, dto.Email);
             Result result = await _messages.Dispatch(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }

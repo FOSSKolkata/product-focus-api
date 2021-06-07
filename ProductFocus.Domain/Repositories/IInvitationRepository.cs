@@ -10,6 +10,6 @@ namespace ProductFocus.Domain.Repositories
     public interface IInvitationRepository
     {
         void AddInvitation(Invitation invitation);
-        Invitation GetByEmail(string email);
+        Invitation GetActiveInvitation(Organization organization, string email);
     }
 }
