@@ -12,10 +12,15 @@ using System.Threading.Tasks;
 namespace ProductFocus.AppServices
 {
     public sealed class GetPendingInvitationListQuery : IQuery<List<GetPendingInvitationDto>>
-    {        
-        public GetPendingInvitationListQuery()
+    {
+        public long OrgId { get; set; }
+        public int Offset { get; set; }
+        public int Count { get; set; }
+        public GetPendingInvitationListQuery(long orgId, int offset, int count)
         {
-        
+            OrgId = orgId;
+            Offset = offset;
+            Count = count;
         }
 
         internal sealed class GetPendingInvitationListQueryHandler : IQueryHandler<GetPendingInvitationListQuery, List<GetPendingInvitationDto>>
@@ -33,11 +38,20 @@ namespace ProductFocus.AppServices
                 string sql = @"
                     select Id, Email, OrganizationId, InvitedOn, LastResentOn, Status 
                     from Invitations
-                    where Status in (1,5)";
+                    where Status in (1,5)
+                    and OrganizationId = @OrgId
+                    order by Id desc
+                    offset @Offset rows
+                    fetch next @Count rows only";
                 
                 using (IDbConnection con = new SqlConnection(_queriesConnectionString.Value))
                 {
-                    pendingInvitationList = (await con.QueryAsync<GetPendingInvitationDto>(sql)).ToList();
+                    pendingInvitationList = (await con.QueryAsync<GetPendingInvitationDto>(sql, new
+                    {
+                        OrgId = query.OrgId,
+                        Offset = query.Offset,
+                        Count = query.Count
+                    })).ToList();
                 }
                 
                 return pendingInvitationList;
