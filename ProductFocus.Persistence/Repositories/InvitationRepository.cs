@@ -27,7 +27,7 @@ namespace ProductFocus.Persistence.Repositories
         {         
             return _unitOfWork.Query<Invitation>()
                 .Where(y => y.Status == InvitationStatus.New || y.Status == InvitationStatus.Resent)
-                .FirstOrDefault(x => x.Email == email && x.Organization == organization);
+                .SingleOrDefault(x => x.Email == email && x.Organization == organization);
         }
     }
 }

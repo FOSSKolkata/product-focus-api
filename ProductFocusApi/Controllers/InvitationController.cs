@@ -38,5 +38,13 @@ namespace ProductFocusApi.Controllers
             Result result = await _messages.Dispatch(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AcceptInvitation([FromBody] AcceptInvitationDto dto)
+        {
+            var command = new AcceptInvitationCommand(dto.OrgId, dto.Email);
+            Result result = await _messages.Dispatch(command);
+            return result.IsSuccess ? Ok() : BadRequest(result.Error);
+        }
     }
 }

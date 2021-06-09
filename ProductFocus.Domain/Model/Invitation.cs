@@ -35,6 +35,12 @@ namespace ProductFocus.Domain.Model
             var invitation = new Invitation(organization, email);
             return invitation;
         }
+
+        public virtual void UpdateInvitationAsAccepted()
+        {
+            Status = InvitationStatus.Accepted;
+            ActionedOn = DateTime.UtcNow;
+        }
     }
 
     public enum InvitationStatus
