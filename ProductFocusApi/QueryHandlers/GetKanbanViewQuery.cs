@@ -13,10 +13,13 @@ namespace ProductFocus.AppServices
 {
     public sealed class GetKanbanViewQuery : IQuery<List<GetKanbanViewDto>>
     {
+        public string ObjectId { get; }
         public long Id { get; }
-        public GetKanbanViewQuery(long id)
+
+        public GetKanbanViewQuery(long id, string objectId)
         {
             Id = id;
+            ObjectId = objectId;
         }
 
         internal sealed class GetKanbanViewQueryHandler : IQueryHandler<GetKanbanViewQuery, List<GetKanbanViewDto>>
@@ -32,10 +35,20 @@ namespace ProductFocus.AppServices
             public async Task<List<GetKanbanViewDto>> Handle(GetKanbanViewQuery query)
             {
                 List<GetKanbanViewDto> kanbanViewList = new List<GetKanbanViewDto>();
-                string sql = @"
-                    SELECT id, name 
-                    from [product-focus].[dbo].[Modules]
-                    WHERE productid = @PrdId
+
+                string sql1 = @"
+                    select Id 
+                    from Users
+                    where ObjectId = @ObjectId";
+
+                string sql2 = @"
+                    SELECT mo.Id, mo.Name 
+                    from Organizations o, Members m, Products p, Modules mo
+                    WHERE o.Id = m.OrganizationId
+                    and o.Id = p.OrganizationId
+                    and p.Id = mo.ProductId
+                    and mo.productid = @PrdId
+                    and m.UserId = @UserId
                     ;
                     SELECT f.Id, ModuleId, Title, SprintId, Name, Status, IsBlocked, WorkItemType, 
                             PlannedStartDate, PlannedEndDate, 
@@ -44,11 +57,18 @@ namespace ProductFocus.AppServices
                     ON f.SprintId = s.Id
 					WHERE moduleid in (
                         select id from Modules where productid = @PrdId)";
+
                 using (IDbConnection con = new SqlConnection(_queriesConnectionString.Value))
                 {
-                    var result = await con.QueryMultipleAsync(sql, new
+                    var userId = (await con.QueryAsync<long>(sql1, new
                     {
-                        PrdId = query.Id
+                        ObjectId = query.ObjectId
+                    }));
+
+                    var result = await con.QueryMultipleAsync(sql2, new
+                    {
+                        PrdId = query.Id,
+                        UserId = userId
                     });
 
                     

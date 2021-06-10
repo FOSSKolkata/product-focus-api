@@ -7,6 +7,8 @@ using ProductFocus.Domain;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using System.Linq;
+using System.Security.Claims;
 
 namespace ProductFocusApi.Controllers
 {
@@ -41,7 +43,8 @@ namespace ProductFocusApi.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetKanbanViewByProductId(long id)
         {
-            List<GetKanbanViewDto> kanbanViewList = await _messages.Dispatch(new GetKanbanViewQuery(id));
+            string objectId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            List<GetKanbanViewDto> kanbanViewList = await _messages.Dispatch(new GetKanbanViewQuery(id, objectId));
             return Ok(kanbanViewList);
         }
     }
