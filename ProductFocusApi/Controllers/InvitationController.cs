@@ -42,7 +42,23 @@ namespace ProductFocusApi.Controllers
         [HttpPost]
         public async Task<IActionResult> AcceptInvitation([FromBody] AcceptInvitationDto dto)
         {
-            var command = new AcceptInvitationCommand(dto.OrgId, dto.Email);
+            var command = new AcceptInvitationCommand(dto.InvitationId, dto.OrgId, dto.Email);
+            Result result = await _messages.Dispatch(command);
+            return result.IsSuccess ? Ok() : BadRequest(result.Error);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RejectInvitation([FromBody] RejectInvitationDto dto)
+        {
+            var command = new RejectInvitationCommand(dto.InvitationId, dto.OrgId, dto.Email);
+            Result result = await _messages.Dispatch(command);
+            return result.IsSuccess ? Ok() : BadRequest(result.Error);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CancelInvitation([FromBody] CancelInvitationDto dto)
+        {
+            var command = new CancelInvitationCommand(dto.InvitationId, dto.OrgId, dto.Email);
             Result result = await _messages.Dispatch(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }

@@ -29,5 +29,10 @@ namespace ProductFocus.Persistence.Repositories
                 .Where(y => y.Status == InvitationStatus.New || y.Status == InvitationStatus.Resent)
                 .SingleOrDefault(x => x.Email == email && x.Organization == organization);
         }
+
+        public async Task<Invitation> GetById(long id)
+        {
+            return await _unitOfWork.GetAsync<Invitation>(id);
+        }
     }
 }

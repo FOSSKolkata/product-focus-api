@@ -11,5 +11,6 @@ namespace ProductFocus.Domain.Repositories
     {
         void AddInvitation(Invitation invitation);
         Invitation GetActiveInvitation(Organization organization, string email);
+        Task<Invitation> GetById(long id);
     }
 }

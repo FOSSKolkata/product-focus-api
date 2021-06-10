@@ -41,6 +41,16 @@ namespace ProductFocus.Domain.Model
             Status = InvitationStatus.Accepted;
             ActionedOn = DateTime.UtcNow;
         }
+        public virtual void UpdateInvitationAsRejected()
+        {
+            Status = InvitationStatus.Rejected;
+            ActionedOn = DateTime.UtcNow;
+        }
+        public virtual void UpdateInvitationAsCancelled()
+        {
+            Status = InvitationStatus.Cancelled;
+            ActionedOn = DateTime.UtcNow;
+        }
     }
 
     public enum InvitationStatus

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ProductFocus.Dtos
 {
-    public sealed class AcceptInvitationDto
+    public sealed class RejectInvitationDto
     {
         public long InvitationId { get; set; }
         public long OrgId { get; set; }

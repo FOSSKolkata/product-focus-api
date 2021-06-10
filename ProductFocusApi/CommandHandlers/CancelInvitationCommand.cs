@@ -9,52 +9,35 @@ using System.Threading.Tasks;
 
 namespace ProductFocus.AppServices
 {
-    public sealed class AcceptInvitationCommand : ICommand
+    public sealed class CancelInvitationCommand : ICommand
     {
         public long InvitationId { get; set; }
         public long OrgId { get; set; }
         public string Email { get; }              
-        public AcceptInvitationCommand(long invitationId, long orgId, string email)
+        public CancelInvitationCommand(long invitationId, long orgId, string email)
         {
             InvitationId = invitationId;
             Email = email;
             OrgId = orgId;
         }
 
-        internal sealed class AcceptInvitationCommandHandler : ICommandHandler<AcceptInvitationCommand>
+        internal sealed class CancelInvitationCommandHandler : ICommandHandler<CancelInvitationCommand>
         {
-            private readonly IInvitationRepository _invitationRepository;
-            private readonly IOrganizationRepository _organizationRepository;
-            private readonly IUserRepository _userRepository;
+            private readonly IInvitationRepository _invitationRepository;                        
             private readonly IUnitOfWork _unitOfWork;
             
 
-            public AcceptInvitationCommandHandler(
-                IInvitationRepository invitationRepository,
-                IOrganizationRepository organizationRepository,
-                IUserRepository userRepository,
-            IUnitOfWork unitOfWork)
+            public CancelInvitationCommandHandler(
+                IInvitationRepository invitationRepository,                
+                IUnitOfWork unitOfWork)
             {
-                _invitationRepository = invitationRepository;
-                _organizationRepository = organizationRepository;
-                _userRepository = userRepository;
+                _invitationRepository = invitationRepository;                
                 _unitOfWork = unitOfWork;                
             }
-            public async Task<Result> Handle(AcceptInvitationCommand command)
+            public async Task<Result> Handle(CancelInvitationCommand command)
             {
                 try 
-                { 
-                    Organization existingOrganization = await _organizationRepository.GetById(command.OrgId);
-
-                    if (existingOrganization == null)
-                        return Result.Failure($"Organization doesn't exist with id : '{command.OrgId}'");
-
-                    User existingUser = _userRepository.GetByEmail(command.Email);
-                
-                    if(existingUser == null)
-                        return Result.Failure($"User '{command.Email}' is not a registered user");
-
-
+                {                     
                     Invitation existingActiveInvitation = await _invitationRepository.GetById(command.InvitationId);
 
                     if (existingActiveInvitation == null)
@@ -64,13 +47,11 @@ namespace ProductFocus.AppServices
                     if (existingActiveInvitation.Email != command.Email)
                         return Result.Failure($"Email sent over request parameter is not matching with the one in the invitation - invitatio id: '{command.InvitationId}'");
 
-                    if (existingActiveInvitation.Organization != existingOrganization)
+                    if (existingActiveInvitation.Organization.Id != command.OrgId)
                         return Result.Failure($"Organization sent is not matching with the organization present against invitation id: '{command.InvitationId}'");
                     //End ---- Check if the invitation is matching with the email and organization 
-                                        
-                    existingOrganization.AddMember(existingUser, false);
 
-                    existingActiveInvitation.UpdateInvitationAsAccepted();
+                    existingActiveInvitation.UpdateInvitationAsCancelled();
                     
                     await _unitOfWork.CompleteAsync();                    
 
