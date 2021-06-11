@@ -31,6 +31,13 @@ namespace ProductFocusApi.Controllers
             return Ok(pendingInvitationList);
         }
 
+        [HttpGet("{orgid}/{offset}/{count}")]
+        public async Task<IActionResult> GetClosedInvitationList(long orgid, int offset, int count)
+        {
+            GetClosedInvitationDto closedInvitationList = await _messages.Dispatch(new GetClosedInvitationListQuery(orgid, offset, count));
+            return Ok(closedInvitationList);
+        }
+
         [HttpPost]
         public async Task<IActionResult> SendInvitation([FromBody] SendInvitationDto dto)
         {            
