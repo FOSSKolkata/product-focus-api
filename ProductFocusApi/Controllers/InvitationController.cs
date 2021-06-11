@@ -27,7 +27,7 @@ namespace ProductFocusApi.Controllers
         [HttpGet("{orgid}/{offset}/{count}")]
         public async Task<IActionResult> GetPendingInvitationList(long orgid, int offset, int count)
         {
-            List<GetPendingInvitationDto> pendingInvitationList = await _messages.Dispatch(new GetPendingInvitationListQuery(orgid, offset, count));
+            GetPendingInvitationDto pendingInvitationList = await _messages.Dispatch(new GetPendingInvitationListQuery(orgid, offset, count));
             return Ok(pendingInvitationList);
         }
 
