@@ -38,6 +38,13 @@ namespace ProductFocusApi.Controllers
             return Ok(closedInvitationList);
         }
 
+        [HttpGet("{orgid}")]
+        public async Task<IActionResult> GetUserListNotPartOfOrganization(long orgid)
+        {
+            List<GetUserNotPartOfOrgDto> userList = await _messages.Dispatch(new GetUserListNotInOrganizationQuery(orgid));
+            return Ok(userList);
+        }
+
         [HttpPost]
         public async Task<IActionResult> SendInvitation([FromBody] SendInvitationDto dto)
         {            
