@@ -19,7 +19,7 @@ namespace ProductFocus.Dtos
         public string Email { get; set; }
         public long OrganizationId { get; set; }
         public DateTime InvitedOn { get; set; }
-        public DateTime LastResentOn { get; set; }
+        public DateTime ActionedOn { get; set; }
         public InvitationStatus Status { get; set; }
     }
 }

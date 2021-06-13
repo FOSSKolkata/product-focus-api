@@ -41,7 +41,7 @@ namespace ProductFocus.AppServices
                     where Status in (2,3,4)
                     and OrganizationId = @OrgId
                     ;
-                    select Id, Email, OrganizationId, InvitedOn, LastResentOn, Status 
+                    select Id, Email, OrganizationId, InvitedOn, ActionedOn, Status 
                     from Invitations
                     where Status in (2,3,4)
                     and OrganizationId = @OrgId
