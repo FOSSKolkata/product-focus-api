@@ -31,6 +31,13 @@ namespace ProductFocusApi.Controllers
             return Ok(userDetails);
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetUserListByOrganization(long id)
+        {
+            GetMemberOfOrganizationDto userDetails = await _messages.Dispatch(new GetUserListByOrganizationQuery(id));
+            return Ok(userDetails);
+        }
+
         [HttpPost]
         public async Task<IActionResult> RegisterUser([FromBody] RegisterUserDto dto)
         {            
