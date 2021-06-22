@@ -29,6 +29,7 @@ using FluentValidation.AspNetCore;
 using ProductFocusApi.Validations;
 using Autofac;
 using ProductFocusApi.AutofacModules;
+using Microsoft.Data.SqlClient;
 
 namespace ProductFocus.Api
 {
@@ -77,15 +78,33 @@ namespace ProductFocus.Api
                 c.OperationFilter<SecurityRequirementsOperationFilter>();
             });
 
+            var builder = new SqlConnectionStringBuilder(
+                Configuration.GetConnectionString("DefaultConnection"));
+            //builder.Password = Configuration["DevDbPassword"];
+            //builder.UserID = Configuration["DevDbUser"];
+            var connection = builder.ConnectionString;
+
             services.AddDbContext<ProductFocusDbContext>(
                 x => x.UseLazyLoadingProxies()
-                    .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                    .UseSqlServer(connection));
+
+            ////services.AddDbContext<ProductFocusDbContext>(
+            //    x => x.UseLazyLoadingProxies()
+            //        .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddHandlers();
             services.AddSingleton<Messages>();
             services.AddTransient<UnitOfWork>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
-            var queriesConnectionString = new QueriesConnectionString(Configuration.GetConnectionString("QueriesConnectionString"));
+
+            var queryBuilder = new SqlConnectionStringBuilder(
+                Configuration.GetConnectionString("QueriesConnectionString"));
+            //builder.Password = Configuration["DevDbPassword"];
+            //builder.UserID = Configuration["DevDbUser"];
+            var queryConnection = builder.ConnectionString;
+
+            var queriesConnectionString = new QueriesConnectionString(queryConnection);
+            
             services.AddSingleton(queriesConnectionString);
             services.AddTransient<IEmailService, EmailService>();
         }
