@@ -50,12 +50,19 @@ namespace ProductFocus.AppServices
                     and mo.productid = @PrdId
                     and m.UserId = @UserId
                     ;
-                    SELECT f.Id, ModuleId, Title, SprintId, Name, Status, IsBlocked, WorkItemType, 
+                    SELECT f.Id, ModuleId, Title, SprintId, Name, StoryPoint, WorkCompletionPercentage, Status, IsBlocked, WorkItemType, 
                             PlannedStartDate, PlannedEndDate, 
                             ActualStartDate, ActualEndDate
                     FROM Features f left outer join Sprint s
                     ON f.SprintId = s.Id
 					WHERE moduleid in (
+                        select id from Modules where productid = @PrdId)
+                    ;
+                    SELECT f.Id, u.Id as UserId, u.Name, u.Email, u.ObjectId
+                    FROM Features f, UserToFeatureAssignments uf, Users u
+					Where uf.UserId = u.Id
+                    and f.Id = uf.FeatureId									
+					and moduleid in (
                         select id from Modules where productid = @PrdId)";
 
                 using (IDbConnection con = new SqlConnection(_queriesConnectionString.Value))
@@ -74,11 +81,17 @@ namespace ProductFocus.AppServices
                     
                     var kanbanViews = await result.ReadAsync<GetKanbanViewDto>();
                     var featureDetails = await result.ReadAsync<FeatureDetail>();
+                    var assigneeDetails = await result.ReadAsync<AssigneeDetail>();
 
                     foreach (var kanbanView in kanbanViews)
                     {
                         kanbanView.FeatureDetails = featureDetails.Where(a => a.ModuleId == kanbanView.Id).ToList();
-                    }
+
+                        foreach (var featureDetail in kanbanView.FeatureDetails)
+                        {
+                            featureDetail.Assignees = assigneeDetails.Where(a => a.Id == featureDetail.Id).ToList();
+                        }
+                    }                                        
 
                     kanbanViewList = kanbanViews.ToList();
                 }
