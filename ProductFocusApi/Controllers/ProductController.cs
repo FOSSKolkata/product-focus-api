@@ -47,5 +47,13 @@ namespace ProductFocusApi.Controllers
             List<GetKanbanViewDto> kanbanViewList = await _messages.Dispatch(new GetKanbanViewQuery(id, objectId));
             return Ok(kanbanViewList);
         }
+
+        [HttpGet("{id}/query")]
+        public async Task<IActionResult> GetKanbanViewByProductIdAndQuery(long id, [FromQuery] long SprintId, [FromQuery] List<long> UserIds)
+        {           
+            string objectId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            List<GetKanbanViewDto> kanbanViewList = await _messages.Dispatch(new GetKanbanViewFilterQuery(id, objectId, SprintId, UserIds));
+            return Ok(kanbanViewList);
+        }
     }
 }

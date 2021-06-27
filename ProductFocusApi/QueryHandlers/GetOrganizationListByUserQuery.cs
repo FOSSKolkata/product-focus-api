@@ -44,6 +44,7 @@ namespace ProductFocus.AppServices
                     where o.Id = m.OrganizationId
                     and UserId = @UserId";
                 
+
                 using (IDbConnection con = new SqlConnection(_queriesConnectionString.Value))
                 {
                     var userId = (await con.QueryAsync<long>(sql1, new
@@ -54,7 +55,7 @@ namespace ProductFocus.AppServices
                     organizationList = (await con.QueryAsync<GetOrganizationByUserDto>(sql2, new
                     {
                         UserId = userId
-                    })).ToList();
+                    })).ToList();                    
                 }
                 
                 _emailService.send();

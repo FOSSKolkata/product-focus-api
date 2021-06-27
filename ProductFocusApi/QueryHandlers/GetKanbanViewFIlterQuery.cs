@@ -11,28 +11,32 @@ using System.Threading.Tasks;
 
 namespace ProductFocus.AppServices
 {
-    public sealed class GetKanbanViewQuery : IQuery<List<GetKanbanViewDto>>
+    public sealed class GetKanbanViewFilterQuery : IQuery<List<GetKanbanViewDto>>
     {
         public string ObjectId { get; }
         public long Id { get; }
+        public long SprintId { get; set; }
+        public IList<long> UserIds { get; set; }
 
-        public GetKanbanViewQuery(long id, string objectId)
+        public GetKanbanViewFilterQuery(long id, string objectId, long sprintId, IList<long> userIds)
         {
             Id = id;
             ObjectId = objectId;
+            SprintId = sprintId;
+            UserIds = userIds;
         }
 
-        internal sealed class GetKanbanViewQueryHandler : IQueryHandler<GetKanbanViewQuery, List<GetKanbanViewDto>>
+        internal sealed class GetKanbanViewFilterQueryHandler : IQueryHandler<GetKanbanViewFilterQuery, List<GetKanbanViewDto>>
         {
             private readonly QueriesConnectionString _queriesConnectionString;
             private readonly IEmailService _emailService;
 
-            public GetKanbanViewQueryHandler(QueriesConnectionString queriesConnectionString, IEmailService emailService)
+            public GetKanbanViewFilterQueryHandler(QueriesConnectionString queriesConnectionString, IEmailService emailService)
             {
                 _queriesConnectionString = queriesConnectionString;
                 _emailService = emailService;
             }
-            public async Task<List<GetKanbanViewDto>> Handle(GetKanbanViewQuery query)
+            public async Task<List<GetKanbanViewDto>> Handle(GetKanbanViewFilterQuery query)
             {
                 List<GetKanbanViewDto> kanbanViewList = new List<GetKanbanViewDto>();
 
@@ -41,16 +45,30 @@ namespace ProductFocus.AppServices
                     from Users
                     where ObjectId = @ObjectId";
 
-                var builder = new SqlBuilder();
+                var builder1 = new SqlBuilder();
+                var selector1 = builder1.AddTemplate("SELECT f.Id, ModuleId, Title, SprintId, s.Name, StoryPoint, WorkCompletionPercentage, Status, IsBlocked, WorkItemType, PlannedStartDate, PlannedEndDate, ActualStartDate, ActualEndDate from Features f /**innerjoin**/ /**where**/");
+                builder1.InnerJoin("Sprint s ON f.SprintId = s.Id");
+                builder1.InnerJoin("Modules m ON f.ModuleId = m.Id");
+                builder1.InnerJoin("Products p ON m.ProductId = p.Id");
+                if (query.UserIds != null && query.UserIds.Count()>0)
+                    builder1.InnerJoin("UserToFeatureAssignments uf ON f.Id = uf.FeatureId");
+                builder1.Where("p.id = @PrdId");
+                builder1.Where("s.id = @SprintId");
+                if (query.UserIds != null && query.UserIds.Count() > 0)
+                    builder1.Where("uf.userid in @UserIds");
 
-                var selector = builder.AddTemplate("SELECT f.Id, u.Id as UserId, u.Name, u.Email, u.ObjectId FROM Features f /**innerjoin**/ /**where**/");
-                builder.InnerJoin("UserToFeatureAssignments uf ON f.Id=uf.FeatureId");
-                builder.InnerJoin("Users u ON uf.UserId=u.Id");
-                builder.InnerJoin("Modules m ON m.Id=f.ModuleId");
-                builder.InnerJoin("Products p ON m.ProductId=p.Id");
-                builder.Where("p.id = @Prdid");
+                var tempStr1 = selector1.RawSql;
 
-                var tempStr = selector.RawSql;
+                var builder2 = new SqlBuilder();
+
+                var selector2 = builder2.AddTemplate("SELECT f.Id, u.Id as UserId, u.Name, u.Email, u.ObjectId FROM Features f /**innerjoin**/ /**where**/");
+                builder2.InnerJoin("UserToFeatureAssignments uf ON f.Id=uf.FeatureId");
+                builder2.InnerJoin("Users u ON uf.UserId=u.Id");
+                builder2.InnerJoin("Modules m ON m.Id=f.ModuleId");
+                builder2.InnerJoin("Products p ON m.ProductId=p.Id");
+                builder2.Where("p.id = @PrdId");
+
+                var tempStr2 = selector2.RawSql;
 
                 string sql2 = @"
                     SELECT mo.Id, mo.Name 
@@ -61,20 +79,9 @@ namespace ProductFocus.AppServices
                     and mo.productid = @PrdId
                     and m.UserId = @UserId
                     ;
-                    SELECT f.Id, ModuleId, Title, SprintId, Name, StoryPoint, WorkCompletionPercentage, Status, IsBlocked, WorkItemType, 
-                            PlannedStartDate, PlannedEndDate, 
-                            ActualStartDate, ActualEndDate
-                    FROM Features f left outer join Sprint s
-                    ON f.SprintId = s.Id
-					WHERE moduleid in (
-                        select id from Modules where productid = @PrdId)
-                    ;
-                    SELECT f.Id, u.Id as UserId, u.Name, u.Email, u.ObjectId
-                    FROM Features f, UserToFeatureAssignments uf, Users u
-					Where uf.UserId = u.Id
-                    and f.Id = uf.FeatureId									
-					and moduleid in (
-                        select id from Modules where productid = @PrdId)";
+                    "+tempStr1+
+                    ";"+tempStr2;
+                
 
                 using (IDbConnection con = new SqlConnection(_queriesConnectionString.Value))
                 {
@@ -86,7 +93,9 @@ namespace ProductFocus.AppServices
                     var result = await con.QueryMultipleAsync(sql2, new
                     {
                         PrdId = query.Id,
-                        UserId = userId
+                        UserId = userId,
+                        SprintId = query.SprintId,
+                        UserIds = query.UserIds
                     });
 
                     

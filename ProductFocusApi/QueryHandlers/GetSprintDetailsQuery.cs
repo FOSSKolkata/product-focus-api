@@ -34,7 +34,8 @@ namespace ProductFocus.AppServices
                 string sql = @"
                     select Id, Name, StartDate, EndDate 
                     from Sprint
-                    where ProductId = @PrdId";
+                    where ProductId = @PrdId
+                    order by StartDate desc";
                 
                 using (IDbConnection con = new SqlConnection(_queriesConnectionString.Value))
                 {
