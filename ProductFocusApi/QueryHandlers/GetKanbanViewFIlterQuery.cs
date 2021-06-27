@@ -46,7 +46,7 @@ namespace ProductFocus.AppServices
                     where ObjectId = @ObjectId";
 
                 var builder1 = new SqlBuilder();
-                var selector1 = builder1.AddTemplate("SELECT f.Id, ModuleId, Title, SprintId, s.Name, StoryPoint, WorkCompletionPercentage, Status, IsBlocked, WorkItemType, PlannedStartDate, PlannedEndDate, ActualStartDate, ActualEndDate from Features f /**innerjoin**/ /**where**/");
+                var selector1 = builder1.AddTemplate("SELECT distinct f.Id, ModuleId, Title, SprintId, s.Name, StoryPoint, WorkCompletionPercentage, Status, IsBlocked, WorkItemType, PlannedStartDate, PlannedEndDate, ActualStartDate, ActualEndDate from Features f /**innerjoin**/ /**where**/");
                 builder1.InnerJoin("Sprint s ON f.SprintId = s.Id");
                 builder1.InnerJoin("Modules m ON f.ModuleId = m.Id");
                 builder1.InnerJoin("Products p ON m.ProductId = p.Id");
