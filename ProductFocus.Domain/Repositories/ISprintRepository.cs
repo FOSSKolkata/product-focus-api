@@ -11,5 +11,6 @@ namespace ProductFocus.Domain.Repositories
     {
         void AddSprint(Sprint sprint);
         Sprint GetByName(string name);
+        Task<Sprint> GetById(long id);
     }
 }

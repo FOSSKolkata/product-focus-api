@@ -27,5 +27,10 @@ namespace ProductFocus.Persistence.Repositories
         {
             return _unitOfWork.Query<Sprint>().SingleOrDefault(x => x.Name == name);
         }
+
+        public async Task<Sprint> GetById(long id)
+        {
+            return await _unitOfWork.GetAsync<Sprint>(id);
+        }
     }
 }

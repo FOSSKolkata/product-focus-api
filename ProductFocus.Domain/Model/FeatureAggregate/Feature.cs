@@ -52,19 +52,20 @@ namespace ProductFocus.Domain.Model
             WorkCompletionPercentage = progress;
         }
 
-        private Feature(Module module, string title, WorkItemType workItemType)
+        private Feature(Module module, string title, WorkItemType workItemType, Sprint sprint)
         {
             Module = module;
             Title = title;
             WorkItemType = workItemType;
+            Sprint = sprint;
         }
 
-        public static Feature CreateInstance(Module module, string title, WorkItemType workItemType)
+        public static Feature CreateInstance(Module module, string title, WorkItemType workItemType, Sprint sprint)
         {
             if (String.IsNullOrEmpty(title))
                 throw new Exception("Feature Title name can't be null or empty");
 
-            var feature = new Feature(module, title, workItemType);
+            var feature = new Feature(module, title, workItemType, sprint);
             return feature;
         }
 

@@ -10,5 +10,6 @@ namespace ProductFocus.Dtos
     {
         public string Title { get; set; }        
         public string WorkItemType { get; set; }
+        public long SprintId { get; set; }
     }
 }
