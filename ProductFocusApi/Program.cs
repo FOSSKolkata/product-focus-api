@@ -20,7 +20,11 @@ namespace ProductFocus.Api
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((context, builder)=>
-                { builder.AddSystemsManager("/productfocus");
+                { 
+                    if(!context.HostingEnvironment.IsDevelopment())
+                    {
+                        builder.AddSystemsManager("/productfocus");
+                    }                    
                 }
                 )
                 .ConfigureWebHostDefaults(webBuilder =>
