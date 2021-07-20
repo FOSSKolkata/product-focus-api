@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using ProductFocus.Domain.Model;
 
 namespace ProductFocus.Persistence
@@ -22,5 +23,17 @@ namespace ProductFocus.Persistence
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Invitation> Invitations { get; set; }
+    }
+
+
+    public class ProductFocusContextFactory : IDesignTimeDbContextFactory<ProductFocusDbContext>
+    {
+        public ProductFocusDbContext CreateDbContext(string[] args)
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<ProductFocusDbContext>();
+            optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS; Database=product-focus; Trusted_Connection=True;");
+
+            return new ProductFocusDbContext(optionsBuilder.Options);
+        }
     }
 }

@@ -7,6 +7,7 @@ using ProductFocus.Domain;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using ProductFocusApi.CommandHandlers;
 
 namespace ProductFocusApi.Controllers
 {
@@ -30,6 +31,21 @@ namespace ProductFocusApi.Controllers
             Result result = await _messages.Dispatch(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> UpsertScrumComment(UpsertScrumCommentCommand command)
+        {
+            Result result = await _messages.Dispatch(command);
+            return result.IsSuccess ? Ok() : BadRequest(result.Error);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpsertScrumWorkCompletionPercentage(UpsertScrumWorkCompletionPercentageCommand command)
+        {
+            Result result = await _messages.Dispatch(command);
+            return result.IsSuccess ? Ok() : BadRequest(result.Error);
+        }
+
 
         [HttpGet("{orgid}/{id}")]
         public async Task<IActionResult> GetFeatureDetailsById(long orgid, long id)

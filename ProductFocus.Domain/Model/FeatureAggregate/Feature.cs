@@ -1,4 +1,6 @@
 ﻿using Common;
+using CSharpFunctionalExtensions;
+using ProductFocus.Domain.Model.FeatureAggregate;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +24,10 @@ namespace ProductFocus.Domain.Model
 
         private readonly IList<FeatureComment> _featureComments = new List<FeatureComment>();
         public virtual IReadOnlyList<FeatureComment> FeatureComments => _featureComments.ToList();
+
+        private readonly IList<ScrumDay> _scrumDays = new List<ScrumDay>();
+        public virtual IReadOnlyList<ScrumDay> ScrumDays => _scrumDays.ToList();
+
         public virtual string Owner { get; private set; }        
         public virtual DateTime PlannedStartDate { get; private set; }
         public virtual DateTime PlannedEndDate { get; private set; }
@@ -32,6 +38,8 @@ namespace ProductFocus.Domain.Model
         public virtual bool IsBlocked { get; set; }
         public virtual Status Status { get; private set; }
         public virtual long ModuleId { get; private set; }
+
+
         public virtual Module Module { get; private set; }
         public virtual bool IsDeleted { get; set; }
         public virtual Sprint Sprint { get; set; }
@@ -135,6 +143,37 @@ namespace ProductFocus.Domain.Model
         public virtual void UpdateActualEndDate(DateTime actualEndDate)
         {
             ActualEndDate = actualEndDate;
+        }
+
+        public virtual Result UpsertScrumComment(DateTime scrumDate, string comment)
+        {
+            if (!(scrumDate >= this.Sprint.StartDate && scrumDate <= this.Sprint.EndDate))
+                return Result.Failure("Invalid scrum date");
+
+            var scrumDay =  this.ScrumDays.Where(x => x.ScrumDate == scrumDate).SingleOrDefault();
+
+            if (scrumDay == null)
+                this._scrumDays.Add(new ScrumDay(scrumDate, comment, this));
+            else
+                scrumDay.UpdateComment(comment);
+
+            return Result.Success();
+        }
+
+
+        public Result UpsertWorkCompletionPercentage(DateTime scrumDate, int workCompletionPercentage)
+        {
+            if (!(scrumDate >= this.Sprint.StartDate && scrumDate <= this.Sprint.EndDate))
+                return Result.Failure("Invalid scrum date");
+
+            var scrumDay = this.ScrumDays.Where(x => x.ScrumDate == scrumDate).SingleOrDefault();
+
+            if (scrumDay == null)
+                this._scrumDays.Add(new ScrumDay(scrumDate, workCompletionPercentage, this));
+            else
+                scrumDay.UpdateCompletionPercentage(workCompletionPercentage);
+
+            return Result.Success();
         }
     }
 
