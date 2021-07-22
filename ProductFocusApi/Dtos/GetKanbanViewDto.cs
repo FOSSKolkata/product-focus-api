@@ -31,6 +31,7 @@ namespace ProductFocus.Dtos
         public DateTime ActualStartDate { get; set; }
         public DateTime ActualEndDate { get; set; }
         public IList<AssigneeDetail> Assignees { get; set; }
+        public IList<ScrumDayDto> ScrumDays { get; set; }
     }
 
     public sealed class AssigneeDetail
@@ -40,5 +41,13 @@ namespace ProductFocus.Dtos
         public string Name { get; set; }
         public string Email { get; set; }
         public string ObjectId { get; set; }
+    }
+
+    public sealed class ScrumDayDto
+    {
+        public long FeatureId { get; set; }
+        public DateTime Date { get; set; }
+        public int WorkCompletionPercentage { get; set; }
+        public int Comment { get; set; }
     }
 }

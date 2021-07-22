@@ -70,6 +70,14 @@ namespace ProductFocus.AppServices
 
                 var tempStr2 = selector2.RawSql;
 
+                var builder3 = new SqlBuilder();
+                var selector3 = builder3.AddTemplate("SELECT  sd.FeatureId, sd.ScrumDate AS Date, sd.WorkCompletionPercentage, sd.Comment FROM ScrumDay sd  /**innerjoin**/ /**where**/");
+                builder3.InnerJoin("Features f ON sd.FeatureId = f.Id");
+                builder3.InnerJoin("Sprint s ON f.SprintId = s.Id");
+                builder1.Where("s.id = @SprintId");
+
+                var tempStr3 = selector3.RawSql;
+
                 string sql2 = @"
                     SELECT mo.Id, mo.Name 
                     from Organizations o, Members m, Products p, Modules mo
@@ -78,10 +86,13 @@ namespace ProductFocus.AppServices
                     and p.Id = mo.ProductId
                     and mo.productid = @PrdId
                     and m.UserId = @UserId
-                    ;
-                    "+tempStr1+
-                    ";"+tempStr2;
+                    ;" + tempStr1 +
+                    ";" + tempStr2 + 
+                    ";" + tempStr3;
                 
+
+                // Query to get scrum data 
+                // Select work completion percentage, scrum date and scrum comment for the features which meet filter criteria 
 
                 using (IDbConnection con = new SqlConnection(_queriesConnectionString.Value))
                 {
@@ -102,6 +113,7 @@ namespace ProductFocus.AppServices
                     var kanbanViews = await result.ReadAsync<GetKanbanViewDto>();
                     var featureDetails = await result.ReadAsync<FeatureDetail>();
                     var assigneeDetails = await result.ReadAsync<AssigneeDetail>();
+                    var scrumDays = await result.ReadAsync<ScrumDayDto>();
 
                     foreach (var kanbanView in kanbanViews)
                     {
@@ -110,6 +122,9 @@ namespace ProductFocus.AppServices
                         foreach (var featureDetail in kanbanView.FeatureDetails)
                         {
                             featureDetail.Assignees = assigneeDetails.Where(a => a.Id == featureDetail.Id).ToList();
+
+                            // Fill in scrum days data 
+                            featureDetail.ScrumDays = scrumDays.Where(x => x.FeatureId == featureDetail.Id).OrderBy(x => x.Date).ToList();
                         }
                     }                                        
 
