@@ -47,7 +47,7 @@ namespace ProductFocus.Dtos
     {
         public long FeatureId { get; set; }
         public DateTime Date { get; set; }
-        public int WorkCompletionPercentage { get; set; }
-        public int Comment { get; set; }
+        public int? WorkCompletionPercentage { get; set; }
+        public string Comment { get; set; }
     }
 }

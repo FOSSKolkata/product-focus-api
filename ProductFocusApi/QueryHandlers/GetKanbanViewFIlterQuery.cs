@@ -74,7 +74,7 @@ namespace ProductFocus.AppServices
                 var selector3 = builder3.AddTemplate("SELECT  sd.FeatureId, sd.ScrumDate AS Date, sd.WorkCompletionPercentage, sd.Comment FROM ScrumDay sd  /**innerjoin**/ /**where**/");
                 builder3.InnerJoin("Features f ON sd.FeatureId = f.Id");
                 builder3.InnerJoin("Sprint s ON f.SprintId = s.Id");
-                builder1.Where("s.id = @SprintId");
+                builder3.Where("s.id = @SprintId");
 
                 var tempStr3 = selector3.RawSql;
 
