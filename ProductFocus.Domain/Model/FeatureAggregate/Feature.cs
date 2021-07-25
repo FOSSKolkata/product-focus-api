@@ -29,12 +29,12 @@ namespace ProductFocus.Domain.Model
         public virtual IReadOnlyList<ScrumDay> ScrumDays => _scrumDays.ToList();
 
         public virtual string Owner { get; private set; }        
-        public virtual DateTime PlannedStartDate { get; private set; }
-        public virtual DateTime PlannedEndDate { get; private set; }
-        public virtual DateTime ActualStartDate { get; private set; }
-        public virtual DateTime ActualEndDate { get; private set; }
+        public virtual DateTime? PlannedStartDate { get; private set; }
+        public virtual DateTime? PlannedEndDate { get; private set; }
+        public virtual DateTime? ActualStartDate { get; private set; }
+        public virtual DateTime? ActualEndDate { get; private set; }
         public virtual int WorkCompletionPercentage { get; private set; }
-        public virtual int StoryPoint { get; private set; }
+        public virtual int? StoryPoint { get; private set; }
         public virtual bool IsBlocked { get; set; }
         public virtual Status Status { get; private set; }
         public virtual long ModuleId { get; private set; }
