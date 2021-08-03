@@ -30,6 +30,8 @@ namespace ProductFocus.Dtos
         public DateTime? PlannedEndDate { get; set; }
         public DateTime? ActualStartDate { get; set; }
         public DateTime? ActualEndDate { get; set; }
+        public string Remarks { get; set; }
+        public bool FunctionalTestability { get; set; }
         public IList<AssigneeDetail> Assignees { get; set; }
         public IList<ScrumDayDto> ScrumDays { get; set; }
     }
