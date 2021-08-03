@@ -111,6 +111,12 @@ namespace ProductFocus.AppServices
                     if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.ActualEndDate)
                         feature.UpdateActualEndDate(command.UpdateFeatureDto.ActualEndDate);
 
+                    if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.Remarks)
+                        feature.UpdateRemarks(command.UpdateFeatureDto.Remarks);
+
+                    if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.FunctionalTestability)
+                        feature.UpdateFunctionalTestability(command.UpdateFeatureDto.FunctionalTestability);
+
                     await _unitOfWork.CompleteAsync();
 
                     _emailService.send();

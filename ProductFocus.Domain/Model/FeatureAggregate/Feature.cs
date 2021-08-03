@@ -14,7 +14,9 @@ namespace ProductFocus.Domain.Model
         public virtual WorkItemType WorkItemType { get; private set;}
         public virtual int UniqueWorkItemNumber { get; private set; }
         public virtual string Description { get; private set; }
-        public string AcceptanceCriteria { get; set; }
+        public virtual string AcceptanceCriteria { get; set; }
+        public virtual string Remarks { get; set; }
+        public virtual bool FunctionalTestability { get; set; }
 
         private readonly IList<UserToFeatureAssignment> _assignees = new List<UserToFeatureAssignment>();
         public virtual IReadOnlyList<UserToFeatureAssignment> Assignees => _assignees.ToList();
@@ -38,8 +40,6 @@ namespace ProductFocus.Domain.Model
         public virtual bool IsBlocked { get; set; }
         public virtual Status Status { get; private set; }
         public virtual long ModuleId { get; private set; }
-
-
         public virtual Module Module { get; private set; }
         public virtual bool IsDeleted { get; set; }
         public virtual Sprint Sprint { get; set; }
@@ -85,6 +85,15 @@ namespace ProductFocus.Domain.Model
         public virtual void UpdateDescription(string description)
         {
             Description = description;
+        }
+
+        public virtual void UpdateRemarks(string remarks)
+        {
+            Remarks = remarks;
+        }
+        public virtual void UpdateFunctionalTestability(bool functionalTestability)
+        {
+            FunctionalTestability = functionalTestability;
         }
 
         public virtual void UpdateWorkCompletionPercentage(int workCompletionPercentage)

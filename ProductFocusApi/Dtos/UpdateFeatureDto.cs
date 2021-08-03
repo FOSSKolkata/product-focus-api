@@ -23,6 +23,8 @@ namespace ProductFocus.Dtos
         public DateTime PlannedEndDate { get; set; }
         public DateTime ActualStartDate { get; set; }
         public DateTime ActualEndDate { get; set; }
+        public string Remarks { get; set; }
+        public bool FunctionalTestability { get; set; }
         public UpdateColumnIdentifier FieldName { get; set; }
     }
 
@@ -41,6 +43,8 @@ namespace ProductFocus.Dtos
         PlannedStartDate = 11,
         PlannedEndDate = 12,
         ActualStartDate = 13,
-        ActualEndDate = 14
+        ActualEndDate = 14,
+        Remarks = 15,
+        FunctionalTestability = 16
     }
 }
