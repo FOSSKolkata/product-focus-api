@@ -7,6 +7,6 @@ namespace ProductFocus.Services
 {
     public interface IEmailService
     {
-        void send();
+        void send(string emailBody, string email);
     }
 }

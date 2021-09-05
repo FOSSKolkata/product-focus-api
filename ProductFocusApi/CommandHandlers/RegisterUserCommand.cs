@@ -48,7 +48,7 @@ namespace ProductFocus.AppServices
 
                     await _unitOfWork.CompleteAsync();
 
-                    _emailService.send();
+                    //_emailService.send();
 
                     return Result.Success();
                 }

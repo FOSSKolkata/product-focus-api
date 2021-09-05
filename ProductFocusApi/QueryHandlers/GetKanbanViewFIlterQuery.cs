@@ -131,7 +131,7 @@ namespace ProductFocus.AppServices
                     kanbanViewList = kanbanViews.ToList();
                 }
 
-                _emailService.send();
+                //_emailService.send();
                 
                 return kanbanViewList;
             }
