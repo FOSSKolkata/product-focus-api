@@ -16,7 +16,7 @@ namespace ProductFocus.Services
                 MailAddress fromAddress = new MailAddress("mail.address@gmail.com");
                 mailMessage.From = fromAddress;
                 mailMessage.To.Add(email);
-                mailMessage.Body = "This is Testing Email Without Configured SMTP Server";
+                mailMessage.Body = emailBody;
                 mailMessage.IsBodyHtml = true;
                 mailMessage.Subject = " Testing Email";
                 SmtpClient smtpClient = new SmtpClient
