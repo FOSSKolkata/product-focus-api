@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MediatR;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -9,32 +10,23 @@ namespace Common
 {
     public abstract class AggregateRoot<TId> : Entity<TId>, IAggregateRoot, IDomainEventManager
     {
+        private List<INotification> _domainEvents;
+        public IReadOnlyCollection<INotification> DomainEvents => _domainEvents?.AsReadOnly();
 
-        private readonly List<IDomainEvent> _domainEvents;
-
-        [NotMapped]
-        public IReadOnlyList<IDomainEvent> DomainEvents
+        public void AddDomainEvent(INotification eventItem)
         {
-            get
-            {
-                return _domainEvents;
-            }
-            private set { }
+            _domainEvents = _domainEvents ?? new List<INotification>();
+            _domainEvents.Add(eventItem);
         }
 
-        public AggregateRoot()
+        public void RemoveDomainEvent(INotification eventItem)
         {
-            _domainEvents = new List<IDomainEvent>();
+            _domainEvents?.Remove(eventItem);
         }
 
-        protected void AddDomainEvent(IDomainEvent newEvent)
+        public void ClearDomainEvents()
         {
-            _domainEvents.Add(newEvent);
-        }
-
-        public virtual void ClearEvents()
-        {
-            _domainEvents.Clear();
+            _domainEvents?.Clear();
         }
     }
 }

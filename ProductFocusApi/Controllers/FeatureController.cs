@@ -8,6 +8,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using ProductFocusApi.CommandHandlers;
+using MediatR;
+using System.Linq;
+using System.Security.Claims;
 
 namespace ProductFocusApi.Controllers
 {
@@ -17,17 +20,24 @@ namespace ProductFocusApi.Controllers
     public class FeatureController : ControllerBase
     {
         private readonly Messages _messages;
-
-        public FeatureController(Messages messages)
+        private readonly IMediator _mediator;
+        
+        
+        public FeatureController(
+            Messages messages,
+            IMediator mediator)
         {
             _messages = messages;
+            _mediator = mediator;
         }
 
 
         [HttpPut]
         public async Task<IActionResult> ModifyFeatureElement([FromBody] UpdateFeatureDto dto)
         {
-            var command = new UpdateFeatureCommand(dto);
+            string objectId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+
+            var command = new UpdateFeatureCommand(dto, objectId);
             Result result = await _messages.Dispatch(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }

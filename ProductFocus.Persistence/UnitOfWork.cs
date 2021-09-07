@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ProductFocus.Persistence
@@ -49,9 +50,9 @@ namespace ProductFocus.Persistence
         {
             return _context.Set<T>();
         }        
-        public async Task<int> CompleteAsync()
+        public async Task<int> CompleteAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await _context.SaveChangesAsync();
+            return await _context.SaveEntitiesAsync(cancellationToken);
         }
 
         public async void Dispose()

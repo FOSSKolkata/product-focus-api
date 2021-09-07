@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MediatR;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,12 @@ namespace Common
 {
     public interface IDomainEventManager
     {
-        IReadOnlyList<IDomainEvent> DomainEvents { get;}
-        void ClearEvents();
+        IReadOnlyCollection<INotification> DomainEvents { get; }
+
+        void AddDomainEvent(INotification eventItem);
+
+        void RemoveDomainEvent(INotification eventItem);
+
+        void ClearDomainEvents();
     }
 }

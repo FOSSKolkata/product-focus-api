@@ -1,5 +1,6 @@
 ﻿using Common;
 using CSharpFunctionalExtensions;
+using ProductFocus.Domain.Events;
 using ProductFocus.Domain.Model.FeatureAggregate;
 using System;
 using System.Collections.Generic;
@@ -110,9 +111,12 @@ namespace ProductFocus.Domain.Model
         {
             StoryPoint = storyPoint;
         }
-        public virtual void UpdateBlockedStatus(bool isBlocked)
+        public virtual void UpdateBlockedStatus(bool isBlocked, long userId)
         {
             IsBlocked = isBlocked;
+
+            if(isBlocked)
+                AddDomainEvent(new WorkItemBlockedDomainEvent(this, userId));
         }
 
         public virtual void UpdateSprint(Sprint sprint)

@@ -26,6 +26,7 @@ namespace ProductFocus.Dtos
         public string Remarks { get; set; }
         public bool FunctionalTestability { get; set; }
         public UpdateColumnIdentifier FieldName { get; set; }
+        public string UserId { get; set; }
     }
 
     public enum UpdateColumnIdentifier

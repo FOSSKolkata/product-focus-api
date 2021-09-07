@@ -113,6 +113,7 @@ namespace ProductFocus.Api
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.RegisterModule(new ApplicationModule());
+            builder.RegisterModule(new MediatorModule());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

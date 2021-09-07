@@ -14,9 +14,11 @@ namespace ProductFocus.AppServices
     {
         public UpdateFeatureDto UpdateFeatureDto { get; }
 
-        public UpdateFeatureCommand(UpdateFeatureDto updateFeatureDto)
+        public string IdpUserId { get; }
+        public UpdateFeatureCommand(UpdateFeatureDto updateFeatureDto, string idpUserId)
         {
             UpdateFeatureDto = updateFeatureDto;
+            IdpUserId = idpUserId;
         }
 
         internal sealed class UpdateFeatureCommandHandler : ICommandHandler<UpdateFeatureCommand>
@@ -48,6 +50,8 @@ namespace ProductFocus.AppServices
 
                 try
                 {
+                    User updatedByUser = _userRepository.GetByIdpUserId(command.IdpUserId);
+
                     if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.Title)
                         feature.UpdateTitle(command.UpdateFeatureDto.Title);
 
@@ -74,7 +78,9 @@ namespace ProductFocus.AppServices
                         feature.UpdateStoryPoint(command.UpdateFeatureDto.StoryPoint);
 
                     if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.IsBlocked)
-                        feature.UpdateBlockedStatus(command.UpdateFeatureDto.IsBlocked);
+                    {
+                        feature.UpdateBlockedStatus(command.UpdateFeatureDto.IsBlocked, updatedByUser.Id);
+                    }
 
                     if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.IncludeAssignee)
                     {
