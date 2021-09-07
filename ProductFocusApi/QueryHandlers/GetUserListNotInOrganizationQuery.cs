@@ -48,7 +48,7 @@ namespace ProductFocus.AppServices
                     })).ToList();
                 }
                 
-                _emailService.send();
+                //_emailService.send();
                 
                 return userList;
             }

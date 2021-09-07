@@ -77,7 +77,7 @@ namespace ProductFocus.AppServices
                     featureDetails = featureInformation.SingleOrDefault();
                 }
                 
-                _emailService.send();                
+                //_emailService.send();                
 
                 return featureDetails;
             }

@@ -42,7 +42,7 @@ namespace ProductFocus.AppServices
                     product.AddModule(command.Name);
                     await _unitOfWork.CompleteAsync();
                 
-                    _emailService.send();
+                    //_emailService.send();
                     
                     return Result.Success();
                 }

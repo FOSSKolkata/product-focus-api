@@ -25,18 +25,19 @@ namespace ProductFocus.AppServices
             private readonly IOrganizationRepository _organizationRepository;
             private readonly IUserRepository _userRepository;
             private readonly IUnitOfWork _unitOfWork;
-            
+            private readonly IEmailService _emailService;
 
             public SendInvitationCommandHandler(
                 IInvitationRepository invitationRepository,
                 IOrganizationRepository organizationRepository,
                 IUserRepository userRepository,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork, IEmailService emailService)
             {
                 _invitationRepository = invitationRepository;
                 _organizationRepository = organizationRepository;
                 _userRepository = userRepository;
-                _unitOfWork = unitOfWork;                
+                _unitOfWork = unitOfWork;
+                _emailService = emailService;
             }
             public async Task<Result> Handle(SendInvitationCommand command)
             {
@@ -65,7 +66,17 @@ namespace ProductFocus.AppServices
                     var invitation = Invitation.CreateInstance(existingOrganization, command.Email);
                     _invitationRepository.AddInvitation(invitation);           
                     
-                    await _unitOfWork.CompleteAsync();                    
+                    await _unitOfWork.CompleteAsync();
+
+                    Invitation newActiveInvitation = _invitationRepository.GetActiveInvitation(existingOrganization, command.Email);
+
+                    string emailBody = $@"
+                    Hi,
+                    You are invited to join {existingOrganization.Name} on Product Focus by...
+                    Click on following link to accept the invitation: 
+                    http://localhost:4200/#/invitation?iid={newActiveInvitation.Id}";
+
+                    _emailService.send(emailBody, command.Email);
 
                     return Result.Success();
                 }
