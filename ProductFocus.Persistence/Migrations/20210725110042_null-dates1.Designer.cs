@@ -10,8 +10,8 @@ using ProductFocus.Persistence;
 namespace ProductFocus.Persistence.Migrations
 {
     [DbContext(typeof(ProductFocusDbContext))]
-    [Migration("20210521112557_feature-entity-update-21-5")]
-    partial class featureentityupdate215
+    [Migration("20210725110042_null-dates1")]
+    partial class nulldates1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,10 +28,13 @@ namespace ProductFocus.Persistence.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("ActualEndDate")
+                    b.Property<string>("AcceptanceCriteria")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ActualEndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("ActualStartDate")
+                    b.Property<DateTime?>("ActualStartDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
@@ -67,10 +70,10 @@ namespace ProductFocus.Persistence.Migrations
                     b.Property<string>("Owner")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("PlannedEndDate")
+                    b.Property<DateTime?>("PlannedEndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("PlannedStartDate")
+                    b.Property<DateTime?>("PlannedStartDate")
                         .HasColumnType("datetime2");
 
                     b.Property<long?>("SprintId")
@@ -79,7 +82,7 @@ namespace ProductFocus.Persistence.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<int>("StoryPoint")
+                    b.Property<int?>("StoryPoint")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -101,6 +104,44 @@ namespace ProductFocus.Persistence.Migrations
                     b.HasIndex("SprintId");
 
                     b.ToTable("Features");
+                });
+
+            modelBuilder.Entity("ProductFocus.Domain.Model.FeatureAggregate.ScrumDay", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("FeatureId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("LastModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ScrumDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("WorkCompletionPercentage")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FeatureId");
+
+                    b.ToTable("ScrumDay");
                 });
 
             modelBuilder.Entity("ProductFocus.Domain.Model.FeatureComment", b =>
@@ -133,6 +174,50 @@ namespace ProductFocus.Persistence.Migrations
                     b.HasIndex("FeatureId");
 
                     b.ToTable("FeatureComments");
+                });
+
+            modelBuilder.Entity("ProductFocus.Domain.Model.Invitation", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("ActionedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("InvitedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("LastModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("LastResentOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("OrganizationId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrganizationId");
+
+                    b.ToTable("Invitations");
                 });
 
             modelBuilder.Entity("ProductFocus.Domain.Model.Member", b =>
@@ -381,10 +466,15 @@ namespace ProductFocus.Persistence.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<long>("ProductId")
+                        .HasColumnType("bigint");
+
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("Sprint");
                 });
@@ -443,9 +533,6 @@ namespace ProductFocus.Persistence.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("FeatureId")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -460,9 +547,41 @@ namespace ProductFocus.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("ProductFocus.Domain.Model.UserToFeatureAssignment", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("FeatureId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("LastModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
                     b.HasIndex("FeatureId");
 
-                    b.ToTable("Users");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserToFeatureAssignments");
                 });
 
             modelBuilder.Entity("ProductFocus.Domain.Model.Feature", b =>
@@ -482,6 +601,17 @@ namespace ProductFocus.Persistence.Migrations
                     b.Navigation("Sprint");
                 });
 
+            modelBuilder.Entity("ProductFocus.Domain.Model.FeatureAggregate.ScrumDay", b =>
+                {
+                    b.HasOne("ProductFocus.Domain.Model.Feature", "Feature")
+                        .WithMany("ScrumDays")
+                        .HasForeignKey("FeatureId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Feature");
+                });
+
             modelBuilder.Entity("ProductFocus.Domain.Model.FeatureComment", b =>
                 {
                     b.HasOne("ProductFocus.Domain.Model.Feature", "Feature")
@@ -491,6 +621,15 @@ namespace ProductFocus.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Feature");
+                });
+
+            modelBuilder.Entity("ProductFocus.Domain.Model.Invitation", b =>
+                {
+                    b.HasOne("ProductFocus.Domain.Model.Organization", "Organization")
+                        .WithMany()
+                        .HasForeignKey("OrganizationId");
+
+                    b.Navigation("Organization");
                 });
 
             modelBuilder.Entity("ProductFocus.Domain.Model.Member", b =>
@@ -550,6 +689,17 @@ namespace ProductFocus.Persistence.Migrations
                     b.Navigation("Role");
                 });
 
+            modelBuilder.Entity("ProductFocus.Domain.Model.Sprint", b =>
+                {
+                    b.HasOne("ProductFocus.Domain.Model.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("ProductFocus.Domain.Model.Task", b =>
                 {
                     b.HasOne("ProductFocus.Domain.Model.Feature", "Feature")
@@ -561,11 +711,19 @@ namespace ProductFocus.Persistence.Migrations
                     b.Navigation("Feature");
                 });
 
-            modelBuilder.Entity("ProductFocus.Domain.Model.User", b =>
+            modelBuilder.Entity("ProductFocus.Domain.Model.UserToFeatureAssignment", b =>
                 {
-                    b.HasOne("ProductFocus.Domain.Model.Feature", null)
+                    b.HasOne("ProductFocus.Domain.Model.Feature", "Feature")
                         .WithMany("Assignees")
                         .HasForeignKey("FeatureId");
+
+                    b.HasOne("ProductFocus.Domain.Model.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Feature");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ProductFocus.Domain.Model.Feature", b =>
@@ -573,6 +731,8 @@ namespace ProductFocus.Persistence.Migrations
                     b.Navigation("Assignees");
 
                     b.Navigation("FeatureComments");
+
+                    b.Navigation("ScrumDays");
 
                     b.Navigation("Tasks");
                 });

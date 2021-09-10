@@ -22,7 +22,7 @@ namespace ProductFocus.Services
                 SmtpClient smtpClient = new SmtpClient
                 {
                     DeliveryMethod = SmtpDeliveryMethod.SpecifiedPickupDirectory,
-                    PickupDirectoryLocation = @"C:\My Work\Product Focus"
+                    PickupDirectoryLocation = @"D:\mail"
                 };
                 smtpClient.Host = "localhost";
                 smtpClient.Send(mailMessage);
