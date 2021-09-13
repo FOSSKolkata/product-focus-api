@@ -116,7 +116,7 @@ namespace ProductFocus.Domain.Model
             IsBlocked = isBlocked;
 
             if(isBlocked)
-                AddDomainEvent(new WorkItemBlockedDomainEvent(this, userId));
+                AddDomainEvent(new WorkItemBlockedDomainEvent(this, userId, Module.ProductId));
         }
 
         public virtual void UpdateSprint(Sprint sprint)

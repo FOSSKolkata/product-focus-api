@@ -12,11 +12,13 @@ namespace ProductFocus.Domain.Events
     {
         public Feature Feature { get; }
         public long EventTriggeredBy { get; }
+        public long ProductId { get; }
 
-        public WorkItemBlockedDomainEvent(Feature feature, long eventTriggedBy)
+        public WorkItemBlockedDomainEvent(Feature feature, long eventTriggedBy, long productId)
         {
             Feature = feature;
             EventTriggeredBy = eventTriggedBy;
+            ProductId = productId;
         }
     }
 }
