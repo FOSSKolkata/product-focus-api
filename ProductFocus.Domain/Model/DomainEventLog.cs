@@ -11,18 +11,20 @@ namespace ProductFocus.Domain.Model
     {
 
         private WorkItemDomainEventLog() { }
-        public WorkItemDomainEventLog(string eventTypeName, string domainEventJson, long moduleId, string eventTriggedBy)
+        public WorkItemDomainEventLog(string eventTypeName, string domainEventJson, long moduleId, string eventTriggedBy, long productId)
         {
             EventTypeName = eventTypeName;
             DomainEventJson = domainEventJson;
             ModuleId = moduleId;
             CreatedOn = DateTime.UtcNow;
             CreatedBy = eventTriggedBy;
+            ProductId = productId;
         }
 
         public string EventTypeName { get; private set; }
         public string DomainEventJson { get; private set; }
         public virtual long ModuleId { get; private set; }
+        public virtual long ProductId { get; private set; }
 
     }
 }
