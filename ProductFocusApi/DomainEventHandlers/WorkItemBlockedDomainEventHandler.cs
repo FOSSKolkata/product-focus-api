@@ -26,7 +26,7 @@ namespace ProductFocusApi.DomainEventHandlers
         }
 
 
-        public async System.Threading.Tasks.Task Handle(WorkItemBlockedDomainEvent workItemMarkedAsBlockedDomainEvent, CancellationToken cancellationToken)
+        public System.Threading.Tasks.Task Handle(WorkItemBlockedDomainEvent workItemMarkedAsBlockedDomainEvent, CancellationToken cancellationToken)
         {
             // Log the event in log table 
 
@@ -36,7 +36,7 @@ namespace ProductFocusApi.DomainEventHandlers
 
             _domainEventLogRepository.AddDomainEventLog(workItemDomainEventLog);
 
-            await _unitOfWork.CompleteAsync(cancellationToken);
+            return System.Threading.Tasks.Task.CompletedTask;
         }
     }
 }
