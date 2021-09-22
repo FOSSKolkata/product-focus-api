@@ -32,5 +32,9 @@ namespace ProductFocus.Persistence.Repositories
         {
             _unitOfWork.Insert<User>(user);
         }
+        public User GetById(long id)
+        {
+            return _unitOfWork.Query<User>().SingleOrDefault(x => x.Id == id);
+        }
     }
 }
