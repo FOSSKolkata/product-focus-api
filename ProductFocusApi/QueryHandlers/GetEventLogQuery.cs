@@ -16,19 +16,19 @@ namespace ProductFocus.AppServices
         public long ProductId { get; set; }
         public IList<long> ModuleIds { get; set; }
         public IList<long> UserIds { get; set; }
-        public long Offset { get; set; }
+        public long RecordOffset { get; set; }
         public long Count { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
-        public GetDomainEventLogQuery(long productId, IList<long> moduleIds, IList<long> userIds, long offset, long count, DateTime startDate, DateTime endDate)
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public GetDomainEventLogQuery(long productId, IList<long> moduleIds, IList<long> userIds, long recordOffset, long count, DateTime? startDate, DateTime? endDate)
         {
             ProductId = productId;
             ModuleIds = moduleIds;
             UserIds = userIds;
-            Offset = offset;
-            Count = count;
             StartDate = startDate;
             EndDate = endDate;
+            RecordOffset = recordOffset;
+            Count = count;
         }
         internal sealed class GetDomainEventLogQueryHandler : IQueryHandler<GetDomainEventLogQuery, List<GetDomainEventLogDto>>
         {
@@ -48,9 +48,9 @@ namespace ProductFocus.AppServices
                     builder.Where("ModuleId in @ModuleIds");
                 if (query.UserIds != null && query.UserIds.Count() > 0)
                     builder.Where("CreatedById in @UserIds");
-                if (query.StartDate.Year != 1 && query.EndDate.Year != 1)
+                if (query.StartDate != null && query.EndDate != null)
                     builder.Where("CreatedOn BETWEEN @StartDate AND @EndDate");
-                builder.OrderBy("CreatedOn DESC offset @Offset rows fetch next @Count rows only");
+                builder.OrderBy("CreatedOn DESC offset @RecordOffset rows fetch next @Count rows only");
 
                 string sql = sqlBuilder.RawSql + @";
                         SELECT wi.Id as EventId, u.Id, u.Name, u.Email FROM Features f 
@@ -68,10 +68,10 @@ namespace ProductFocus.AppServices
                         ProductId = query.ProductId,
                         ModuleIds = query.ModuleIds,
                         UserIds = query.UserIds,
-                        Offset = query.Offset,
+                        RecordOffset = query.RecordOffset,
                         Count = query.Count,
                         StartDate = query.StartDate,
-                        EndDate = query.EndDate.AddDays(1)
+                        EndDate = query.EndDate?.AddDays(1)
                     });
 
                     eventLogList = (await result.ReadAsync<GetDomainEventLogDto>()).ToList();

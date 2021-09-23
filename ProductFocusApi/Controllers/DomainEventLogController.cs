@@ -11,7 +11,7 @@ namespace ProductFocusApi.Controllers
 {
     [ApiController]
     [Route("[Controller]/[Action]")]
-    //[Authorize]
+    [Authorize]
     public class DomainEventLogController : ControllerBase
     {
         private readonly Messages _messages;
@@ -21,7 +21,7 @@ namespace ProductFocusApi.Controllers
         }
 
         [HttpGet("{productId}/{offset}/{count}/query")]
-        public async Task<IActionResult> GetEventLog(long productId, long offset, long count, DateTime startDate, DateTime endDate, [FromQuery] IList<long> moduleIds, [FromQuery] IList<long> userIds)
+        public async Task<IActionResult> GetEventLog(long productId, long offset, long count, DateTime? startDate, DateTime? endDate, [FromQuery] IList<long> moduleIds, [FromQuery] IList<long> userIds)
         {
             List<GetDomainEventLogDto> eventLog = await _messages.Dispatch(new GetDomainEventLogQuery(productId,moduleIds,userIds,offset,count,startDate,endDate));
             return Ok(eventLog);
