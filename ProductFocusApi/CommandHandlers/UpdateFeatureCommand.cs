@@ -53,13 +53,13 @@ namespace ProductFocus.AppServices
                     User updatedByUser = _userRepository.GetByIdpUserId(command.IdpUserId);
 
                     if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.Title)
-                        feature.UpdateTitle(command.UpdateFeatureDto.Title);
+                        feature.UpdateTitle(command.UpdateFeatureDto.Title, updatedByUser.Id, feature.Title);
 
                     if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.Description)
-                        feature.UpdateDescription(command.UpdateFeatureDto.Description);
+                        feature.UpdateDescription(command.UpdateFeatureDto.Description, updatedByUser.Id, feature.Description);
 
                     if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.WorkCompletionPercentage)
-                        feature.UpdateWorkCompletionPercentage(command.UpdateFeatureDto.WorkCompletionPercentage);
+                        feature.UpdateWorkCompletionPercentage(command.UpdateFeatureDto.WorkCompletionPercentage, updatedByUser.Id, feature.WorkCompletionPercentage);
 
                     if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.Status)
                         feature.UpdateStatus(command.UpdateFeatureDto.Status);
@@ -70,12 +70,11 @@ namespace ProductFocus.AppServices
 
                         if (sprintDetails == null)
                             return Result.Failure($"Sprint with name '{command.UpdateFeatureDto.SprintName}' doesn't exist");
-
-                        feature.UpdateSprint(sprintDetails);
+                        feature.UpdateSprint(sprintDetails, updatedByUser.Id, feature.Sprint.Name);
                     }
 
                     if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.StoryPoint)
-                        feature.UpdateStoryPoint(command.UpdateFeatureDto.StoryPoint);
+                        feature.UpdateStoryPoint(command.UpdateFeatureDto.StoryPoint, updatedByUser.Id, feature.StoryPoint);
 
                     if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.IsBlocked)
                     {
@@ -89,7 +88,7 @@ namespace ProductFocus.AppServices
                         if (userDetails == null)
                             return Result.Failure($"User with email '{command.UpdateFeatureDto.EmailOfAssignee}' doesn't exist");
 
-                        feature.IncludeAssignee(userDetails);
+                        feature.IncludeAssignee(userDetails, updatedByUser.Id, command.UpdateFeatureDto.EmailOfAssignee);
                     }
 
                     if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.ExcludeAssignee)
@@ -99,17 +98,17 @@ namespace ProductFocus.AppServices
                         if (userDetails == null)
                             return Result.Failure($"User with email '{command.UpdateFeatureDto.EmailOfAssignee}' doesn't exist");
 
-                        feature.ExcludeAssignee(userDetails);
+                        feature.ExcludeAssignee(userDetails, updatedByUser.Id, command.UpdateFeatureDto.EmailOfAssignee);
                     }
 
                     if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.AcceptanceCriteria)
                         feature.UpdateAcceptanceCriteria(command.UpdateFeatureDto.AcceptanceCriteria);
 
                     if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.PlannedStartDate)
-                        feature.UpdatePlannedStartDate(command.UpdateFeatureDto.PlannedStartDate);
+                        feature.UpdatePlannedStartDate(command.UpdateFeatureDto.PlannedStartDate, updatedByUser.Id, feature.PlannedStartDate);
 
                     if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.PlannedEndDate)
-                        feature.UpdatePlannedEndDate(command.UpdateFeatureDto.PlannedEndDate);
+                        feature.UpdatePlannedEndDate(command.UpdateFeatureDto.PlannedEndDate, updatedByUser.Id, feature.PlannedEndDate);
 
                     if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.ActualStartDate)
                         feature.UpdateActualStartDate(command.UpdateFeatureDto.ActualStartDate);

@@ -20,7 +20,8 @@ namespace ProductFocus.AppServices
         public long Count { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
-        public GetDomainEventLogQuery(long productId, IList<long> moduleIds, IList<long> userIds, long recordOffset, long count, DateTime? startDate, DateTime? endDate)
+        public string EventType { get; set; }
+        public GetDomainEventLogQuery(long productId, IList<long> moduleIds, IList<long> userIds, long recordOffset, long count, DateTime? startDate, DateTime? endDate, string eventType)
         {
             ProductId = productId;
             ModuleIds = moduleIds;
@@ -29,6 +30,7 @@ namespace ProductFocus.AppServices
             EndDate = endDate;
             RecordOffset = recordOffset;
             Count = count;
+            EventType = eventType;
         }
         internal sealed class GetDomainEventLogQueryHandler : IQueryHandler<GetDomainEventLogQuery, List<GetDomainEventLogDto>>
         {
@@ -44,6 +46,8 @@ namespace ProductFocus.AppServices
                 var builder = new SqlBuilder();
                 var sqlBuilder = builder.AddTemplate("SELECT Id, EventTypeName, DomainEventJson, ModuleId, ProductId, CreatedOn, CreatedBy, ModuleName from Workitemdomaineventlogs /**where**/ /**orderby**/");
                 builder.Where("ProductId = @ProductId");
+                if (query.EventType != null && query.EventType != string.Empty)
+                    builder.Where("EventTypeName = @EventType");
                 if (query.ModuleIds != null && query.ModuleIds.Count() > 0)
                     builder.Where("ModuleId in @ModuleIds");
                 if (query.UserIds != null && query.UserIds.Count() > 0)
@@ -71,7 +75,8 @@ namespace ProductFocus.AppServices
                         RecordOffset = query.RecordOffset,
                         Count = query.Count,
                         StartDate = query.StartDate,
-                        EndDate = query.EndDate?.AddDays(1)
+                        EndDate = query.EndDate?.AddDays(1),
+                        EventType = query.EventType
                     });
 
                     eventLogList = (await result.ReadAsync<GetDomainEventLogDto>()).ToList();

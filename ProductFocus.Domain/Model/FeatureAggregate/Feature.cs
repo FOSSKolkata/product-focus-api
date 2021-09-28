@@ -78,14 +78,16 @@ namespace ProductFocus.Domain.Model
             return feature;
         }
 
-        public virtual void UpdateTitle(string title)
+        public virtual void UpdateTitle(string title, long userId, string previousTitle)
         {
             Title = title;
+            AddDomainEvent(new WorkItemTitleChangedDomainEvent(this, userId, Module.ProductId, previousTitle, title));
         }
 
-        public virtual void UpdateDescription(string description)
+        public virtual void UpdateDescription(string description, long userId, string previousDescription)
         {
             Description = description;
+            AddDomainEvent(new WorkItemDescriptionChangedDomainEvent(this, userId, Module.ProductId, previousDescription, description));
         }
 
         public virtual void UpdateRemarks(string remarks)
@@ -97,9 +99,10 @@ namespace ProductFocus.Domain.Model
             FunctionalTestability = functionalTestability;
         }
 
-        public virtual void UpdateWorkCompletionPercentage(int workCompletionPercentage)
+        public virtual void UpdateWorkCompletionPercentage(int workCompletionPercentage, long userId, long oldWorkPercentage)
         {
             WorkCompletionPercentage = workCompletionPercentage;
+            AddDomainEvent(new WorkInProgressDomainEvent(this, userId, Module.ProductId, oldWorkPercentage, workCompletionPercentage));
         }
 
         public virtual void UpdateStatus(Status status)
@@ -107,9 +110,10 @@ namespace ProductFocus.Domain.Model
             Status = status;
         }
 
-        public virtual void UpdateStoryPoint(int storyPoint)
+        public virtual void UpdateStoryPoint(int storyPoint, long userId, long? previousStoryPoint)
         {
             StoryPoint = storyPoint;
+            AddDomainEvent(new WorkItemStoryPointChangedDomainEvent(this, userId, Module.ProductId, previousStoryPoint, storyPoint));
         }
         public virtual void UpdateBlockedStatus(bool isBlocked, long userId)
         {
@@ -119,9 +123,10 @@ namespace ProductFocus.Domain.Model
                 AddDomainEvent(new WorkItemBlockedDomainEvent(this, userId, Module.ProductId));
         }
 
-        public virtual void UpdateSprint(Sprint sprint)
+        public virtual void UpdateSprint(Sprint sprint, long userId, string previousSprintName)
         {
             Sprint = sprint;
+            AddDomainEvent(new AddWorkItemToSprintDomainEvent(this, userId, Module.ProductId, previousSprintName, sprint.Name));
         }
 
         public virtual void UpdateAcceptanceCriteria(string acceptanceCriteria)
@@ -129,25 +134,29 @@ namespace ProductFocus.Domain.Model
             AcceptanceCriteria = acceptanceCriteria;
         }
 
-        public virtual void IncludeAssignee(User user)
+        public virtual void IncludeAssignee(User user, long userId, string email)
         {
             UserToFeatureAssignment newAssignee = UserToFeatureAssignment.CreateInstance(this, user);
             _assignees.Add(newAssignee);
+            AddDomainEvent(new AddOwnerToWorkItemDomainEvent(this, userId, Module.ProductId, user.Name, email));
         }
 
-        public virtual void ExcludeAssignee(User user)
+        public virtual void ExcludeAssignee(User user, long userId, string email)
         {
             UserToFeatureAssignment assigneeToExclude = Assignees.SingleOrDefault(x => x.User == user);
             _assignees.Remove(assigneeToExclude);
+            AddDomainEvent(new RemoveOwnerFromWorkItemDomainEvent(this, userId, Module.ProductId, user.Name, email));
         }
 
-        public virtual void UpdatePlannedStartDate(DateTime plannedStartDate)
+        public virtual void UpdatePlannedStartDate(DateTime plannedStartDate, long userId, DateTime? previousEndDate)
         {
             PlannedStartDate = plannedStartDate;
+            AddDomainEvent(new WorkItemStartDateChangedDomainEvent(this, userId, Module.ProductId, previousEndDate, plannedStartDate));
         }
-        public virtual void UpdatePlannedEndDate(DateTime plannedEndDate)
+        public virtual void UpdatePlannedEndDate(DateTime plannedEndDate, long userId, DateTime? previousEndDate)
         {
             PlannedEndDate = plannedEndDate;
+            AddDomainEvent(new WorkItemEndDateChangedDomainEvent(this, userId, Module.ProductId, previousEndDate, plannedEndDate));
         }
         public virtual void UpdateActualStartDate(DateTime actualStartDate)
         {
