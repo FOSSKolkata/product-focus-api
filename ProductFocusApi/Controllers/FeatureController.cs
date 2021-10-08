@@ -11,6 +11,9 @@ using ProductFocusApi.CommandHandlers;
 using MediatR;
 using System.Linq;
 using System.Security.Claims;
+using ProductFocusApi.Dtos;
+using ProductFocus.Domain.Model;
+using ProductFocusApi.QueryHandlers;
 
 namespace ProductFocusApi.Controllers
 {
@@ -62,6 +65,21 @@ namespace ProductFocusApi.Controllers
         {
             GetFeatureDetailsDto featureDetails = await _messages.Dispatch(new GetFeatureDetailsQuery(orgid, id));
             return Ok(featureDetails);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateFeaturesOrdering([FromBody] OrderingInfoDto dto)
+        {
+            var command = new UpdateFeatureOrderCommand(dto);
+            Result result = await _messages.Dispatch(command);
+            return result.IsSuccess ? Ok() : BadRequest(result.Error);
+        }
+
+        [HttpGet("{prodId}/{sprintId}/{category}")]
+        public async Task<IActionResult> GetFeatureOrderingByProductIdAndCategory(long prodId, long sprintId, OrderingCategoryEnum category)
+        {
+            List<FeatureOrderDto> featureOrder = await _messages.Dispatch(new GetFeatureOrderingByProductIdAndCategoryQuery(prodId, sprintId, category));
+            return Ok(featureOrder);
         }
     }
 }

@@ -35,6 +35,7 @@ namespace ProductFocus.Persistence
         public DbSet<User> Users { get; set; }
         public DbSet<Invitation> Invitations { get; set; }
         public DbSet<WorkItemDomainEventLog> WorkItemDomainEventLogs { get; set; }
+        public DbSet<FeatureOrdering> FeatureOrders { get; set; }
 
         private readonly IMediator _mediator;
 

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using System.Linq;
 using System.Security.Claims;
+using ProductFocus.Domain.Model;
 
 namespace ProductFocusApi.Controllers
 {
@@ -48,11 +49,11 @@ namespace ProductFocusApi.Controllers
             return Ok(kanbanViewList);
         }
 
-        [HttpGet("{id}/query")]
-        public async Task<IActionResult> GetKanbanViewByProductIdAndQuery(long id, [FromQuery] long SprintId, [FromQuery] List<long> UserIds)
+        [HttpGet("{id}/{orderingCategory}/query")]
+        public async Task<IActionResult> GetKanbanViewByProductIdAndQuery(long id, OrderingCategoryEnum orderingCategory, [FromQuery] long SprintId, [FromQuery] List<long> UserIds)
         {           
             string objectId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            List<GetKanbanViewDto> kanbanViewList = await _messages.Dispatch(new GetKanbanViewFilterQuery(id, objectId, SprintId, UserIds));
+            List<GetKanbanViewDto> kanbanViewList = await _messages.Dispatch(new GetKanbanViewFilterQuery(id, orderingCategory, objectId, SprintId, UserIds));
             return Ok(kanbanViewList);
         }
     }

@@ -8,6 +8,7 @@ using Microsoft.Data.SqlClient;
 using ProductFocus.ConnectionString;
 using ProductFocus.Services;
 using System.Threading.Tasks;
+using ProductFocus.Domain.Model;
 
 namespace ProductFocus.AppServices
 {
@@ -17,10 +18,12 @@ namespace ProductFocus.AppServices
         public long Id { get; }
         public long SprintId { get; set; }
         public IList<long> UserIds { get; set; }
+        public long OrderingCategoryNum { get; set; }
 
-        public GetKanbanViewFilterQuery(long id, string objectId, long sprintId, IList<long> userIds)
+        public GetKanbanViewFilterQuery(long id, OrderingCategoryEnum orderingCategory, string objectId, long sprintId, IList<long> userIds)
         {
             Id = id;
+            OrderingCategoryNum = ((long)orderingCategory);
             ObjectId = objectId;
             SprintId = sprintId;
             UserIds = userIds;
@@ -46,12 +49,13 @@ namespace ProductFocus.AppServices
                     where ObjectId = @ObjectId";
 
                 var builder1 = new SqlBuilder();
-                var selector1 = builder1.AddTemplate("SELECT distinct f.Id, ModuleId, Title, SprintId, s.Name, StoryPoint, WorkCompletionPercentage, Status, IsBlocked, WorkItemType, PlannedStartDate, PlannedEndDate, ActualStartDate, ActualEndDate, Remarks, FunctionalTestability from Features f /**innerjoin**/ /**where**/");
+                var selector1 = builder1.AddTemplate("SELECT distinct f.Id, ModuleId, Title, f.SprintId, s.Name, StoryPoint, WorkCompletionPercentage, Status, IsBlocked, WorkItemType, PlannedStartDate, PlannedEndDate, ActualStartDate, ActualEndDate, Remarks, fo.OrderNumber, FunctionalTestability from Features f /**innerjoin**/ /**leftjoin**/ /**where**/");
                 builder1.InnerJoin("Sprint s ON f.SprintId = s.Id");
                 builder1.InnerJoin("Modules m ON f.ModuleId = m.Id");
                 builder1.InnerJoin("Products p ON m.ProductId = p.Id");
                 if (query.UserIds != null && query.UserIds.Count()>0)
                     builder1.InnerJoin("UserToFeatureAssignments uf ON f.Id = uf.FeatureId");
+                builder1.LeftJoin("FeatureOrders fo ON fo.FeatureId = f.Id AND fo.SprintId = @SprintId AND fo.OrderingCategory = @OrderingCategory");
                 builder1.Where("p.id = @PrdId");
                 builder1.Where("s.id = @SprintId");
                 if (query.UserIds != null && query.UserIds.Count() > 0)
@@ -106,7 +110,8 @@ namespace ProductFocus.AppServices
                         PrdId = query.Id,
                         UserId = userId,
                         SprintId = query.SprintId,
-                        UserIds = query.UserIds
+                        UserIds = query.UserIds,
+                        OrderingCategory = query.OrderingCategoryNum
                     });
 
                     

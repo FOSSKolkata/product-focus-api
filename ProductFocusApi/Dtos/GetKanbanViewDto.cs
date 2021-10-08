@@ -25,6 +25,7 @@ namespace ProductFocus.Dtos
         public int WorkCompletionPercentage { get; set; }
         public Status Status { get; set; }
         public bool IsBlocked { get; set; }
+        public long OrderNumber { get; set; }
         public WorkItemType WorkItemType { get; set; }
         public DateTime? PlannedStartDate { get; set; }
         public DateTime? PlannedEndDate { get; set; }
