@@ -25,6 +25,11 @@ namespace ProductFocus.Persistence.Repositories
             return await _unitOfWork.Query<FeatureOrdering>().Where(x => x.FeatureId == id && x.OrderingCategory == order && x.SprintId == sprintId).SingleOrDefaultAsync();
         }
 
+        public async Task<List<FeatureOrdering>> GetByCategoryAndSprint(OrderingCategoryEnum order, long sprintId)
+        {
+            return await _unitOfWork.Query<FeatureOrdering>().Where(x => x.OrderingCategory == order && x.SprintId == sprintId).ToListAsync();
+        }
+
         public void Remove(FeatureOrdering featureOrder)
         {
             _unitOfWork.Remove(featureOrder);

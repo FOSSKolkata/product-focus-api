@@ -31,13 +31,13 @@ namespace ProductFocusApi.CommandHandlers
             {
                 try
                 {
+                    List<FeatureOrdering> orderList = await _featureOrderRepository.GetByCategoryAndSprint(command.OrderingInfo.OrderingCategory, command.OrderingInfo.SprintId);
+                    foreach(var order in orderList)
+                    {
+                        _featureOrderRepository.Remove(order);
+                    }
                     foreach (var featureOrder in command.OrderingInfo.featuresOrder)
                     {
-                        FeatureOrdering order = await _featureOrderRepository.GetByFeatureIdAndCategory(featureOrder.FeatureId, command.OrderingInfo.SprintId, command.OrderingInfo.OrderingCategory);
-                        if (order != null)
-                        {
-                            _featureOrderRepository.Remove(order);
-                        }
                         var newFeatureOrder = FeatureOrdering.CreateInstance(featureOrder.FeatureId, featureOrder.OrderNumber, command.OrderingInfo.SprintId, command.OrderingInfo.OrderingCategory);
                         _featureOrderRepository.Add(newFeatureOrder);
                     }
