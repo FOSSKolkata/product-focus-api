@@ -9,7 +9,5 @@ namespace ProductFocus.Dtos
     public sealed class RejectInvitationDto
     {
         public long InvitationId { get; set; }
-        public long OrgId { get; set; }
-        public string Email { get; set; }                
     }
 }
