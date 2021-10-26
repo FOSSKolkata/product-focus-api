@@ -70,7 +70,7 @@ namespace ProductFocusApi.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateFeaturesOrdering([FromBody] OrderingInfoDto dto)
         {
-            var command = new UpdateFeatureOrderCommand(dto);
+            var command = new UpdateFeatureOrderingCommand(dto);
             Result result = await _messages.Dispatch(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }

@@ -28,17 +28,20 @@ namespace ProductFocus.AppServices
             private readonly IUserRepository _userRepository;
             private readonly IUnitOfWork _unitOfWork;
             private readonly IEmailService _emailService;
+            private readonly IFeatureOrderRepository _featureOrderingRepository;
 
             public UpdateFeatureCommandHandler(
                 IProductRepository productRepository, IFeatureRepository featureRepository,
                 ISprintRepository sprintRepository, IUserRepository userRepository, 
-                IUnitOfWork unitOfWork, IEmailService emailService)
+                IUnitOfWork unitOfWork, IEmailService emailService,
+                IFeatureOrderRepository featureOrderRepository)
             {                
                 _featureRepository = featureRepository;
                 _sprintRepository = sprintRepository;
                 _userRepository = userRepository;
                 _unitOfWork = unitOfWork;
                 _emailService = emailService;
+                _featureOrderingRepository = featureOrderRepository;
             }
             public async Task<Result> Handle(UpdateFeatureCommand command)
             {
@@ -66,11 +69,17 @@ namespace ProductFocus.AppServices
 
                     if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.Sprint)
                     {
-                        Sprint sprintDetails = _sprintRepository.GetByName(command.UpdateFeatureDto.SprintName);
+                        Sprint currentSprint = _sprintRepository.GetByName(command.UpdateFeatureDto.SprintName);
 
-                        if (sprintDetails == null)
+                        if (currentSprint == null)
                             return Result.Failure($"Sprint with name '{command.UpdateFeatureDto.SprintName}' doesn't exist");
-                        feature.UpdateSprint(sprintDetails, updatedByUser.Id, feature.Sprint.Name);
+                        feature.UpdateSprint(currentSprint, updatedByUser.Id, feature.Sprint);
+
+                        List<FeatureOrdering> featureOrderings = await _featureOrderingRepository.GetByIdAndSprint(feature.Id, feature.Sprint.Id);
+                        foreach (var featureOrdering in featureOrderings)
+                        {
+                            featureOrdering.UpdateSprint(currentSprint.Id);
+                        }
                     }
 
                     if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.StoryPoint)

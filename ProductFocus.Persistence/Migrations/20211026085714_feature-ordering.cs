@@ -8,7 +8,7 @@ namespace ProductFocus.Persistence.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "FeatureOrders",
+                name: "FeatureOrderings",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -24,9 +24,9 @@ namespace ProductFocus.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FeatureOrders", x => x.Id);
+                    table.PrimaryKey("PK_FeatureOrderings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_FeatureOrders_Features_FeatureId",
+                        name: "FK_FeatureOrderings_Features_FeatureId",
                         column: x => x.FeatureId,
                         principalTable: "Features",
                         principalColumn: "Id",
@@ -34,15 +34,15 @@ namespace ProductFocus.Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_FeatureOrders_FeatureId",
-                table: "FeatureOrders",
+                name: "IX_FeatureOrderings_FeatureId",
+                table: "FeatureOrderings",
                 column: "FeatureId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "FeatureOrders");
+                name: "FeatureOrderings");
         }
     }
 }

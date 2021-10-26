@@ -123,10 +123,10 @@ namespace ProductFocus.Domain.Model
                 AddDomainEvent(new WorkItemBlockedDomainEvent(this, userId, Module.ProductId));
         }
 
-        public virtual void UpdateSprint(Sprint sprint, long userId, string previousSprintName)
+        public virtual void UpdateSprint(Sprint currentSprint, long userId, Sprint previousSprint)
         {
-            Sprint = sprint;
-            AddDomainEvent(new AddWorkItemToSprintDomainEvent(this, userId, Module.ProductId, previousSprintName, sprint.Name));
+            Sprint = currentSprint;
+            AddDomainEvent(new AddWorkItemToSprintDomainEvent(this, userId, Module.ProductId, previousSprint, currentSprint));
         }
 
         public virtual void UpdateAcceptanceCriteria(string acceptanceCriteria)

@@ -55,7 +55,7 @@ namespace ProductFocus.AppServices
                 builder1.InnerJoin("Products p ON m.ProductId = p.Id");
                 if (query.UserIds != null && query.UserIds.Count()>0)
                     builder1.InnerJoin("UserToFeatureAssignments uf ON f.Id = uf.FeatureId");
-                builder1.LeftJoin("FeatureOrders fo ON fo.FeatureId = f.Id AND fo.SprintId = @SprintId AND fo.OrderingCategory = @OrderingCategory");
+                builder1.LeftJoin("FeatureOrderings fo ON fo.FeatureId = f.Id AND fo.SprintId = @SprintId AND fo.OrderingCategory = @OrderingCategory");
                 builder1.Where("p.id = @PrdId");
                 builder1.Where("s.id = @SprintId");
                 if (query.UserIds != null && query.UserIds.Count() > 0)

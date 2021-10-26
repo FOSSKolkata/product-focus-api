@@ -34,7 +34,7 @@ namespace ProductFocusApi.QueryHandlers
             {
                 List<FeatureOrderDto> featureOrders = new List<FeatureOrderDto>();
 
-                var sql = @"SELECT FeatureId, OrderNumber FROM FeatureOrders fo
+                var sql = @"SELECT FeatureId, OrderNumber FROM FeatureOrderings fo
                             INNER JOIN Features f ON f.id = fo.featureId
                             INNER JOIN Modules m ON m.Id = f.ModuleId
                             INNER JOIN Products p ON m.ProductId=p.Id

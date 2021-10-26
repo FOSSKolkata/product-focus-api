@@ -10,15 +10,15 @@ using System.Threading.Tasks;
 
 namespace ProductFocusApi.CommandHandlers
 {
-    public sealed class UpdateFeatureOrderCommand : ICommand
+    public sealed class UpdateFeatureOrderingCommand : ICommand
     {
         public OrderingInfoDto OrderingInfo { get; }
-        public UpdateFeatureOrderCommand(OrderingInfoDto orderingInfo)
+        public UpdateFeatureOrderingCommand(OrderingInfoDto orderingInfo)
         {
             OrderingInfo = orderingInfo;
         }
 
-        internal sealed class UpdateFeatureOrderCommandHandler : ICommandHandler<UpdateFeatureOrderCommand>
+        internal sealed class UpdateFeatureOrderCommandHandler : ICommandHandler<UpdateFeatureOrderingCommand>
         {
             private IFeatureOrderRepository _featureOrderRepository;
             private IUnitOfWork _unitOfWork;
@@ -27,19 +27,19 @@ namespace ProductFocusApi.CommandHandlers
                 _featureOrderRepository = featureOrderRepository;
                 _unitOfWork = unitOfWork;
             }
-            public async Task<Result> Handle(UpdateFeatureOrderCommand command)
+            public async Task<Result> Handle(UpdateFeatureOrderingCommand command)
             {
                 try
                 {
-                    List<FeatureOrdering> orderList = await _featureOrderRepository.GetByCategoryAndSprint(command.OrderingInfo.OrderingCategory, command.OrderingInfo.SprintId);
-                    foreach(var order in orderList)
+                    List<FeatureOrdering> featureOrderings = await _featureOrderRepository.GetByCategoryAndSprint(command.OrderingInfo.OrderingCategory, command.OrderingInfo.SprintId);
+                    foreach(var featureOrdering in featureOrderings)
                     {
-                        _featureOrderRepository.Remove(order);
+                        _featureOrderRepository.Remove(featureOrdering);
                     }
-                    foreach (var featureOrder in command.OrderingInfo.featuresOrder)
+                    foreach (var featureOrdering in command.OrderingInfo.featuresOrdering)
                     {
-                        var newFeatureOrder = FeatureOrdering.CreateInstance(featureOrder.FeatureId, featureOrder.OrderNumber, command.OrderingInfo.SprintId, command.OrderingInfo.OrderingCategory);
-                        _featureOrderRepository.Add(newFeatureOrder);
+                        var newFeatureOrdering = FeatureOrdering.CreateInstance(featureOrdering.FeatureId, featureOrdering.OrderNumber, command.OrderingInfo.SprintId, command.OrderingInfo.OrderingCategory);
+                        _featureOrderRepository.Add(newFeatureOrdering);
                     }
                     await _unitOfWork.CompleteAsync();
                     return Result.Success();

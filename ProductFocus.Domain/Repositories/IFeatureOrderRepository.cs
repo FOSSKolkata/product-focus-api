@@ -12,6 +12,7 @@ namespace ProductFocus.Domain.Repositories
         void Add(FeatureOrdering featureOrder);
         Task<FeatureOrdering> GetByFeatureIdAndCategory(long id, long sprintId, OrderingCategoryEnum order);
         Task<List<FeatureOrdering>> GetByCategoryAndSprint(OrderingCategoryEnum order, long sprintId);
+        Task<List<FeatureOrdering>> GetByIdAndSprint(long id, long sprintId);
         void Remove(FeatureOrdering featureOrder);
     }
 }

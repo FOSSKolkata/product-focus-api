@@ -34,5 +34,10 @@ namespace ProductFocus.Persistence.Repositories
         {
             _unitOfWork.Remove(featureOrder);
         }
+
+        public async Task<List<FeatureOrdering>> GetByIdAndSprint(long id, long sprintId)
+        {
+            return await _unitOfWork.Query<FeatureOrdering>().Where(x => x.FeatureId == id && x.SprintId == sprintId).ToListAsync();
+        }
     }
 }

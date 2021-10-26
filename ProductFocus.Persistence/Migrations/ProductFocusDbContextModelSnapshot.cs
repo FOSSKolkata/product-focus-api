@@ -226,7 +226,7 @@ namespace ProductFocus.Persistence.Migrations
 
                     b.HasIndex("FeatureId");
 
-                    b.ToTable("FeatureOrders");
+                    b.ToTable("FeatureOrderings");
                 });
 
             modelBuilder.Entity("ProductFocus.Domain.Model.Invitation", b =>

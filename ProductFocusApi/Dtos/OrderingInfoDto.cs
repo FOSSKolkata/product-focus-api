@@ -8,7 +8,7 @@ namespace ProductFocusApi.Dtos
 {
     public sealed class OrderingInfoDto
     {
-        public IList<FeatureOrderDto> featuresOrder { get; set;}
+        public IList<FeatureOrderDto> featuresOrdering { get; set;}
         public OrderingCategoryEnum OrderingCategory { get; set; }
         public long SprintId { get; set; }
     }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ProductFocus.Domain.Model
 {
-    [Table("FeatureOrders")]
+    [Table("FeatureOrderings")]
     public class FeatureOrdering : AggregateRoot<Guid>
     {
         public OrderingCategoryEnum OrderingCategory { get; set; }
@@ -29,6 +29,12 @@ namespace ProductFocus.Domain.Model
             featureOrder.SprintId = sprintId;
             featureOrder.OrderingCategory = orderingCategory;
             return featureOrder;
+        }
+
+        public virtual void UpdateSprint(long sprintId)
+        {
+            this.SprintId = sprintId;
+            this.OrderNumber = long.MaxValue; // Add the feature to fag end of the sprint work items.
         }
     }
 

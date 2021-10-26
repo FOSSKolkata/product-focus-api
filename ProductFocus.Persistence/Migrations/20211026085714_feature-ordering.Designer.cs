@@ -10,7 +10,7 @@ using ProductFocus.Persistence;
 namespace ProductFocus.Persistence.Migrations
 {
     [DbContext(typeof(ProductFocusDbContext))]
-    [Migration("20211006072425_feature-ordering")]
+    [Migration("20211026085714_feature-ordering")]
     partial class featureordering
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -228,7 +228,7 @@ namespace ProductFocus.Persistence.Migrations
 
                     b.HasIndex("FeatureId");
 
-                    b.ToTable("FeatureOrders");
+                    b.ToTable("FeatureOrderings");
                 });
 
             modelBuilder.Entity("ProductFocus.Domain.Model.Invitation", b =>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
 
@@ -12,23 +13,48 @@ namespace ProductFocus.Services
         {
             try
             {
-                MailMessage mailMessage = new MailMessage();
-                MailAddress fromAddress = new MailAddress("mail.address@gmail.com");
-                mailMessage.From = fromAddress;
-                mailMessage.To.Add(email);
-                mailMessage.Body = emailBody;
-                mailMessage.IsBodyHtml = true;
-                mailMessage.Subject = " Testing Email";
+                /*MailMessage mailMessage = new MailMessage();
+                //MailAddress fromAddress = new MailAddress("admin@dumanhilltechnologies.com");
+                MailAddress fromAddress = new MailAddress("info@intelli-h.com");
+                MailAddress toAddress = new MailAddress(email);
+                //const string fromPassword = "Dewsacademy@1a";
+                const string fromPassword = "reversal@1";
+                const string subject = "Invitation to join Product Focus.";
+
                 SmtpClient smtpClient = new SmtpClient
                 {
-                    DeliveryMethod = SmtpDeliveryMethod.SpecifiedPickupDirectory,
-                    PickupDirectoryLocation = @"C:\My Work\Product Focus"
+                    Host = "smtp.gmail.com",
+                    Port = 578,
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
                 };
-                smtpClient.Host = "localhost";
-                smtpClient.Send(mailMessage);
+
+                using (var message = new MailMessage(fromAddress, toAddress)
+                {
+                    Subject = subject,
+                    Body = emailBody
+                })
+                {
+                    smtpClient.Send(message);
+                }*/
+
+                MailMessage mail = new MailMessage();
+                mail.To.Add(email);
+                mail.From = new MailAddress("info@intelli-h.com");
+                mail.Subject = "Invitation to join Product Focus.";
+                mail.Body = emailBody;
+                mail.IsBodyHtml = true;
+                SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
+                smtp.EnableSsl = true;
+                smtp.UseDefaultCredentials = false;
+                smtp.Credentials = new System.Net.NetworkCredential("info@intelli-h.com", "reversal@1");
+                smtp.Send(mail);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex);
             }
         }
     }
