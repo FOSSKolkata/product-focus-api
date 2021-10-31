@@ -7,6 +7,8 @@ using ProductFocus.Domain;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using System.Linq;
+using System.Security.Claims;
 
 namespace ProductFocusApi.Controllers
 {
@@ -26,7 +28,9 @@ namespace ProductFocusApi.Controllers
         [HttpPost("{id}")]
         public async Task<IActionResult> AddFeature(long id, [FromBody] AddFeatureDto dto)
         {
-            var command = new AddFeatureCommand(id, dto.Title, dto.WorkItemType, dto.SprintId);
+            string objectId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+
+            var command = new AddFeatureCommand(id, dto.Title, dto.WorkItemType, dto.SprintId, objectId);
             Result result = await _messages.Dispatch(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }        

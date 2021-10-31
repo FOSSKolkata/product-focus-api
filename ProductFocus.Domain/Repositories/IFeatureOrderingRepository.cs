@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace ProductFocus.Domain.Repositories
 {
-    public interface IFeatureOrderRepository
+    public interface IFeatureOrderingRepository
     {
-        void Add(FeatureOrdering featureOrder);
-        Task<FeatureOrdering> GetByFeatureIdAndCategory(long id, long sprintId, OrderingCategoryEnum order);
-        Task<List<FeatureOrdering>> GetByCategoryAndSprint(OrderingCategoryEnum order, long sprintId);
+        void Add(FeatureOrdering featureOrdering);
+        Task<FeatureOrdering> GetByFeatureIdAndCategory(long id, long sprintId, OrderingCategoryEnum orderingCategoryEnum);
+        Task<List<FeatureOrdering>> GetByCategoryAndSprint(OrderingCategoryEnum orderingCategoryEnum, long sprintId);
         Task<List<FeatureOrdering>> GetByIdAndSprint(long id, long sprintId);
         void Remove(FeatureOrdering featureOrder);
     }

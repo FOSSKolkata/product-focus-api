@@ -11,6 +11,7 @@ using System.Security.Claims;
 using System.Linq;
 using ProductFocusApi.QueryHandlers;
 using ProductFocusApi.Dtos;
+using ProductFocusApi.CommandHandlers;
 
 namespace ProductFocusApi.Controllers
 {
@@ -52,6 +53,15 @@ namespace ProductFocusApi.Controllers
         {
             string objectId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
             var command = new SendInvitationCommand(dto.OrgId, dto.Email, objectId);
+            Result result = await _messages.Dispatch(command);
+            return result.IsSuccess ? Ok() : BadRequest(result.Error);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResendInvitation([FromBody] ResendInvitationCommand dto)
+        {
+            string objectId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            var command = new ResendInvitationCommand(dto.InvitationId, objectId);
             Result result = await _messages.Dispatch(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }

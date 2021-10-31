@@ -20,9 +20,9 @@ namespace ProductFocusApi.CommandHandlers
 
         internal sealed class UpdateFeatureOrderCommandHandler : ICommandHandler<UpdateFeatureOrderingCommand>
         {
-            private IFeatureOrderRepository _featureOrderRepository;
+            private IFeatureOrderingRepository _featureOrderRepository;
             private IUnitOfWork _unitOfWork;
-            public UpdateFeatureOrderCommandHandler(IFeatureOrderRepository featureOrderRepository, IUnitOfWork unitOfWork)
+            public UpdateFeatureOrderCommandHandler(IFeatureOrderingRepository featureOrderRepository, IUnitOfWork unitOfWork)
             {
                 _featureOrderRepository = featureOrderRepository;
                 _unitOfWork = unitOfWork;

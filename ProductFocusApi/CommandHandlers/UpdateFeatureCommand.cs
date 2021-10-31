@@ -28,13 +28,13 @@ namespace ProductFocus.AppServices
             private readonly IUserRepository _userRepository;
             private readonly IUnitOfWork _unitOfWork;
             private readonly IEmailService _emailService;
-            private readonly IFeatureOrderRepository _featureOrderingRepository;
+            private readonly IFeatureOrderingRepository _featureOrderingRepository;
 
             public UpdateFeatureCommandHandler(
                 IProductRepository productRepository, IFeatureRepository featureRepository,
                 ISprintRepository sprintRepository, IUserRepository userRepository, 
                 IUnitOfWork unitOfWork, IEmailService emailService,
-                IFeatureOrderRepository featureOrderRepository)
+                IFeatureOrderingRepository featureOrderRepository)
             {                
                 _featureRepository = featureRepository;
                 _sprintRepository = sprintRepository;

@@ -8,12 +8,46 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using ProductFocus.Domain.Model;
+using ProductFocus.Domain.Model.FeatureAggregate;
 using Task = System.Threading.Tasks.Task;
 
 namespace ProductFocus.Persistence
 {
     public class ProductFocusDbContext: DbContext
     {
+        protected override void OnModelCreating(ModelBuilder modelbuilder)
+        {
+            modelbuilder.Entity<Feature>()
+             .Property(o => o.Id).UseHiLo();
+            modelbuilder.Entity<FeatureComment>()
+             .Property(o => o.Id).UseHiLo();
+            modelbuilder.Entity<ScrumDay>()
+             .Property(o => o.Id).UseHiLo();
+            modelbuilder.Entity<ProductFocus.Domain.Model.Task>()
+             .Property(o => o.Id).UseHiLo();
+            modelbuilder.Entity<Member>()
+             .Property(o => o.Id).UseHiLo();
+            modelbuilder.Entity<Organization>()
+             .Property(o => o.Id).UseHiLo();
+            modelbuilder.Entity<Module>()
+             .Property(o => o.Id).UseHiLo();
+            modelbuilder.Entity<Product>()
+             .Property(o => o.Id).UseHiLo();
+            modelbuilder.Entity<Role>()
+             .Property(o => o.Id).UseHiLo();
+            modelbuilder.Entity<RolePermission>()
+             .Property(o => o.Id).UseHiLo();
+            modelbuilder.Entity<Invitation>()
+             .Property(o => o.Id).UseHiLo();
+            modelbuilder.Entity<Permission>()
+             .Property(o => o.Id).UseHiLo();
+            modelbuilder.Entity<Sprint>()
+             .Property(o => o.Id).UseHiLo();
+            modelbuilder.Entity<User>()
+             .Property(o => o.Id).UseHiLo();
+            modelbuilder.Entity<UserToFeatureAssignment>()
+             .Property(o => o.Id).UseHiLo();
+        }
         public ProductFocusDbContext(DbContextOptions<ProductFocusDbContext> options) : base(options)
         {
 
