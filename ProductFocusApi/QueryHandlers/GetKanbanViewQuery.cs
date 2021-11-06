@@ -25,16 +25,15 @@ namespace ProductFocus.AppServices
         internal sealed class GetKanbanViewQueryHandler : IQueryHandler<GetKanbanViewQuery, List<GetKanbanViewDto>>
         {
             private readonly QueriesConnectionString _queriesConnectionString;
-            private readonly IEmailService _emailService;
 
-            public GetKanbanViewQueryHandler(QueriesConnectionString queriesConnectionString, IEmailService emailService)
+            public GetKanbanViewQueryHandler(QueriesConnectionString queriesConnectionString)
             {
                 _queriesConnectionString = queriesConnectionString;
-                _emailService = emailService;
             }
             public async Task<List<GetKanbanViewDto>> Handle(GetKanbanViewQuery query)
             {
                 List<GetKanbanViewDto> kanbanViewList = new List<GetKanbanViewDto>();
+                List<GetKanbanViewTempDto> kanbanViewTempList = new List<GetKanbanViewTempDto>();
 
                 string sql1 = @"
                     select Id 
@@ -90,11 +89,11 @@ namespace ProductFocus.AppServices
                     });
 
                     
-                    var kanbanViews = await result.ReadAsync<GetKanbanViewDto>();
+                    var kanbanViewsTemp = await result.ReadAsync<GetKanbanViewTempDto>();
                     var featureDetails = await result.ReadAsync<FeatureDetail>();
                     var assigneeDetails = await result.ReadAsync<AssigneeDetail>();
 
-                    foreach (var kanbanView in kanbanViews)
+                    foreach (var kanbanView in kanbanViewsTemp)
                     {
                         kanbanView.FeatureDetails = featureDetails.Where(a => a.ModuleId == kanbanView.Id).ToList();
 
@@ -104,10 +103,15 @@ namespace ProductFocus.AppServices
                         }
                     }                                        
 
-                    kanbanViewList = kanbanViews.ToList();
+                    kanbanViewTempList = kanbanViewsTemp.ToList();
                 }
 
-                //_emailService.send();
+                for(int i = 0; i < kanbanViewTempList.Count; i++)
+                {
+                    kanbanViewList.Add(new GetKanbanViewDto());
+                    kanbanViewList[i].GroupName = kanbanViewTempList[i].GroupName;
+                    kanbanViewList[i].FeatureDetails = kanbanViewTempList[i].FeatureDetails;
+                }
                 
                 return kanbanViewList;
             }

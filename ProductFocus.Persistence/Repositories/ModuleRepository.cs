@@ -1,4 +1,5 @@
-﻿using ProductFocus.Domain.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,10 @@ namespace ProductFocus.Persistence.Repositories
         public Task<Module> GetById(long id)
         {
             return _unitOfWork.GetAsync<Module>(id);
+        }
+        public async Task<Module> GetByName(string name)
+        {
+            return await _unitOfWork.Query<Module>().Where(a => a.Name == name).SingleOrDefaultAsync();
         }
     }
 }

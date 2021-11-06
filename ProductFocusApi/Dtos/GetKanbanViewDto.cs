@@ -9,8 +9,14 @@ namespace ProductFocus.Dtos
 {
     public sealed class GetKanbanViewDto
     {
+        public string GroupName { get; set; }
+        public IList<FeatureDetail> FeatureDetails { get; set; }
+    }
+
+    public sealed class GetKanbanViewTempDto
+    {
         public long Id { get; set; }
-        public string Name { get; set; }
+        public string GroupName { get; set; }
         public IList<FeatureDetail> FeatureDetails { get; set; }
     }
 
@@ -52,5 +58,11 @@ namespace ProductFocus.Dtos
         public DateTime Date { get; set; }
         public int? WorkCompletionPercentage { get; set; }
         public string Comment { get; set; }
+    }
+
+    public enum GroupCategoryEnum
+    {
+        Module = 1,
+        Users = 2
     }
 }

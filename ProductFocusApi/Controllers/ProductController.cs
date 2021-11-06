@@ -49,11 +49,11 @@ namespace ProductFocusApi.Controllers
             return Ok(kanbanViewList);
         }
 
-        [HttpGet("{id}/{orderingCategory}/query")]
-        public async Task<IActionResult> GetKanbanViewByProductIdAndQuery(long id, OrderingCategoryEnum orderingCategory, [FromQuery] long SprintId, [FromQuery] List<long> UserIds)
-        {           
+        [HttpGet("{id}/{orderingCategory}/{groupCategoryEnum}/query")]
+        public async Task<IActionResult> GetKanbanViewByProductIdAndQuery(long id, OrderingCategoryEnum orderingCategory, [FromQuery] long SprintId, [FromQuery] List<long> UserIds, GroupCategoryEnum groupCategoryEnum)
+        {
             string objectId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            List<GetKanbanViewDto> kanbanViewList = await _messages.Dispatch(new GetKanbanViewFilterQuery(id, orderingCategory, objectId, SprintId, UserIds));
+            List<GetKanbanViewDto> kanbanViewList = await _messages.Dispatch(new GetKanbanViewFilterQuery(id, orderingCategory, objectId, SprintId, UserIds, groupCategoryEnum));
             return Ok(kanbanViewList);
         }
     }

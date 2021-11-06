@@ -10,5 +10,6 @@ namespace ProductFocus.Domain.Repositories
     public interface IModuleRepository
     {
         Task<Module> GetById(long id);
+        Task<Module> GetByName(string name);
     }
 }
