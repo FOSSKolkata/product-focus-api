@@ -27,6 +27,7 @@ namespace ProductFocus.Dtos
         public bool FunctionalTestability { get; set; }
         public UpdateColumnIdentifier FieldName { get; set; }
         public string UserId { get; set; }
+        public long ModuleId { get; set; }
     }
 
     public enum UpdateColumnIdentifier
@@ -46,6 +47,7 @@ namespace ProductFocus.Dtos
         ActualStartDate = 13,
         ActualEndDate = 14,
         Remarks = 15,
-        FunctionalTestability = 16
+        FunctionalTestability = 16,
+        UpdateModule = 17
     }
 }

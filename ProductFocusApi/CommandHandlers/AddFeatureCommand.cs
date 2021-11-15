@@ -31,14 +31,13 @@ namespace ProductFocus.AppServices
             private readonly IFeatureRepository _featureRepository;
             private readonly ISprintRepository _sprintRepository;
             private readonly IUnitOfWork _unitOfWork;
-            private readonly IEmailService _emailService;
             private readonly IUserRepository _userRepository;
             private readonly IFeatureOrderingRepository _featureOrderingRepository;
 
             public AddFeatureCommandHandler(
                 IProductRepository productRepository, IFeatureRepository featureRepository,
                 ISprintRepository sprintRepository,
-                IUnitOfWork unitOfWork, IEmailService emailService,
+                IUnitOfWork unitOfWork,
                 IUserRepository userRepository,
                 IFeatureOrderingRepository featureOrderingRepository)
             {
@@ -46,15 +45,14 @@ namespace ProductFocus.AppServices
                 _featureRepository = featureRepository;
                 _sprintRepository = sprintRepository;
                 _unitOfWork = unitOfWork;
-                _emailService = emailService;
                 _userRepository = userRepository;
                 _featureOrderingRepository = featureOrderingRepository;
             }
             public async Task<Result> Handle(AddFeatureCommand command)
             {
-                Module module = await _productRepository.GetModuleById(command.Id);
-                if (module == null)
-                    return Result.Failure($"No module found with Module Id '{command.Id}'");
+                Product product = await _productRepository.GetById(command.Id);
+                if (product == null)
+                    return Result.Failure($"No product found with product Id '{command.Id}'");
 
                 Sprint sprint = await _sprintRepository.GetById(command.SprintId);
                 if (sprint == null)
@@ -69,7 +67,7 @@ namespace ProductFocus.AppServices
                 try
                 {
                     User updatedByUser = _userRepository.GetByIdpUserId(command.IdpUserId);
-                    var feature = Feature.CreateInstance(module, command.Title, workItemType, sprint, updatedByUser.Id);
+                    var feature = Feature.CreateInstance(product, command.Title, workItemType, sprint, updatedByUser.Id);
                     
                     _featureRepository.AddFeature(feature);
                     foreach (OrderingCategoryEnum orderingCategoryEnum in Enum.GetValues(typeof(OrderingCategoryEnum)))
@@ -79,8 +77,6 @@ namespace ProductFocus.AppServices
                         _featureOrderingRepository.Add(featureOrdering);
                     }
                     await _unitOfWork.CompleteAsync();
-
-                    //_emailService.send();
 
                     return Result.Success();
                 }

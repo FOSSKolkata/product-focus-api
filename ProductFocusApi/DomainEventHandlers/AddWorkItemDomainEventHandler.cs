@@ -26,7 +26,7 @@ namespace ProductFocusApi.DomainEventHandlers
         public async System.Threading.Tasks.Task Handle(AddWorkItemDomainEvent addWorkItemDomainEvent, CancellationToken cancellationToken)
         {
             User user = _userRepository.GetById(addWorkItemDomainEvent.EventTriggeredById);
-            WorkItemDomainEventLog workItemDomainEventLog = new WorkItemDomainEventLog(nameof(AddWorkItemDomainEvent), JsonSerializer.Serialize(new { FeatureId = addWorkItemDomainEvent.Feature.Id, Title = addWorkItemDomainEvent.Feature.Title }), addWorkItemDomainEvent.Feature.ModuleId, addWorkItemDomainEvent.Feature.Module.Name, addWorkItemDomainEvent.EventTriggeredById, user.Name, addWorkItemDomainEvent.ProductId, addWorkItemDomainEvent.Feature.Id);
+            WorkItemDomainEventLog workItemDomainEventLog = new WorkItemDomainEventLog(nameof(AddWorkItemDomainEvent), JsonSerializer.Serialize(new { FeatureId = addWorkItemDomainEvent.Feature.Id, Title = addWorkItemDomainEvent.Feature.Title }), addWorkItemDomainEvent.Feature.ModuleId, addWorkItemDomainEvent.Feature.Module?.Name, addWorkItemDomainEvent.EventTriggeredById, user.Name, addWorkItemDomainEvent.ProductId, addWorkItemDomainEvent.Feature.Id);
             _domainEventLogRepository.AddDomainEventLog(workItemDomainEventLog);
 
             await _unitOfWork.CompleteAsync(cancellationToken);

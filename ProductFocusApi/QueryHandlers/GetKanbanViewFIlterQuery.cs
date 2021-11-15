@@ -51,13 +51,13 @@ namespace ProductFocus.AppServices
                     where ObjectId = @ObjectId";
 
                 var builder1 = new SqlBuilder();
-                var selector1 = builder1.AddTemplate("SELECT distinct f.Id, ModuleId, Title, f.SprintId, s.Name, StoryPoint, WorkCompletionPercentage, Status, IsBlocked, WorkItemType, PlannedStartDate, PlannedEndDate, ActualStartDate, ActualEndDate, Remarks, fo.OrderNumber, FunctionalTestability from Features f /**innerjoin**/ /**leftjoin**/ /**where**/");
+                var selector1 = builder1.AddTemplate("SELECT distinct f.Id, ModuleId, Title, f.SprintId, s.Name, StoryPoint, WorkCompletionPercentage, Status, IsBlocked, WorkItemType, PlannedStartDate, PlannedEndDate, ActualStartDate, ActualEndDate, Remarks, fo.OrderNumber, FunctionalTestability from Features f /**leftjoin**/ /**innerjoin**/ /**where**/");
+                builder1.LeftJoin("FeatureOrderings fo ON fo.FeatureId = f.Id AND fo.SprintId = @SprintId AND fo.OrderingCategory = @OrderingCategory");
+                builder1.LeftJoin("Modules m ON f.ModuleId = m.Id");
                 builder1.InnerJoin("Sprint s ON f.SprintId = s.Id");
-                builder1.InnerJoin("Modules m ON f.ModuleId = m.Id");
-                builder1.InnerJoin("Products p ON m.ProductId = p.Id");
+                builder1.InnerJoin("Products p ON m.ProductId = p.Id OR f.ProductId = p.Id");
                 if (query.UserIds != null && query.UserIds.Count > 0)
                     builder1.InnerJoin("UserToFeatureAssignments uf ON f.Id = uf.FeatureId");
-                builder1.LeftJoin("FeatureOrderings fo ON fo.FeatureId = f.Id AND fo.SprintId = @SprintId AND fo.OrderingCategory = @OrderingCategory");
                 builder1.Where("p.id = @PrdId");
                 builder1.Where("s.id = @SprintId");
                 if (query.UserIds != null && query.UserIds.Count > 0)
@@ -157,11 +157,19 @@ namespace ProductFocus.AppServices
                         }
                     }
                     kanbanViewTempList = kanbanViewsTemp.ToList();
+                    List<FeatureDetail> anonymousFeature = featureDetails.Where(a => a.ModuleId == null).ToList();
                     for (int i = 0; i < kanbanViewTempList.Count; i++)
                     {
                         kanbanViewList.Add(new GetKanbanViewDto());
                         kanbanViewList[i].FeatureDetails = kanbanViewTempList[i].FeatureDetails;
                         kanbanViewList[i].GroupName = kanbanViewTempList[i].GroupName;
+                    }
+                    kanbanViewList.Add(new GetKanbanViewDto());
+                    kanbanViewList[kanbanViewList.Count - 1].FeatureDetails = anonymousFeature;
+                    kanbanViewList[kanbanViewList.Count - 1].GroupName = "Anonymous";
+                    foreach (var feature in kanbanViewList[kanbanViewList.Count - 1].FeatureDetails)
+                    {
+                        feature.Assignees = assigneeDetails.Where(a => a.Id == feature.Id).ToList();
                     }
                 }
                 if(query.GroupCategoryEnum == GroupCategoryEnum.Module)

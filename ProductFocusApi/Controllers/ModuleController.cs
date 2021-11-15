@@ -33,6 +33,6 @@ namespace ProductFocusApi.Controllers
             var command = new AddFeatureCommand(id, dto.Title, dto.WorkItemType, dto.SprintId, objectId);
             Result result = await _messages.Dispatch(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
-        }        
+        }
     }
 }

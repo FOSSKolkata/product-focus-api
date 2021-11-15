@@ -29,12 +29,14 @@ namespace ProductFocus.AppServices
             private readonly IUnitOfWork _unitOfWork;
             private readonly IEmailService _emailService;
             private readonly IFeatureOrderingRepository _featureOrderingRepository;
+            private readonly IModuleRepository _moduleRepository;
 
             public UpdateFeatureCommandHandler(
                 IProductRepository productRepository, IFeatureRepository featureRepository,
                 ISprintRepository sprintRepository, IUserRepository userRepository, 
                 IUnitOfWork unitOfWork, IEmailService emailService,
-                IFeatureOrderingRepository featureOrderRepository)
+                IFeatureOrderingRepository featureOrderRepository,
+                IModuleRepository moduleRepository)
             {                
                 _featureRepository = featureRepository;
                 _sprintRepository = sprintRepository;
@@ -42,6 +44,7 @@ namespace ProductFocus.AppServices
                 _unitOfWork = unitOfWork;
                 _emailService = emailService;
                 _featureOrderingRepository = featureOrderRepository;
+                _moduleRepository = moduleRepository;
             }
             public async Task<Result> Handle(UpdateFeatureCommand command)
             {
@@ -130,7 +133,15 @@ namespace ProductFocus.AppServices
 
                     if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.FunctionalTestability)
                         feature.UpdateFunctionalTestability(command.UpdateFeatureDto.FunctionalTestability);
-
+                    if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.UpdateModule)
+                    {
+                        Module module = await _moduleRepository.GetById(command.UpdateFeatureDto.ModuleId);
+                        if(module == null)
+                        {
+                            return Result.Failure("Module doesn't exist");
+                        }
+                        feature.UpdateModule(module);
+                    }
                     await _unitOfWork.CompleteAsync();
 
                     //_emailService.send();

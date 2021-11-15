@@ -23,7 +23,7 @@ namespace ProductFocus.Dtos
     public sealed class FeatureDetail
     {
         public long Id { get; set; }
-        public long ModuleId { get; set; }
+        public long? ModuleId { get; set; }
         public string Title { get; set; }
         public long SprintId { get; set; }
         public string Name { get; set; }

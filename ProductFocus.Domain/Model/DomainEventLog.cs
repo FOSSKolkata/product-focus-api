@@ -11,7 +11,7 @@ namespace ProductFocus.Domain.Model
     {
 
         private WorkItemDomainEventLog() { }
-        public WorkItemDomainEventLog(string eventTypeName, string domainEventJson, long moduleId, string moduleName, long eventTriggedById, string eventTriggedBy, long productId, long featureId)
+        public WorkItemDomainEventLog(string eventTypeName, string domainEventJson, long? moduleId, string? moduleName, long eventTriggedById, string eventTriggedBy, long productId, long featureId)
         {
             EventTypeName = eventTypeName;
             DomainEventJson = domainEventJson;
@@ -26,7 +26,7 @@ namespace ProductFocus.Domain.Model
 
         public string EventTypeName { get; private set; }
         public string DomainEventJson { get; private set; }
-        public virtual long ModuleId { get; private set; }
+        public virtual long? ModuleId { get; private set; }
         public virtual long ProductId { get; private set; }
         public virtual long FeatureId { get; private set; }
         public string ModuleName { get; private set; }
