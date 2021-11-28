@@ -135,11 +135,11 @@ namespace ProductFocus.AppServices
                         feature.UpdateFunctionalTestability(command.UpdateFeatureDto.FunctionalTestability);
                     if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.UpdateModule)
                     {
-                        Module module = await _moduleRepository.GetById(command.UpdateFeatureDto.ModuleId);
-                        if(module == null)
+                        Module module = command.UpdateFeatureDto.ModuleId != null ? await _moduleRepository.GetById(command.UpdateFeatureDto.ModuleId??0) : null;
+                        /*if(module == null)
                         {
                             return Result.Failure("Module doesn't exist");
-                        }
+                        }*/
                         feature.UpdateModule(module);
                     }
                     await _unitOfWork.CompleteAsync();

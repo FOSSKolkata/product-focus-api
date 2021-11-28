@@ -42,6 +42,7 @@ namespace ProductFocus.AppServices
             public async Task<List<GetKanbanViewDto>> Handle(GetKanbanViewFilterQuery query)
             {
                 List<GetKanbanViewDto> kanbanViewList = new();
+                List<GetKanbanViewDto> userGroupKanban = new();
                 List<GetKanbanViewTempDto> kanbanViewTempList = new();
                 Dictionary<KeyValuePair<string,string>, List<FeatureDetail>> dic = new();
 
@@ -53,7 +54,7 @@ namespace ProductFocus.AppServices
                 var builder1 = new SqlBuilder();
                 var selector1 = builder1.AddTemplate("SELECT distinct f.Id, ModuleId, Title, f.SprintId, s.Name, StoryPoint, WorkCompletionPercentage, Status, IsBlocked, WorkItemType, PlannedStartDate, PlannedEndDate, ActualStartDate, ActualEndDate, Remarks, fo.OrderNumber, FunctionalTestability from Features f /**leftjoin**/ /**innerjoin**/ /**where**/");
                 builder1.LeftJoin("FeatureOrderings fo ON fo.FeatureId = f.Id AND fo.SprintId = @SprintId AND fo.OrderingCategory = @OrderingCategory");
-                builder1.LeftJoin("Modules m ON f.ModuleId = m.Id");
+                builder1.LeftJoin("Modules m ON (f.ModuleId = m.Id OR f.ModuleId is null)");
                 builder1.InnerJoin("Sprint s ON f.SprintId = s.Id");
                 builder1.InnerJoin("Products p ON m.ProductId = p.Id OR f.ProductId = p.Id");
                 if (query.UserIds != null && query.UserIds.Count > 0)
@@ -66,12 +67,12 @@ namespace ProductFocus.AppServices
                 var tempStr1 = selector1.RawSql;
                 var builder2 = new SqlBuilder();
 
-                var selector2 = builder2.AddTemplate("SELECT f.Id, u.Id as UserId, u.Name, u.Email, u.ObjectId FROM Features f /**innerjoin**/ /**where**/");
+                var selector2 = builder2.AddTemplate("SELECT f.Id, u.Id as UserId, u.Name, u.Email, u.ObjectId FROM Features f /**leftjoin**/ /**innerjoin**/ /**where**/");
+                builder2.LeftJoin("Modules m ON m.Id=f.ModuleId");
+                builder2.LeftJoin("Products p ON m.ProductId=p.Id");
                 builder2.InnerJoin("UserToFeatureAssignments uf ON f.Id=uf.FeatureId");
                 builder2.InnerJoin("Users u ON uf.UserId=u.Id");
-                builder2.InnerJoin("Modules m ON m.Id=f.ModuleId");
-                builder2.InnerJoin("Products p ON m.ProductId=p.Id");
-                builder2.Where("p.id = @PrdId");
+                builder2.Where("f.productId = @PrdId");
 
                 var tempStr2 = selector2.RawSql;
 
@@ -165,9 +166,50 @@ namespace ProductFocus.AppServices
                         kanbanViewList[i].GroupName = kanbanViewTempList[i].GroupName;
                     }
                     kanbanViewList.Add(new GetKanbanViewDto());
-                    kanbanViewList[kanbanViewList.Count - 1].FeatureDetails = anonymousFeature;
-                    kanbanViewList[kanbanViewList.Count - 1].GroupName = "Anonymous";
-                    foreach (var feature in kanbanViewList[kanbanViewList.Count - 1].FeatureDetails)
+                    kanbanViewList[^1].FeatureDetails = anonymousFeature;
+                    kanbanViewList[^1].GroupName = "Anonymous Module";
+                    foreach (var featureDetail in kanbanViewList[^1].FeatureDetails)
+                    {
+                        featureDetail.Assignees = assigneeDetails.Where(a => a.Id == featureDetail.Id).ToList();
+                        List<KeyValuePair<string, string>> emailNamePairs = new();
+                        foreach (var assignee in featureDetail.Assignees)
+                        {
+                            emailNamePairs.Add(KeyValuePair.Create(assignee.Email, assignee.Name));
+                        }
+                        emailNamePairs.Sort((KeyValuePair<string, string> a, KeyValuePair<string, string> b) => {
+                            return string.Compare(a.Key, b.Key);
+                        });
+                        string tempEmails = string.Empty;
+                        string tempNames = string.Empty;
+                        foreach (KeyValuePair<string, string> keyValue in emailNamePairs)
+                        {
+                            tempEmails = tempEmails + keyValue.Key + ",";
+                            tempNames = tempNames + keyValue.Value + ", ";
+                        }
+                        if (tempEmails != string.Empty)
+                        {
+                            KeyValuePair<string, string> key = KeyValuePair.Create(tempEmails, tempNames);
+                            if (!dic.ContainsKey(key))
+                            {
+                                dic[key] = new List<FeatureDetail>();
+                            }
+                            dic[key].Add(featureDetail);
+                        }
+                        // Fill in scrum days data 
+                        featureDetail.ScrumDays = scrumDays.Where(x => x.FeatureId == featureDetail.Id).OrderBy(x => x.Date).ToList();
+                    }
+                    foreach (KeyValuePair<KeyValuePair<string, string>, List<FeatureDetail>> kv in dic)
+                    {
+                        GetKanbanViewDto temp = new();
+                        temp.GroupName = kv.Key.Value[0..^2];
+                        temp.FeatureDetails = kv.Value;
+                        userGroupKanban.Add(temp);
+                    }
+                    List<FeatureDetail> anonymousFeatureWithoutUser = featureDetails.Where(a => a.Assignees.Count == 0 || a.Assignees == null).ToList();
+                    userGroupKanban.Add(new GetKanbanViewDto());
+                    userGroupKanban[^1].GroupName = "Anonymous User";
+                    userGroupKanban[^1].FeatureDetails = anonymousFeatureWithoutUser;
+                    foreach(var feature in userGroupKanban[^1].FeatureDetails)
                     {
                         feature.Assignees = assigneeDetails.Where(a => a.Id == feature.Id).ToList();
                     }
@@ -177,14 +219,6 @@ namespace ProductFocus.AppServices
                     return kanbanViewList;
                 }
 
-                List<GetKanbanViewDto> userGroupKanban = new();
-                foreach(KeyValuePair<KeyValuePair<string,string>,List<FeatureDetail>> kv in dic)
-                {
-                    GetKanbanViewDto temp = new();
-                    temp.GroupName = kv.Key.Value[0..^2];
-                    temp.FeatureDetails = kv.Value;
-                    userGroupKanban.Add(temp);
-                }
                 if(query.GroupCategoryEnum == GroupCategoryEnum.Users)
                 {
                     return userGroupKanban;

@@ -29,6 +29,6 @@ namespace ProductFocus.Domain.Model
         public virtual long? ModuleId { get; private set; }
         public virtual long ProductId { get; private set; }
         public virtual long FeatureId { get; private set; }
-        public string ModuleName { get; private set; }
+        public string? ModuleName { get; private set; }
     }
 }

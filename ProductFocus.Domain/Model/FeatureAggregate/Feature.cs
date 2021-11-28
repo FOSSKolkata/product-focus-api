@@ -171,7 +171,7 @@ namespace ProductFocus.Domain.Model
         public virtual void UpdateModule(Module module)
         {
             Module = module;
-            ModuleId = module.Id;
+            ModuleId = module?.Id;
         }
 
         public virtual Result UpsertScrumComment(DateTime scrumDate, string comment)
@@ -209,14 +209,17 @@ namespace ProductFocus.Domain.Model
     public enum Status
     {
         New = 1,
-        InProgress = 2,
-        OnHold = 3,
-        Complete = 4
+        Planned = 2,
+        DevInProgress = 3,
+        SFQ = 4,
+        Done = 5,
     }
 
     public enum WorkItemType
     {
         Feature = 1,
-        Bug =2
+        Bug = 2,
+        Epic = 3,
+        PBI = 4
     }
 }

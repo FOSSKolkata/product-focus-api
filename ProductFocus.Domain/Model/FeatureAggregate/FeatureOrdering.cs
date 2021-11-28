@@ -23,7 +23,7 @@ namespace ProductFocus.Domain.Model
         }
         public static FeatureOrdering CreateInstance(long featureId, long orderNumber, long sprintId, OrderingCategoryEnum orderingCategory)
         {
-            FeatureOrdering featureOrder = new FeatureOrdering();
+            FeatureOrdering featureOrder = new();
             featureOrder.FeatureId = featureId;
             featureOrder.OrderNumber = orderNumber;
             featureOrder.SprintId = sprintId;
