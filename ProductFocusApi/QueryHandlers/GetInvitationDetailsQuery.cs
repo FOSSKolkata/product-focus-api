@@ -5,8 +5,6 @@ using ProductFocus.ConnectionString;
 using ProductFocus.Domain;
 using ProductFocus.Domain.Model;
 using ProductFocusApi.Dtos;
-using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;

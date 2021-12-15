@@ -5,7 +5,6 @@ using ProductFocus.Domain.Model.FeatureAggregate;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace ProductFocus.Domain.Model
 {
@@ -53,13 +52,13 @@ namespace ProductFocus.Domain.Model
 
         }
 
-        private Feature(string title, string description,
+        /*private Feature(string title, string description,
             int progress) : this()
         {
             Title = title;
             Description = description;
             WorkCompletionPercentage = progress;
-        }
+        }*/
 
         private Feature(Product product, string title, WorkItemType workItemType, Sprint sprint, long userId)
         {
@@ -67,7 +66,7 @@ namespace ProductFocus.Domain.Model
             Title = title;
             WorkItemType = workItemType;
             Sprint = sprint;
-            AddDomainEvent(new AddWorkItemDomainEvent(this, userId, Sprint.Id, ProductId));
+            AddDomainEvent(new AddWorkItemDomainEvent(this, userId, Sprint?.Id, ProductId));
         }
 
         public static Feature CreateInstance(Product product, string title, WorkItemType workItemType, Sprint sprint, long userId)

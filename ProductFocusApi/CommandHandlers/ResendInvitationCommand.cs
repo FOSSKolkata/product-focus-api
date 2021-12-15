@@ -1,5 +1,4 @@
 ﻿using CSharpFunctionalExtensions;
-using ProductFocus.AppServices;
 using ProductFocus.Domain;
 using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;

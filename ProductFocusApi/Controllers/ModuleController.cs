@@ -1,10 +1,7 @@
-﻿using Common;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ProductFocus.AppServices;
 using ProductFocus.Dtos;
 using CSharpFunctionalExtensions;
-using ProductFocus.Domain;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using System.Linq;

@@ -6,7 +6,6 @@ using Dapper;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using ProductFocus.ConnectionString;
-using ProductFocus.Services;
 using System.Threading.Tasks;
 
 namespace ProductFocus.AppServices
@@ -109,7 +108,7 @@ namespace ProductFocus.AppServices
                 for(int i = 0; i < kanbanViewTempList.Count; i++)
                 {
                     kanbanViewList.Add(new GetKanbanViewDto());
-                    kanbanViewList[i].GroupName = kanbanViewTempList[i].GroupName;
+                    kanbanViewList[i].GroupList[0].GroupName = kanbanViewTempList[i].GroupName;
                     kanbanViewList[i].FeatureDetails = kanbanViewTempList[i].FeatureDetails;
                 }
                 

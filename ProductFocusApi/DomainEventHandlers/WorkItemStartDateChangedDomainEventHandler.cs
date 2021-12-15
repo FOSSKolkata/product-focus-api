@@ -3,12 +3,8 @@ using ProductFocus.Domain;
 using ProductFocus.Domain.Events;
 using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace ProductFocusApi.DomainEventHandlers
 {
@@ -26,7 +22,7 @@ namespace ProductFocusApi.DomainEventHandlers
         public async System.Threading.Tasks.Task Handle(WorkItemStartDateChangedDomainEvent workItemStartDateChangedDomainEvent, CancellationToken cancellationToken)
         {
             User user = _userRepository.GetById(workItemStartDateChangedDomainEvent.EventTriggeredById);
-            WorkItemDomainEventLog workItemDomainEventLog = new WorkItemDomainEventLog(nameof(WorkItemStartDateChangedDomainEvent), JsonSerializer.Serialize(new { FeatureId = workItemStartDateChangedDomainEvent.Feature.Id, Title = workItemStartDateChangedDomainEvent.Feature.Title, PreviousStartDate = workItemStartDateChangedDomainEvent.PreviousStartDate, CurrentStartDate = workItemStartDateChangedDomainEvent.CurrentStartDate }), workItemStartDateChangedDomainEvent.Feature.ModuleId, workItemStartDateChangedDomainEvent.Feature.Module.Name, workItemStartDateChangedDomainEvent.EventTriggeredById, user.Name, workItemStartDateChangedDomainEvent.ProductId, workItemStartDateChangedDomainEvent.Feature.Id);
+            WorkItemDomainEventLog workItemDomainEventLog = new(nameof(WorkItemStartDateChangedDomainEvent), JsonSerializer.Serialize(new { FeatureId = workItemStartDateChangedDomainEvent.Feature.Id, Title = workItemStartDateChangedDomainEvent.Feature.Title, PreviousStartDate = workItemStartDateChangedDomainEvent.PreviousStartDate, CurrentStartDate = workItemStartDateChangedDomainEvent.CurrentStartDate }), workItemStartDateChangedDomainEvent.Feature.ModuleId, workItemStartDateChangedDomainEvent.Feature.Module?.Name, workItemStartDateChangedDomainEvent.EventTriggeredById, user.Name, workItemStartDateChangedDomainEvent.ProductId, workItemStartDateChangedDomainEvent.Feature.Id);
             _domainEventLogRepository.AddDomainEventLog(workItemDomainEventLog);
 
             await _unitOfWork.CompleteAsync(cancellationToken);

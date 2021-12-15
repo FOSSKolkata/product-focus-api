@@ -3,7 +3,6 @@ using ProductFocus.Domain;
 using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
 using ProductFocus.Dtos;
-using ProductFocus.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -27,14 +26,13 @@ namespace ProductFocus.AppServices
             private readonly ISprintRepository _sprintRepository;
             private readonly IUserRepository _userRepository;
             private readonly IUnitOfWork _unitOfWork;
-            private readonly IEmailService _emailService;
             private readonly IFeatureOrderingRepository _featureOrderingRepository;
             private readonly IModuleRepository _moduleRepository;
 
             public UpdateFeatureCommandHandler(
-                IProductRepository productRepository, IFeatureRepository featureRepository,
+                IFeatureRepository featureRepository,
                 ISprintRepository sprintRepository, IUserRepository userRepository, 
-                IUnitOfWork unitOfWork, IEmailService emailService,
+                IUnitOfWork unitOfWork,
                 IFeatureOrderingRepository featureOrderRepository,
                 IModuleRepository moduleRepository)
             {                
@@ -42,7 +40,6 @@ namespace ProductFocus.AppServices
                 _sprintRepository = sprintRepository;
                 _userRepository = userRepository;
                 _unitOfWork = unitOfWork;
-                _emailService = emailService;
                 _featureOrderingRepository = featureOrderRepository;
                 _moduleRepository = moduleRepository;
             }
@@ -113,6 +110,20 @@ namespace ProductFocus.AppServices
                         feature.ExcludeAssignee(userDetails, updatedByUser.Id, command.UpdateFeatureDto.EmailOfAssignee);
                     }
 
+                    if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.IncludeAndExcludeOwners)
+                    {
+                        foreach(long id in command.UpdateFeatureDto.ExcludeOwnerList)
+                        {
+                            User user = _userRepository.GetById(id);
+                            feature.ExcludeAssignee(user, user.Id, user.Email);
+                        }
+                        foreach(long id in command.UpdateFeatureDto.IncludeOwnerList)
+                        {
+                            User user = _userRepository.GetById(id);
+                            feature.IncludeAssignee(user, user.Id, user.Email);
+                        }
+                    }
+
                     if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.AcceptanceCriteria)
                         feature.UpdateAcceptanceCriteria(command.UpdateFeatureDto.AcceptanceCriteria);
 
@@ -136,15 +147,10 @@ namespace ProductFocus.AppServices
                     if (command.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.UpdateModule)
                     {
                         Module module = command.UpdateFeatureDto.ModuleId != null ? await _moduleRepository.GetById(command.UpdateFeatureDto.ModuleId??0) : null;
-                        /*if(module == null)
-                        {
-                            return Result.Failure("Module doesn't exist");
-                        }*/
                         feature.UpdateModule(module);
                     }
                     await _unitOfWork.CompleteAsync();
 
-                    //_emailService.send();
 
                     return Result.Success();
                 }

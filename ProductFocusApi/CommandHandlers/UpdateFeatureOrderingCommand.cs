@@ -5,7 +5,6 @@ using ProductFocus.Domain.Repositories;
 using ProductFocusApi.Dtos;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ProductFocusApi.CommandHandlers
@@ -20,8 +19,8 @@ namespace ProductFocusApi.CommandHandlers
 
         internal sealed class UpdateFeatureOrderCommandHandler : ICommandHandler<UpdateFeatureOrderingCommand>
         {
-            private IFeatureOrderingRepository _featureOrderRepository;
-            private IUnitOfWork _unitOfWork;
+            private readonly IFeatureOrderingRepository _featureOrderRepository;
+            private readonly IUnitOfWork _unitOfWork;
             public UpdateFeatureOrderCommandHandler(IFeatureOrderingRepository featureOrderRepository, IUnitOfWork unitOfWork)
             {
                 _featureOrderRepository = featureOrderRepository;
@@ -31,14 +30,14 @@ namespace ProductFocusApi.CommandHandlers
             {
                 try
                 {
-                    List<FeatureOrdering> featureOrderings = await _featureOrderRepository.GetByCategoryAndSprint(command.OrderingInfo.OrderingCategory, command.OrderingInfo.SprintId);
+                    List<FeatureOrdering> featureOrderings = await _featureOrderRepository.GetByCategoryAndSprint(command.OrderingInfo.SprintId);
                     foreach(var featureOrdering in featureOrderings)
                     {
                         _featureOrderRepository.Remove(featureOrdering);
                     }
-                    foreach (var featureOrdering in command.OrderingInfo.featuresOrdering)
+                    foreach (var featureOrdering in command.OrderingInfo.FeaturesOrdering)
                     {
-                        var newFeatureOrdering = FeatureOrdering.CreateInstance(featureOrdering.FeatureId, featureOrdering.OrderNumber, command.OrderingInfo.SprintId, command.OrderingInfo.OrderingCategory);
+                        var newFeatureOrdering = FeatureOrdering.CreateInstance(featureOrdering.FeatureId, featureOrdering.OrderNumber, command.OrderingInfo.SprintId);
                         _featureOrderRepository.Add(newFeatureOrdering);
                     }
                     await _unitOfWork.CompleteAsync();

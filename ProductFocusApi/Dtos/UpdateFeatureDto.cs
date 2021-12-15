@@ -1,9 +1,6 @@
 ﻿using ProductFocus.Domain.Model;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProductFocus.Dtos
 {
@@ -28,6 +25,8 @@ namespace ProductFocus.Dtos
         public UpdateColumnIdentifier FieldName { get; set; }
         public string UserId { get; set; }
         public long? ModuleId { get; set; }
+        public List<long> IncludeOwnerList { get; set; }
+        public List<long> ExcludeOwnerList { get; set; }
     }
 
     public enum UpdateColumnIdentifier
@@ -48,6 +47,7 @@ namespace ProductFocus.Dtos
         ActualEndDate = 14,
         Remarks = 15,
         FunctionalTestability = 16,
-        UpdateModule = 17
+        UpdateModule = 17,
+        IncludeAndExcludeOwners = 18
     }
 }

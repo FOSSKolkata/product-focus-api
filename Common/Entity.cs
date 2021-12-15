@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Common
 {
@@ -20,7 +16,7 @@ namespace Common
         {
             if(object.Equals(id, default(TId)))
             {
-                throw new ArgumentException("The ID cannot be the type's default value.", "id");
+                throw new ArgumentException("The ID cannot be the type's default value.", nameof(id));
             }
 
             this.Id = id;
@@ -55,9 +51,9 @@ namespace Common
 
         public static bool operator ==(Entity<TId> a, Entity<TId> b)
         {
-            if (ReferenceEquals(a, null) && ReferenceEquals(b, null))
+            if (a is null && b is null)
                 return true;
-            if (ReferenceEquals(a, null) || ReferenceEquals(b, null))
+            if (a is null || b is null)
                 return false;
 
             return a.Equals(b);

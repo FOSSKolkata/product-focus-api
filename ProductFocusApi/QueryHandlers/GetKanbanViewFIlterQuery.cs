@@ -7,31 +7,28 @@ using System.Data;
 using Microsoft.Data.SqlClient;
 using ProductFocus.ConnectionString;
 using System.Threading.Tasks;
-using ProductFocus.Domain.Model;
 using System;
 
 namespace ProductFocus.AppServices
 {
-    public sealed class GetKanbanViewFilterQuery : IQuery<List<GetKanbanViewDto>>
+    public sealed class GetKanbanViewFilterQuery : IQuery<GetKanbanViewListDto>
     {
         public string ObjectId { get; }
         public long Id { get; }
-        public long SprintId { get; set; }
+        public long? SprintId { get; set; }
         public IList<long> UserIds { get; set; }
-        public long OrderingCategoryNum { get; set; }
         public GroupCategoryEnum GroupCategoryEnum { get; set; }
 
-        public GetKanbanViewFilterQuery(long id, OrderingCategoryEnum orderingCategory, string objectId, long sprintId, IList<long> userIds, GroupCategoryEnum groupCategoryEnum)
+        public GetKanbanViewFilterQuery(long id, string objectId, long? sprintId, IList<long> userIds, GroupCategoryEnum groupCategoryEnum)
         {
             Id = id;
-            OrderingCategoryNum = ((long)orderingCategory);
             ObjectId = objectId;
             SprintId = sprintId;
             UserIds = userIds;
             GroupCategoryEnum = groupCategoryEnum;
         }
 
-        internal sealed class GetKanbanViewFilterQueryHandler : IQueryHandler<GetKanbanViewFilterQuery, List<GetKanbanViewDto>>
+        internal sealed class GetKanbanViewFilterQueryHandler : IQueryHandler<GetKanbanViewFilterQuery, GetKanbanViewListDto>
         {
             private readonly QueriesConnectionString _queriesConnectionString;
 
@@ -39,12 +36,13 @@ namespace ProductFocus.AppServices
             {
                 _queriesConnectionString = queriesConnectionString;
             }
-            public async Task<List<GetKanbanViewDto>> Handle(GetKanbanViewFilterQuery query)
+            public async Task<GetKanbanViewListDto> Handle(GetKanbanViewFilterQuery query)
             {
                 List<GetKanbanViewDto> kanbanViewList = new();
                 List<GetKanbanViewDto> userGroupKanban = new();
                 List<GetKanbanViewTempDto> kanbanViewTempList = new();
-                Dictionary<KeyValuePair<string,string>, List<FeatureDetail>> dic = new();
+                // Will Store userIds and List of Features with (userIds and names)
+                Dictionary<string, List<KeyValuePair<List<GroupItem>,FeatureDetail>>> dic = new();
 
                 string sql1 = @"
                     select Id 
@@ -53,7 +51,7 @@ namespace ProductFocus.AppServices
 
                 var builder1 = new SqlBuilder();
                 var selector1 = builder1.AddTemplate("SELECT distinct f.Id, ModuleId, Title, f.SprintId, s.Name, StoryPoint, WorkCompletionPercentage, Status, IsBlocked, WorkItemType, PlannedStartDate, PlannedEndDate, ActualStartDate, ActualEndDate, Remarks, fo.OrderNumber, FunctionalTestability from Features f /**leftjoin**/ /**innerjoin**/ /**where**/");
-                builder1.LeftJoin("FeatureOrderings fo ON fo.FeatureId = f.Id AND fo.SprintId = @SprintId AND fo.OrderingCategory = @OrderingCategory");
+                builder1.LeftJoin("FeatureOrderings fo ON fo.FeatureId = f.Id AND fo.SprintId = @SprintId");
                 builder1.LeftJoin("Modules m ON (f.ModuleId = m.Id OR f.ModuleId is null)");
                 builder1.InnerJoin("Sprint s ON f.SprintId = s.Id");
                 builder1.InnerJoin("Products p ON m.ProductId = p.Id OR f.ProductId = p.Id");
@@ -112,8 +110,7 @@ namespace ProductFocus.AppServices
                         PrdId = query.Id,
                         UserId = userId,
                         query.SprintId,
-                        query.UserIds,
-                        OrderingCategory = query.OrderingCategoryNum
+                        query.UserIds
                     });
 
                     
@@ -129,99 +126,109 @@ namespace ProductFocus.AppServices
                         foreach (var featureDetail in kanbanView.FeatureDetails)
                         {
                             featureDetail.Assignees = assigneeDetails.Where(a => a.Id == featureDetail.Id).ToList();
-                            List<KeyValuePair<string,string>> emailNamePairs = new();
-                            foreach(var assignee in featureDetail.Assignees)
+                            List<GroupItem> groupItemList = new();  // Will store list of UserId and Name
+                            string userIds = string.Empty;          // Will Store ',' separated UserIds
+
+                            foreach (var assignee in featureDetail.Assignees)
                             {
-                                emailNamePairs.Add(KeyValuePair.Create(assignee.Email, assignee.Name));
+                                groupItemList.Add(new GroupItem(assignee.UserId, assignee.Name));
+                                userIds = userIds + assignee.UserId + ",";
                             }
-                            emailNamePairs.Sort((KeyValuePair<string,string> a,KeyValuePair<string,string> b) => {
-                                return string.Compare(a.Key, b.Key);
-                            });
-                            string tempEmails = string.Empty;
-                            string tempNames = string.Empty;
-                            foreach(KeyValuePair<string,string> keyValue in emailNamePairs)
+                            if (groupItemList.Count != 0)
                             {
-                                tempEmails = tempEmails + keyValue.Key + ",";
-                                tempNames = tempNames + keyValue.Value + ", ";
-                            }
-                            if(tempEmails != string.Empty)
-                            {
-                                KeyValuePair<string,string> key = KeyValuePair.Create(tempEmails, tempNames);
-                                if (!dic.ContainsKey(key))
+                                if (!dic.ContainsKey(userIds))      // If List of UserIds doesn't exist in dictionary
                                 {
-                                    dic[key] = new List<FeatureDetail>();
+                                    // Initialize
+                                    dic[userIds] = new List<KeyValuePair<List<GroupItem>,FeatureDetail>>();
                                 }
-                                dic[key].Add(featureDetail);
+                                // Adding the feature with UserList into the dictionary
+                                dic[userIds].Add(new KeyValuePair<List<GroupItem>, FeatureDetail>(groupItemList, featureDetail));
                             }
                             // Fill in scrum days data 
                             featureDetail.ScrumDays = scrumDays.Where(x => x.FeatureId == featureDetail.Id).OrderBy(x => x.Date).ToList();
                         }
                     }
                     kanbanViewTempList = kanbanViewsTemp.ToList();
+
+                    // Feature list which don't have any module assigned
                     List<FeatureDetail> anonymousFeature = featureDetails.Where(a => a.ModuleId == null).ToList();
+
                     for (int i = 0; i < kanbanViewTempList.Count; i++)
                     {
                         kanbanViewList.Add(new GetKanbanViewDto());
                         kanbanViewList[i].FeatureDetails = kanbanViewTempList[i].FeatureDetails;
-                        kanbanViewList[i].GroupName = kanbanViewTempList[i].GroupName;
+                        kanbanViewList[i].GroupList = new List<GroupItem>{new GroupItem(kanbanViewTempList[i].Id, kanbanViewTempList[i].GroupName)};
                     }
+
                     kanbanViewList.Add(new GetKanbanViewDto());
                     kanbanViewList[^1].FeatureDetails = anonymousFeature;
-                    kanbanViewList[^1].GroupName = "Anonymous Module";
+                    kanbanViewList[^1].GroupList = new List<GroupItem>{new GroupItem(null, "Anonymous Module")};
+
+                    // Same algorithm applied as above in anonymous feature list
                     foreach (var featureDetail in kanbanViewList[^1].FeatureDetails)
                     {
                         featureDetail.Assignees = assigneeDetails.Where(a => a.Id == featureDetail.Id).ToList();
-                        List<KeyValuePair<string, string>> emailNamePairs = new();
+                        List<GroupItem> groupItemList = new();
+                        string userIds = string.Empty;
                         foreach (var assignee in featureDetail.Assignees)
                         {
-                            emailNamePairs.Add(KeyValuePair.Create(assignee.Email, assignee.Name));
+                            groupItemList.Add(new GroupItem(assignee.UserId, assignee.Name));
+                            userIds = userIds + assignee.UserId + ",";
                         }
-                        emailNamePairs.Sort((KeyValuePair<string, string> a, KeyValuePair<string, string> b) => {
-                            return string.Compare(a.Key, b.Key);
-                        });
-                        string tempEmails = string.Empty;
-                        string tempNames = string.Empty;
-                        foreach (KeyValuePair<string, string> keyValue in emailNamePairs)
+                        if (groupItemList.Count != 0)
                         {
-                            tempEmails = tempEmails + keyValue.Key + ",";
-                            tempNames = tempNames + keyValue.Value + ", ";
-                        }
-                        if (tempEmails != string.Empty)
-                        {
-                            KeyValuePair<string, string> key = KeyValuePair.Create(tempEmails, tempNames);
-                            if (!dic.ContainsKey(key))
+                            if (!dic.ContainsKey(userIds))
                             {
-                                dic[key] = new List<FeatureDetail>();
+                                dic[userIds] = new List<KeyValuePair<List<GroupItem>, FeatureDetail>>();
                             }
-                            dic[key].Add(featureDetail);
+                            dic[userIds].Add(new KeyValuePair<List<GroupItem>, FeatureDetail>(groupItemList, featureDetail));
                         }
                         // Fill in scrum days data 
                         featureDetail.ScrumDays = scrumDays.Where(x => x.FeatureId == featureDetail.Id).OrderBy(x => x.Date).ToList();
                     }
-                    foreach (KeyValuePair<KeyValuePair<string, string>, List<FeatureDetail>> kv in dic)
+
+                    // Iterating in dictionary to generate GroupByUser
+                    foreach (KeyValuePair<string, List<KeyValuePair<List<GroupItem>, FeatureDetail>>> kv in dic)
                     {
-                        GetKanbanViewDto temp = new();
-                        temp.GroupName = kv.Key.Value[0..^2];
-                        temp.FeatureDetails = kv.Value;
-                        userGroupKanban.Add(temp);
+                        GetKanbanViewDto tempKanbanBoard = new();
+                        tempKanbanBoard.GroupList = kv.Value[0].Key;    // Taking 0 since every list item has same user
+                        List<FeatureDetail> featureDetailsList = new(); // Will store all the feature which is under all the above user.
+                        foreach(KeyValuePair<List<GroupItem>, FeatureDetail> groupItemListAndFeatureDetail in kv.Value)
+                        {
+                            featureDetailsList.Add(groupItemListAndFeatureDetail.Value);
+                        }
+                        tempKanbanBoard.FeatureDetails = featureDetailsList;
+                        userGroupKanban.Add(tempKanbanBoard);
                     }
+
+                    // Feature list without user assigned to
                     List<FeatureDetail> anonymousFeatureWithoutUser = featureDetails.Where(a => a.Assignees.Count == 0 || a.Assignees == null).ToList();
+
                     userGroupKanban.Add(new GetKanbanViewDto());
-                    userGroupKanban[^1].GroupName = "Anonymous User";
+                    userGroupKanban[^1].GroupList = new List<GroupItem>
+                    {
+                        new GroupItem(null, "Anonymous User")
+                    };
                     userGroupKanban[^1].FeatureDetails = anonymousFeatureWithoutUser;
-                    foreach(var feature in userGroupKanban[^1].FeatureDetails)
+                    foreach (var feature in userGroupKanban[^1].FeatureDetails)
                     {
                         feature.Assignees = assigneeDetails.Where(a => a.Id == feature.Id).ToList();
                     }
                 }
                 if(query.GroupCategoryEnum == GroupCategoryEnum.Module)
                 {
-                    return kanbanViewList;
+                    GetKanbanViewListDto kanban = new();
+                    kanban.GroupType = "Module";
+                    kanban.KanbanList = kanbanViewList;
+                    return kanban;
                 }
 
                 if(query.GroupCategoryEnum == GroupCategoryEnum.Users)
                 {
-                    return userGroupKanban;
+                    GetKanbanViewListDto kanban = new();
+                    kanban.GroupType = "Users";
+                    kanban.KanbanList = userGroupKanban;
+                    return kanban;
                 }
                 throw new ArgumentException("Invalid agrument is passed.");
             }

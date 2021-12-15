@@ -2,13 +2,10 @@
 using Microsoft.Data.SqlClient;
 using ProductFocus.ConnectionString;
 using ProductFocus.Domain;
-using ProductFocus.Domain.Model;
 using ProductFocusApi.Dtos;
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace ProductFocusApi.QueryHandlers
 {
@@ -16,12 +13,10 @@ namespace ProductFocusApi.QueryHandlers
     {
         public long ProductId { get; set; }
         public long SprintId { get; set; }
-        public OrderingCategoryEnum OrderingCategory { get; set; }
-        public GetFeatureOrderingByProductIdAndCategoryQuery(long productId, long sprintId, OrderingCategoryEnum orderingCategory)
+        public GetFeatureOrderingByProductIdAndCategoryQuery(long productId, long sprintId)
         {
             ProductId = productId;
             SprintId = sprintId;
-            OrderingCategory = orderingCategory;
         }
         internal sealed class GetFeatureOrderingByProductIdAndCategoryQueryHandler : IQueryHandler<GetFeatureOrderingByProductIdAndCategoryQuery, List<FeatureOrderDto>>
         {
@@ -32,7 +27,7 @@ namespace ProductFocusApi.QueryHandlers
             }
             public async System.Threading.Tasks.Task<List<FeatureOrderDto>> Handle(GetFeatureOrderingByProductIdAndCategoryQuery query)
             {
-                List<FeatureOrderDto> featureOrders = new List<FeatureOrderDto>();
+                List<FeatureOrderDto> featureOrders = new();
 
                 var sql = @"SELECT FeatureId, OrderNumber FROM FeatureOrderings fo
                             INNER JOIN Features f ON f.id = fo.featureId
@@ -44,9 +39,8 @@ namespace ProductFocusApi.QueryHandlers
                 using (IDbConnection con = new SqlConnection(_queriesConnectionString.Value))
                 {
                     featureOrders = (await con.QueryAsync<FeatureOrderDto>(sql, new {
-                        ProductId = query.ProductId,
-                        SprintId = query.SprintId,
-                        OrderingCategory = query.OrderingCategory
+                        query.ProductId,
+                        query.SprintId
                     })).ToList();
                 }
                 return featureOrders;

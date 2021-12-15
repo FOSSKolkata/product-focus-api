@@ -1,15 +1,10 @@
-﻿using ProductFocus.Domain.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace ProductFocusApi.Dtos
 {
     public sealed class OrderingInfoDto
     {
-        public IList<FeatureOrderDto> featuresOrdering { get; set;}
-        public OrderingCategoryEnum OrderingCategory { get; set; }
+        public IList<FeatureOrderDto> FeaturesOrdering { get; set;}
         public long SprintId { get; set; }
     }
     public sealed class FeatureOrderDto

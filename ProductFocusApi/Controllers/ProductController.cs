@@ -1,15 +1,12 @@
-﻿using Common;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ProductFocus.AppServices;
 using ProductFocus.Dtos;
 using CSharpFunctionalExtensions;
-using ProductFocus.Domain;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using System.Linq;
 using System.Security.Claims;
-using ProductFocus.Domain.Model;
 
 namespace ProductFocusApi.Controllers
 {
@@ -49,12 +46,12 @@ namespace ProductFocusApi.Controllers
             return Ok(kanbanViewList);
         }
 
-        [HttpGet("{id}/{orderingCategory}/{groupCategoryEnum}/query")]
-        public async Task<IActionResult> GetKanbanViewByProductIdAndQuery(long id, OrderingCategoryEnum orderingCategory, [FromQuery] long SprintId, [FromQuery] List<long> UserIds, GroupCategoryEnum groupCategoryEnum)
+        [HttpGet("{id}/{groupCategoryEnum}/query")]
+        public async Task<IActionResult> GetKanbanViewByProductIdAndQuery(long id, [FromQuery] long? SprintId, [FromQuery] List<long> UserIds, GroupCategoryEnum groupCategoryEnum)
         {
             string objectId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            List<GetKanbanViewDto> kanbanViewList = await _messages.Dispatch(new GetKanbanViewFilterQuery(id, orderingCategory, objectId, SprintId, UserIds, groupCategoryEnum));
-            return Ok(kanbanViewList);
+            GetKanbanViewListDto kanban = await _messages.Dispatch(new GetKanbanViewFilterQuery(id, objectId, SprintId, UserIds, groupCategoryEnum));
+            return Ok(kanban);
         }
     }
 }

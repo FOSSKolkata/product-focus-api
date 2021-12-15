@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace ProductFocus.ConnectionString
+﻿namespace ProductFocus.ConnectionString
 {
     public sealed class QueriesConnectionString
     {

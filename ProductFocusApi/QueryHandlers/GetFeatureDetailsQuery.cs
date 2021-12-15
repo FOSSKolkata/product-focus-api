@@ -1,6 +1,5 @@
 ﻿using ProductFocus.Domain;
 using ProductFocus.Dtos;
-using System.Collections.Generic;
 using System.Linq;
 using Dapper;
 using System.Data;
@@ -25,16 +24,14 @@ namespace ProductFocus.AppServices
         internal sealed class GetFeatureDetailsQueryHandler : IQueryHandler<GetFeatureDetailsQuery, GetFeatureDetailsDto>
         {
             private readonly QueriesConnectionString _queriesConnectionString;
-            private readonly IEmailService _emailService;
 
             public GetFeatureDetailsQueryHandler(QueriesConnectionString queriesConnectionString, IEmailService emailService)
             {
                 _queriesConnectionString = queriesConnectionString;
-                _emailService = emailService;
             }
             public async Task<GetFeatureDetailsDto> Handle(GetFeatureDetailsQuery query)
             {
-                GetFeatureDetailsDto featureDetails = new GetFeatureDetailsDto();
+                GetFeatureDetailsDto featureDetails = new();
                 
                 string sql = @"
                     select Id, Title, Description, WorkCompletionPercentage, 
@@ -48,7 +45,7 @@ namespace ProductFocus.AppServices
                     where id in (select userid from UserToFeatureAssignments 
                     where featureid = @Id)
                     ;
-                    select u.Name, u.Email, u.ObjectId from Members m, Users u
+                    select u.Name, u.Email, u.ObjectId, u.Id from Members m, Users u
                     where m.UserId = u.Id
                     and m.OrganizationId = @OrgId
                     ;
@@ -61,8 +58,8 @@ namespace ProductFocus.AppServices
                 {
                     var result = await con.QueryMultipleAsync(sql, new
                     {
-                        Id = query.Id,
-                        OrgId = query.OrgId
+                        query.Id,
+                        query.OrgId
                     });
 
                     var featureInformation = await result.ReadAsync<GetFeatureDetailsDto>();
@@ -75,9 +72,7 @@ namespace ProductFocus.AppServices
                     featureInformation.SingleOrDefault().Sprint = sprint.SingleOrDefault();
 
                     featureDetails = featureInformation.SingleOrDefault();
-                }
-                
-                //_emailService.send();                
+                }             
 
                 return featureDetails;
             }

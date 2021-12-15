@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -70,11 +67,13 @@ namespace ProductFocus.Persistence
         public DbSet<Invitation> Invitations { get; set; }
         public DbSet<WorkItemDomainEventLog> WorkItemDomainEventLogs { get; set; }
         public DbSet<FeatureOrdering> FeatureOrders { get; set; }
+        public DbSet<TagCategory> TagCategories { get; set; }
+        public DbSet<Tag> Tags { get; set; }
 
         private readonly IMediator _mediator;
 
 
-        public async Task<int> SaveEntitiesAsync(CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<int> SaveEntitiesAsync(CancellationToken cancellationToken = default)
         {
             // Dispatch Domain Events collection. 
             // Choices:
@@ -106,7 +105,7 @@ namespace ProductFocus.Persistence
 
         class NoMediator : IMediator
         {
-            public Task Publish<TNotification>(TNotification notification, CancellationToken cancellationToken = default(CancellationToken)) where TNotification : INotification
+            public Task Publish<TNotification>(TNotification notification, CancellationToken cancellationToken = default) where TNotification : INotification
             {
                 return Task.CompletedTask;
             }
@@ -116,9 +115,9 @@ namespace ProductFocus.Persistence
                 return Task.CompletedTask;
             }
 
-            public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default(CancellationToken))
+            public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)
             {
-                return Task.FromResult<TResponse>(default(TResponse));
+                return Task.FromResult<TResponse>(default);
             }
 
             public Task<object> Send(object request, CancellationToken cancellationToken = default)

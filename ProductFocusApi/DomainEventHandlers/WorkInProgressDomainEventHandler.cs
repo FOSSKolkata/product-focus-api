@@ -4,11 +4,8 @@ using ProductFocus.Domain.Events;
 using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace ProductFocusApi.DomainEventHandlers
 {
@@ -31,7 +28,7 @@ namespace ProductFocusApi.DomainEventHandlers
         public async System.Threading.Tasks.Task Handle(WorkInProgressDomainEvent workInProgressDomainEvent, CancellationToken cancellationToken)
         {
             User user = _userRepository.GetById(workInProgressDomainEvent.EventTriggeredById);
-            WorkItemDomainEventLog workItemDomainEventLog = new WorkItemDomainEventLog(nameof(WorkInProgressDomainEvent), JsonSerializer.Serialize(new { FeatureId = workInProgressDomainEvent.Feature.Id, Title = workInProgressDomainEvent.Feature.Title, OldWorkProgress = workInProgressDomainEvent.OldWorkPercentage, NewWorkProgress = workInProgressDomainEvent.NewWorkPercentage }), workInProgressDomainEvent.Feature.ModuleId, workInProgressDomainEvent.Feature.Module.Name, workInProgressDomainEvent.EventTriggeredById, user.Name, workInProgressDomainEvent.ProductId, workInProgressDomainEvent.Feature.Id);
+            WorkItemDomainEventLog workItemDomainEventLog = new(nameof(WorkInProgressDomainEvent), JsonSerializer.Serialize(new { FeatureId = workInProgressDomainEvent.Feature.Id, Title = workInProgressDomainEvent.Feature.Title, OldWorkProgress = workInProgressDomainEvent.OldWorkPercentage, NewWorkProgress = workInProgressDomainEvent.NewWorkPercentage }), workInProgressDomainEvent.Feature.ModuleId, workInProgressDomainEvent.Feature.Module?.Name, workInProgressDomainEvent.EventTriggeredById, user.Name, workInProgressDomainEvent.ProductId, workInProgressDomainEvent.Feature.Id);
             _domainEventLogRepository.AddDomainEventLog(workItemDomainEventLog);
 
             await _unitOfWork.CompleteAsync(cancellationToken);

@@ -4,11 +4,8 @@ using ProductFocus.Domain.Events;
 using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace ProductFocusApi.DomainEventHandlers
 {
@@ -26,7 +23,7 @@ namespace ProductFocusApi.DomainEventHandlers
         public async System.Threading.Tasks.Task Handle(AddOwnerToWorkItemDomainEvent addOwnerToWorkItemDomainEvent, CancellationToken cancellationToken)
         {
             User user = _userRepository.GetById(addOwnerToWorkItemDomainEvent.EventTriggeredById);
-            WorkItemDomainEventLog workItemDomainEventLog = new WorkItemDomainEventLog(nameof(AddOwnerToWorkItemDomainEvent), JsonSerializer.Serialize(new { FeatureId = addOwnerToWorkItemDomainEvent.Feature.Id, Title = addOwnerToWorkItemDomainEvent.Feature.Title, OwnerName = addOwnerToWorkItemDomainEvent.OwnerName, OwnerEmail = addOwnerToWorkItemDomainEvent.OwnerEmail }), addOwnerToWorkItemDomainEvent.Feature.ModuleId, addOwnerToWorkItemDomainEvent.Feature.Module?.Name, addOwnerToWorkItemDomainEvent.EventTriggeredById, user.Name, addOwnerToWorkItemDomainEvent.ProductId, addOwnerToWorkItemDomainEvent.Feature.Id);
+            WorkItemDomainEventLog workItemDomainEventLog = new(nameof(AddOwnerToWorkItemDomainEvent), JsonSerializer.Serialize(new { FeatureId = addOwnerToWorkItemDomainEvent.Feature.Id, Title = addOwnerToWorkItemDomainEvent.Feature.Title, OwnerName = addOwnerToWorkItemDomainEvent.OwnerName, OwnerEmail = addOwnerToWorkItemDomainEvent.OwnerEmail }), addOwnerToWorkItemDomainEvent.Feature.ModuleId, addOwnerToWorkItemDomainEvent.Feature.Module?.Name, addOwnerToWorkItemDomainEvent.EventTriggeredById, user.Name, addOwnerToWorkItemDomainEvent.ProductId, addOwnerToWorkItemDomainEvent.Feature.Id);
             _domainEventLogRepository.AddDomainEventLog(workItemDomainEventLog);
 
             await _unitOfWork.CompleteAsync(cancellationToken);

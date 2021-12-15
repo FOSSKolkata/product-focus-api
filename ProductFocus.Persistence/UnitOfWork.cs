@@ -1,13 +1,8 @@
 ﻿using Common;
 using Microsoft.EntityFrameworkCore;
 using ProductFocus.Domain;
-using ProductFocus.Domain.Model;
-using ProductFocus.Domain.Repositories;
-using ProductFocus.Persistence.Repositories;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -56,7 +51,7 @@ namespace ProductFocus.Persistence
         {
             return _context.Set<T>();
         }
-        public async Task<int> CompleteAsync(CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<int> CompleteAsync(CancellationToken cancellationToken = default)
         {
             return await _context.SaveEntitiesAsync(cancellationToken);
         }

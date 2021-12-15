@@ -225,10 +225,7 @@ namespace ProductFocus.Persistence.Migrations
                     b.Property<long>("OrderNumber")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("OrderingCategory")
-                        .HasColumnType("int");
-
-                    b.Property<long>("SprintId")
+                    b.Property<long?>("SprintId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
@@ -577,6 +574,76 @@ namespace ProductFocus.Persistence.Migrations
                     b.ToTable("Sprint");
                 });
 
+            modelBuilder.Entity("ProductFocus.Domain.Model.Tag", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("CreatedById")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("LastModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("TagCategoryId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TagCategoryId");
+
+                    b.ToTable("Tags");
+                });
+
+            modelBuilder.Entity("ProductFocus.Domain.Model.TagCategory", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("CreatedById")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("LastModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("ProductId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("TagCategories");
+                });
+
             modelBuilder.Entity("ProductFocus.Domain.Model.Task", b =>
                 {
                     b.Property<long>("Id")
@@ -859,6 +926,24 @@ namespace ProductFocus.Persistence.Migrations
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("ProductFocus.Domain.Model.Tag", b =>
+                {
+                    b.HasOne("ProductFocus.Domain.Model.TagCategory", "TagCategory")
+                        .WithMany()
+                        .HasForeignKey("TagCategoryId");
+
+                    b.Navigation("TagCategory");
+                });
+
+            modelBuilder.Entity("ProductFocus.Domain.Model.TagCategory", b =>
+                {
+                    b.HasOne("ProductFocus.Domain.Model.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId");
 
                     b.Navigation("Product");
                 });

@@ -3,12 +3,8 @@ using ProductFocus.Domain;
 using ProductFocus.Domain.Events;
 using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace ProductFocusApi.DomainEventHandlers
 {
@@ -26,7 +22,7 @@ namespace ProductFocusApi.DomainEventHandlers
         public async System.Threading.Tasks.Task Handle(WorkItemTitleChangedDomainEvent workItemTitleChangedDomainEvent, CancellationToken cancellationToken)
         {
             User user = _userRepository.GetById(workItemTitleChangedDomainEvent.EventTriggeredById);
-            WorkItemDomainEventLog workItemDomainEventLog = new WorkItemDomainEventLog(nameof(WorkItemTitleChangedDomainEvent), JsonSerializer.Serialize(new { FeatureId = workItemTitleChangedDomainEvent.Feature.Id, Title = workItemTitleChangedDomainEvent.Feature.Title, PreviousTitle = workItemTitleChangedDomainEvent.PreviousTitle, CurrentTitle = workItemTitleChangedDomainEvent.CurrentTitle }), workItemTitleChangedDomainEvent.Feature.ModuleId, workItemTitleChangedDomainEvent.Feature.Module.Name, workItemTitleChangedDomainEvent.EventTriggeredById, user.Name, workItemTitleChangedDomainEvent.ProductId, workItemTitleChangedDomainEvent.Feature.Id);
+            WorkItemDomainEventLog workItemDomainEventLog = new(nameof(WorkItemTitleChangedDomainEvent), JsonSerializer.Serialize(new { FeatureId = workItemTitleChangedDomainEvent.Feature.Id, Title = workItemTitleChangedDomainEvent.Feature.Title, PreviousTitle = workItemTitleChangedDomainEvent.PreviousTitle, CurrentTitle = workItemTitleChangedDomainEvent.CurrentTitle }), workItemTitleChangedDomainEvent.Feature.ModuleId, workItemTitleChangedDomainEvent.Feature.Module?.Name, workItemTitleChangedDomainEvent.EventTriggeredById, user.Name, workItemTitleChangedDomainEvent.ProductId, workItemTitleChangedDomainEvent.Feature.Id);
             _domainEventLogRepository.AddDomainEventLog(workItemDomainEventLog);
 
             await _unitOfWork.CompleteAsync(cancellationToken);

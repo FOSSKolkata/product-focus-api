@@ -1,16 +1,37 @@
 ﻿using ProductFocus.Domain.Model;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProductFocus.Dtos
 {
+    public sealed class GetKanbanViewListDto
+    {
+        public string GroupType { get; set; }
+        public IList<GetKanbanViewDto> KanbanList { get; set; }
+    }
     public sealed class GetKanbanViewDto
     {
-        public string GroupName { get; set; }
+        public IList<GroupItem> GroupList { get; set; }
         public IList<FeatureDetail> FeatureDetails { get; set; }
+    }
+
+    public sealed class GroupItem
+    {
+        public long? GroupId { get; set; }
+        public string GroupName { get; set; }
+        public GroupItem(long? groupId, string groupName)
+        {
+            GroupId = groupId;
+            GroupName = groupName;
+        }
+        public static bool operator <(GroupItem group1, GroupItem group2)
+        {
+            return group1.GroupId < group2.GroupId;
+        }
+        public static bool operator >(GroupItem group1, GroupItem group2)
+        {
+            return !(group1 < group2);
+        }
     }
 
     public sealed class GetKanbanViewTempDto
