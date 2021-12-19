@@ -1,5 +1,6 @@
 ﻿using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
+using System.Threading.Tasks;
 
 namespace ProductFocus.Persistence.Repositories
 {
@@ -13,6 +14,11 @@ namespace ProductFocus.Persistence.Repositories
         public void AddTagCategory(TagCategory tagCategory)
         {
             _unitOfWork.Insert<TagCategory>(tagCategory);
+        }
+
+        public Task<TagCategory> GetById(long id)
+        {
+            return _unitOfWork.GetAsync<TagCategory>(id);
         }
     }
 }

@@ -23,16 +23,14 @@ namespace ProductFocus.AppServices
             private readonly IOrganizationRepository _organizationRepository;
             private readonly IUserRepository _userRepository;
             private readonly IUnitOfWork _unitOfWork;
-            private readonly IEmailService _emailService;
 
             public AddOrganizationCommandHandler(
                 IOrganizationRepository organizationRepository, IUserRepository userRepository,
-                IUnitOfWork unitOfWork, IEmailService emailService)
+                IUnitOfWork unitOfWork)
             {
                 _organizationRepository = organizationRepository;
                 _userRepository = userRepository;
                 _unitOfWork = unitOfWork;
-                _emailService = emailService;
             }
             public async Task<Result> Handle(AddOrganizationCommand command)
             {
@@ -54,8 +52,6 @@ namespace ProductFocus.AppServices
                     organization.AddMember(user, true);
 
                     await _unitOfWork.CompleteAsync();
-
-                    //_emailService.send();
 
                     return Result.Success();
                 }

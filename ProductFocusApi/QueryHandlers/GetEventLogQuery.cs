@@ -69,14 +69,14 @@ namespace ProductFocus.AppServices
                 {
                     var result = await con.QueryMultipleAsync(sql, new
                     {
-                        ProductId = query.ProductId,
-                        ModuleIds = query.ModuleIds,
-                        UserIds = query.UserIds,
-                        RecordOffset = query.RecordOffset,
-                        Count = query.Count,
-                        StartDate = query.StartDate,
+                        query.ProductId,
+                        query.ModuleIds,
+                        query.UserIds,
+                        query.RecordOffset,
+                        query.Count,
+                        query.StartDate,
                         EndDate = query.EndDate?.AddDays(1),
-                        EventType = query.EventType
+                        query.EventType
                     });
 
                     eventLogList = (await result.ReadAsync<GetDomainEventLogDto>()).ToList();

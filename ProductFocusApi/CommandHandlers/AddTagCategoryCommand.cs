@@ -40,7 +40,8 @@ namespace ProductFocusApi.CommandHandlers
 
                 try
                 {
-                    product.AddTagCategory(command.Name);
+                    TagCategory tagCategory = TagCategory.CreateInstance(product, command.Name);
+                    _tagCategoryRepository.AddTagCategory(tagCategory);
                     await _unitOfWork.CompleteAsync();
                     return Result.Success();
                 }

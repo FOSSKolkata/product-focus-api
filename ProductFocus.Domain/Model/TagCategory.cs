@@ -6,8 +6,8 @@ namespace ProductFocus.Domain.Model
 {
     public class TagCategory : AggregateRoot<long>
     {
-        public virtual string Name { get; set; }
-        public virtual Product Product { get; set; }
+        public virtual string Name { get; private set; }
+        public virtual Product Product { get; private set; }
 
         protected TagCategory()
         {

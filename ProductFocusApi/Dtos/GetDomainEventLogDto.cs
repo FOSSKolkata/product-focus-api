@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ProductFocusApi.Dtos
 {
-    public class GetDomainEventLogDto
+    public sealed class GetDomainEventLogDto
     {
         public Guid Id { get; set; }
         public string EventTypeName { get; set; }

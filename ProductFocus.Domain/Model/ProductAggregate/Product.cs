@@ -11,7 +11,6 @@ namespace ProductFocus.Domain.Model
         public virtual Organization Organization { get; private set; }
         
         private readonly IList<Module> _modules = new List<Module>();
-        private readonly IList<TagCategory> _tagCategorys = new List<TagCategory>();
         public virtual IReadOnlyList<Module> Modules => _modules.ToList();
         protected Product()
         {
@@ -41,12 +40,6 @@ namespace ProductFocus.Domain.Model
             
             var module = Module.CreateInstance(this, name);
             _modules.Add(module);
-        }
-
-        public virtual void AddTagCategory(string name)
-        {
-            var tagCategory = TagCategory.CreateInstance(this, name);
-            _tagCategorys.Add(tagCategory);
         }
     }
 }

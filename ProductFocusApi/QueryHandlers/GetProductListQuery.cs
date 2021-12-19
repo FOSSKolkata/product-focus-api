@@ -6,7 +6,6 @@ using Dapper;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using ProductFocus.ConnectionString;
-using ProductFocus.Services;
 using System.Threading.Tasks;
 
 namespace ProductFocus.AppServices
@@ -22,16 +21,14 @@ namespace ProductFocus.AppServices
         internal sealed class GetProductListQueryHandler : IQueryHandler<GetProductListQuery, List<GetProductDto>>
         {
             private readonly QueriesConnectionString _queriesConnectionString;
-            private readonly IEmailService _emailService;
 
-            public GetProductListQueryHandler(QueriesConnectionString queriesConnectionString, IEmailService emailService)
+            public GetProductListQueryHandler(QueriesConnectionString queriesConnectionString)
             {
                 _queriesConnectionString = queriesConnectionString;
-                _emailService = emailService;
             }
             public async Task<List<GetProductDto>> Handle(GetProductListQuery query)
             {
-                List<GetProductDto> productList = new List<GetProductDto>();
+                List<GetProductDto> productList = new();
                 
                 string sql = @"
                     SELECT id, name 
@@ -45,8 +42,6 @@ namespace ProductFocus.AppServices
                         OrgId = query.Id
                     })).ToList();
                 }
-                
-                //_emailService.send();
                 
                 return productList;
             }

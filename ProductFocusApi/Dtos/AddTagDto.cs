@@ -1,8 +1,8 @@
 ﻿namespace ProductFocusApi.Dtos
 {
-    public sealed class GetTagCategoryDto
+    public sealed class AddTagDto
     {
-        public long Id { get; set; }
         public string Name { get; set; }
+        public long? TagCategoryId { get; set; }
     }
 }
