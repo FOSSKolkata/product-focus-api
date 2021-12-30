@@ -1,13 +1,18 @@
 ﻿using Common;
 using CSharpFunctionalExtensions;
+using System;
 
 namespace ProductFocus.Domain.Model
 {
-    public class Tag : AggregateRoot<long>
+    public class Tag : AggregateRoot<long>, ISoftDeletable
     {
         public virtual string Name { get; private set; }
         public virtual TagCategory TagCategory { get; private set; }
         public virtual long ProductId { get; private set; }
+        public bool IsDeleted { get; set; }
+        public DateTime DeletedOn { get; set; }
+        public string DeletedBy { get; set; }
+
         protected Tag()
         {
             // this protected constructor is for lazy loading to work
@@ -26,6 +31,13 @@ namespace ProductFocus.Domain.Model
             }
             Tag tag = new(name, productId, tagCategory);
             return tag;
+        }
+
+        public void Delete(string userId)
+        {
+            IsDeleted = true;
+            DeletedBy = userId;
+            DeletedOn = DateTime.Now;
         }
     }
 }

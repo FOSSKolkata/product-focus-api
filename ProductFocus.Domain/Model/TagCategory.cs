@@ -24,5 +24,10 @@ namespace ProductFocus.Domain.Model
             var tagCategory = new TagCategory(product, name);
             return tagCategory;
         }
+
+        public static implicit operator TagCategory(long v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using ProductFocus.Domain.Model;
+using ProductFocus.Domain.Model.BusinessAggregate;
 using ProductFocus.Domain.Model.FeatureAggregate;
 using Task = System.Threading.Tasks.Task;
 
@@ -69,6 +70,9 @@ namespace ProductFocus.Persistence
         public DbSet<FeatureOrdering> FeatureOrders { get; set; }
         public DbSet<TagCategory> TagCategories { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<BusinessRequirement> BusinessRequirements { get; set; }
+        public DbSet<BusinessRequirementTag> BusinessRequirementTags { get; set; }
+        public DbSet<BusinessRequirementAttachment> BusinessRequirementAttachments { get; set; }
 
         private readonly IMediator _mediator;
 

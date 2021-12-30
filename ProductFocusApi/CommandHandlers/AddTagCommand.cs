@@ -2,7 +2,6 @@
 using ProductFocus.Domain;
 using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
-using ProductFocusApi.Dtos;
 using System;
 using System.Threading.Tasks;
 
@@ -11,11 +10,13 @@ namespace ProductFocusApi.CommandHandlers
     public sealed class AddTagCommand : ICommand
     {
         public long ProductId { get; }
-        public AddTagDto AddTagDto { get; }
-        public AddTagCommand(long productId, AddTagDto addTagDto)
+        public string TagName { get; }
+        public long? TagCategoryId { get; }
+        public AddTagCommand(long productId, string tagName, long? tagCategoryId)
         {
             ProductId = productId;
-            AddTagDto = addTagDto;
+            TagName = tagName;
+            TagCategoryId = tagCategoryId;
         }
         internal sealed class AddTagCommandHandler : ICommandHandler<AddTagCommand>
         {
@@ -36,9 +37,22 @@ namespace ProductFocusApi.CommandHandlers
 
                 try
                 {
-                    TagCategory tagCategory = command.AddTagDto.TagCategoryId == null ? null : await _tagCategoryRepository.GetById((long)command.AddTagDto.TagCategoryId);
-                    Tag tag = Tag.CreateInstance(command.AddTagDto.Name, command.ProductId, tagCategory).Value;
-                    _tagRepository.AddTag(tag);
+                    TagCategory tagCategory = command.TagCategoryId == null ? null : await _tagCategoryRepository.GetById((long)command.TagCategoryId);
+                    Tag alreadyPresentTagInProduct = await _tagRepository.GetByNameAndProductId(command.TagName, command.ProductId);
+                    if(alreadyPresentTagInProduct == null)
+                    {
+
+                        Tag tag = Tag.CreateInstance(command.TagName, command.ProductId, tagCategory).Value;
+                        _tagRepository.AddTag(tag);
+                    }
+                    else if(alreadyPresentTagInProduct.IsDeleted == true)
+                    {
+                        alreadyPresentTagInProduct.IsDeleted = false;
+                    }
+                    else
+                    {
+                        return Result.Failure($"Tag is already present with the name {command.TagName}");
+                    }
                     await _unitOfWork.CompleteAsync();
                     return Result.Success();
                 } catch(Exception ex)

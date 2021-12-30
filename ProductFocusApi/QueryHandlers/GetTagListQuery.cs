@@ -28,7 +28,7 @@ namespace ProductFocusApi.QueryHandlers
             {
                 List<GetTagDto> tagList = new();
 
-                string sql = @"SELECT Id, Name from Tags Where ProductId = @ProductId";
+                string sql = @"SELECT Id, Name FROM Tags WHERE ProductId = @ProductId AND IsDeleted = 'false' ORDER BY Name";
 
                 using(IDbConnection con = new SqlConnection(_queriesConnectionString.Value))
                 {

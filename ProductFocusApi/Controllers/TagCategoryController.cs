@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProductFocus.AppServices;
 using ProductFocusApi.CommandHandlers;
@@ -11,6 +12,7 @@ namespace ProductFocusApi.Controllers
 {
     [ApiController]
     [Route("[Controller]/[Action]")]
+    [Authorize]
     public class TagCategoryController : Controller
     {
         private readonly Messages _messages;

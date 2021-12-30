@@ -20,6 +20,7 @@ using ProductFocusApi.Validations;
 using Autofac;
 using ProductFocusApi.AutofacModules;
 using Microsoft.Data.SqlClient;
+using ProductFocusApi.ConnectionString;
 
 namespace ProductFocus.Api
 {
@@ -39,7 +40,6 @@ namespace ProductFocus.Api
                     .AddMicrosoftIdentityWebApi(options =>
                     {
                         Configuration.Bind("AzureAdB2C", options);
-
                         options.TokenValidationParameters.NameClaimType = "name";
                     },
             options => { Configuration.Bind("AzureAdB2C", options); });
@@ -73,7 +73,6 @@ namespace ProductFocus.Api
             //builder.Password = Configuration["DevDbPassword"];
             //builder.UserID = Configuration["DevDbUser"];
             var connection = builder.ConnectionString;
-
             services.AddDbContext<ProductFocusDbContext>(
                 x => x.UseLazyLoadingProxies()
                     .UseSqlServer(connection));
@@ -94,7 +93,8 @@ namespace ProductFocus.Api
             var queryConnection = builder.ConnectionString;
 
             var queriesConnectionString = new QueriesConnectionString(queryConnection);
-            
+            var blobConnection = Configuration.GetConnectionString("BlobConnectionString");
+            services.AddSingleton(new BlobConnectionString(blobConnection));
             services.AddSingleton(queriesConnectionString);
             services.AddTransient<IEmailService, EmailService>();
         }

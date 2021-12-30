@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProductFocus.Persistence;
 
 namespace ProductFocus.Persistence.Migrations
 {
     [DbContext(typeof(ProductFocusDbContext))]
-    partial class ProductFocusDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211219080721_softdeleteInTag")]
+    partial class softdeleteInTag
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,83 +23,6 @@ namespace ProductFocus.Persistence.Migrations
 
             modelBuilder.HasSequence("EntityFrameworkHiLoSequence")
                 .IncrementsBy(10);
-
-            modelBuilder.Entity("ProductFocus.Domain.Model.BusinessAggregate.BusinessRequirementTag", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<long>("BusinessRequirementId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("CreatedById")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("LastModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long>("TagId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TagId");
-
-                    b.ToTable("BusinessRequirementTags");
-                });
-
-            modelBuilder.Entity("ProductFocus.Domain.Model.BusinessRequirement", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("CreatedById")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("LastModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long>("ProductId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Source")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SourceInformation")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("BusinessRequirements");
-                });
 
             modelBuilder.Entity("ProductFocus.Domain.Model.Feature", b =>
                 {
@@ -892,17 +817,6 @@ namespace ProductFocus.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("WorkItemDomainEventLogs");
-                });
-
-            modelBuilder.Entity("ProductFocus.Domain.Model.BusinessAggregate.BusinessRequirementTag", b =>
-                {
-                    b.HasOne("ProductFocus.Domain.Model.Tag", "Tag")
-                        .WithMany()
-                        .HasForeignKey("TagId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Tag");
                 });
 
             modelBuilder.Entity("ProductFocus.Domain.Model.Feature", b =>
