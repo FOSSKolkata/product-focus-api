@@ -3,6 +3,12 @@ using System.Collections.Generic;
 
 namespace ProductFocusApi.Dtos
 {
+    public sealed class GetBusinessRequirementsDto
+    {
+        public long RecordCount { get; set; }
+        public IList<GetBusinessRequirementDto> BusinessRequirements { get; set; }
+    }
+
     public sealed class GetBusinessRequirementDto
     {
         public long Id { get; set; }

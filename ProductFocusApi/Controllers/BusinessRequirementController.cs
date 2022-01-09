@@ -33,10 +33,10 @@ namespace ProductFocusApi.Controllers
             GetBusinessRequirementDetailsDto businessRequirementDetails = await _messages.Dispatch(new GetBusinessRequirementDetailsQuery(id));
             return Ok(businessRequirementDetails);
         }
-        [HttpGet("{productId}/query")]
-        public async Task<IActionResult> GetBusinessRequirementsByProductId(long productId, [FromQuery] List<long> tagIds, DateTime? startDate, DateTime? endDate)
+        [HttpGet("{productId}/{offset}/{count}/query")]
+        public async Task<IActionResult> GetBusinessRequirementsByProductId(long productId, [FromQuery] List<long> tagIds, DateTime? startDate, DateTime? endDate, long offset, long count)
         {
-            List<GetBusinessRequirementDto> businessRequirements = await _messages.Dispatch(new GetBusinessRequirementListQuery(productId, tagIds, startDate, endDate));
+            GetBusinessRequirementsDto businessRequirements = await _messages.Dispatch(new GetBusinessRequirementListQuery(productId, tagIds, startDate, endDate, offset, count));
             return Ok(businessRequirements);
         }
     }
