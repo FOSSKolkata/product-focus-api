@@ -31,8 +31,8 @@ namespace ProductFocus.AppServices
             }
             public async Task<List<GetKanbanViewDto>> Handle(GetKanbanViewQuery query)
             {
-                List<GetKanbanViewDto> kanbanViewList = new List<GetKanbanViewDto>();
-                List<GetKanbanViewTempDto> kanbanViewTempList = new List<GetKanbanViewTempDto>();
+                List<GetKanbanViewDto> kanbanViewList = new();
+                List<GetKanbanViewTempDto> kanbanViewTempList = new();
 
                 string sql1 = @"
                     select Id 
@@ -46,7 +46,7 @@ namespace ProductFocus.AppServices
                 builder.InnerJoin("Users u ON uf.UserId=u.Id");
                 builder.InnerJoin("Modules m ON m.Id=f.ModuleId");
                 builder.InnerJoin("Products p ON m.ProductId=p.Id");
-                builder.Where("p.id = @Prdid");
+                builder.Where("p.id = @PrdId");
 
                 var tempStr = selector.RawSql;
 
@@ -78,7 +78,7 @@ namespace ProductFocus.AppServices
                 {
                     var userId = (await con.QueryAsync<long>(sql1, new
                     {
-                        ObjectId = query.ObjectId
+                        query.ObjectId
                     }));
 
                     var result = await con.QueryMultipleAsync(sql2, new

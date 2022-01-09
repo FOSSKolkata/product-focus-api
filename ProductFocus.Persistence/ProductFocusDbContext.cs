@@ -45,6 +45,18 @@ namespace ProductFocus.Persistence
              .Property(o => o.Id).UseHiLo();
             modelbuilder.Entity<UserToFeatureAssignment>()
              .Property(o => o.Id).UseHiLo();
+            modelbuilder.Entity<Tag>()
+             .Property(o => o.Id).UseHiLo();
+            modelbuilder.Entity<TagCategory>()
+             .Property(o => o.Id).UseHiLo();
+            modelbuilder.Entity<BusinessRequirement>()
+             .Property(o => o.Id).UseHiLo();
+            modelbuilder.Entity<BusinessRequirement>()
+             .Property(o => o.Id).UseHiLo();
+            modelbuilder.Entity<BusinessRequirementTag>()
+             .Property(o => o.Id).UseHiLo();
+            modelbuilder.Entity<BusinessRequirementAttachment>()
+             .Property(o => o.Id).UseHiLo();
         }
         public ProductFocusDbContext(DbContextOptions<ProductFocusDbContext> options) : base(options)
         {

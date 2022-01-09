@@ -29,7 +29,7 @@ namespace ProductFocusApi.QueryHandlers
             }
             public async Task<Result<GetInvitationDetailsDto>> Handle(GetInvitationDetailsQuery query)
             {
-                GetInvitationDetailsDto invitationDetails = new GetInvitationDetailsDto();
+                GetInvitationDetailsDto invitationDetails = new();
                 string sql1 = @"SELECT Email FROM Users WHERE ObjectId = @ObjectId";
                 string sql2 = @"SELECT Id, Email, OrganizationId, CreatedById, Status FROM Invitations WHERE Id = @Id;";
                 string sql3 = @"SELECT * FROM Organizations WHERE Id = @OrgId;
@@ -39,12 +39,12 @@ namespace ProductFocusApi.QueryHandlers
                 {
                     string email = (await con.QueryAsync<string>(sql1, new
                     {
-                        ObjectId = query.ObjectId
+                        query.ObjectId
                     })).SingleOrDefault();
 
                     var invitation = (await con.QueryAsync<InvitationDetails>(sql2, new
-                    { 
-                        Id = query.Id
+                    {
+                        query.Id
                     })).SingleOrDefault();
 
                     if (invitation == null)

@@ -21,6 +21,7 @@ using Autofac;
 using ProductFocusApi.AutofacModules;
 using Microsoft.Data.SqlClient;
 using ProductFocusApi.ConnectionString;
+using Azure.Storage.Blobs;
 
 namespace ProductFocus.Api
 {
@@ -95,6 +96,7 @@ namespace ProductFocus.Api
             var queriesConnectionString = new QueriesConnectionString(queryConnection);
             var blobConnection = Configuration.GetConnectionString("BlobConnectionString");
             services.AddSingleton(new BlobConnectionString(blobConnection));
+            services.AddSingleton(new BlobServiceClient(blobConnection));
             services.AddSingleton(queriesConnectionString);
             services.AddTransient<IEmailService, EmailService>();
         }

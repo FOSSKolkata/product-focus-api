@@ -41,16 +41,16 @@ namespace ProductFocus.AppServices
             }
             public async Task<List<GetDomainEventLogDto>> Handle(GetDomainEventLogQuery query)
             {
-                List<GetDomainEventLogDto> eventLogList = new List<GetDomainEventLogDto>();
+                List<GetDomainEventLogDto> eventLogList = new();
 
                 var builder = new SqlBuilder();
                 var sqlBuilder = builder.AddTemplate("SELECT Id, EventTypeName, DomainEventJson, ModuleId, ProductId, CreatedOn, CreatedBy, ModuleName from Workitemdomaineventlogs /**where**/ /**orderby**/");
                 builder.Where("ProductId = @ProductId");
                 if (query.EventType != null && query.EventType != string.Empty)
                     builder.Where("EventTypeName = @EventType");
-                if (query.ModuleIds != null && query.ModuleIds.Count() > 0)
+                if (query.ModuleIds != null && query.ModuleIds.Count > 0)
                     builder.Where("ModuleId in @ModuleIds");
-                if (query.UserIds != null && query.UserIds.Count() > 0)
+                if (query.UserIds != null && query.UserIds.Count > 0)
                     builder.Where("CreatedById in @UserIds");
                 if (query.StartDate != null && query.EndDate != null)
                     builder.Where("CreatedOn BETWEEN @StartDate AND @EndDate");

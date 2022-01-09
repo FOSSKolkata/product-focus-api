@@ -28,7 +28,7 @@ namespace ProductFocus.AppServices
             }
             public async Task<GetMemberOfOrganizationDto> Handle(GetUserListByOrganizationQuery query)
             {
-                GetMemberOfOrganizationDto userList = new GetMemberOfOrganizationDto();
+                GetMemberOfOrganizationDto userList = new();
                 
                 string sql = @"
                     select count(1) as RecordCount
@@ -45,7 +45,7 @@ namespace ProductFocus.AppServices
                 {
                     var result = await con.QueryMultipleAsync(sql, new
                     {
-                        OrgId = query.OrgId                        
+                        query.OrgId                        
                     });
 
                     var responseList = await result.ReadAsync<GetMemberOfOrganizationDto>();

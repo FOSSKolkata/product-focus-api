@@ -22,16 +22,14 @@ namespace ProductFocus.AppServices
         internal sealed class GetOrganizationListByUserQueryHandler : IQueryHandler<GetOrganizationListByUserQuery, List<GetOrganizationByUserDto>>
         {
             private readonly QueriesConnectionString _queriesConnectionString;
-            private readonly IEmailService _emailService;
 
-            public GetOrganizationListByUserQueryHandler(QueriesConnectionString queriesConnectionString, IEmailService emailService)
+            public GetOrganizationListByUserQueryHandler(QueriesConnectionString queriesConnectionString)
             {
                 _queriesConnectionString = queriesConnectionString;
-                _emailService = emailService;
             }
             public async Task<List<GetOrganizationByUserDto>> Handle(GetOrganizationListByUserQuery query)
             {
-                List<GetOrganizationByUserDto> organizationList = new List<GetOrganizationByUserDto>();                
+                List<GetOrganizationByUserDto> organizationList = new();                
 
                 string sql1 = @"
                     select Id 
@@ -49,7 +47,7 @@ namespace ProductFocus.AppServices
                 {
                     var userId = (await con.QueryAsync<long>(sql1, new
                     {
-                        ObjectId = query.ObjectId
+                        query.ObjectId
                     }));
 
                     organizationList = (await con.QueryAsync<GetOrganizationByUserDto>(sql2, new

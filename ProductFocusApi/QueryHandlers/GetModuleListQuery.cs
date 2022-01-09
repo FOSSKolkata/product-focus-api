@@ -22,16 +22,14 @@ namespace ProductFocus.AppServices
         internal sealed class GetModuleListQueryHandler : IQueryHandler<GetModuleListQuery, List<GetModuleDto>>
         {
             private readonly QueriesConnectionString _queriesConnectionString;
-            private readonly IEmailService _emailService;
 
-            public GetModuleListQueryHandler(QueriesConnectionString queriesConnectionString, IEmailService emailService)
+            public GetModuleListQueryHandler(QueriesConnectionString queriesConnectionString)
             {
                 _queriesConnectionString = queriesConnectionString;
-                _emailService = emailService;
             }
             public async Task<List<GetModuleDto>> Handle(GetModuleListQuery query)
             {
-                List<GetModuleDto> moduleList = new List<GetModuleDto>();
+                List<GetModuleDto> moduleList = new();
                 
                 string sql = @"
                     SELECT id, name 
@@ -45,8 +43,6 @@ namespace ProductFocus.AppServices
                         PrdId = query.Id
                     })).ToList();
                 }
-                
-                //_emailService.send();
                 
                 return moduleList;
             }
