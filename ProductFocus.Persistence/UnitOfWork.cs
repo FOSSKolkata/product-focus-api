@@ -1,13 +1,8 @@
 ﻿using Common;
 using Microsoft.EntityFrameworkCore;
 using ProductFocus.Domain;
-using ProductFocus.Domain.Model;
-using ProductFocus.Domain.Repositories;
-using ProductFocus.Persistence.Repositories;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -39,6 +34,12 @@ namespace ProductFocus.Persistence
             _context.Set<T>().Add(entity);
         }
 
+        internal void Remove<T>(T entity)
+            where T : class, IAggregateRoot
+        {
+            _context.Remove<T>(entity);
+        }
+
         internal void Update<T>(T entity) 
             where T : class, IAggregateRoot
         {
@@ -49,8 +50,8 @@ namespace ProductFocus.Persistence
             where T : class
         {
             return _context.Set<T>();
-        }        
-        public async Task<int> CompleteAsync(CancellationToken cancellationToken = default(CancellationToken))
+        }
+        public async Task<int> CompleteAsync(CancellationToken cancellationToken = default)
         {
             return await _context.SaveEntitiesAsync(cancellationToken);
         }

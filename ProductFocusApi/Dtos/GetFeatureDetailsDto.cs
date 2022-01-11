@@ -1,9 +1,6 @@
 ﻿using ProductFocus.Domain.Model;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProductFocus.Dtos
 {
@@ -39,6 +36,7 @@ namespace ProductFocus.Dtos
         public string Name { get; set; }
         public string Email { get; set; }
         public string ObjectId { get; set; }
+        public long Id { get; set; }
     }
 
     public sealed class SprintDetails

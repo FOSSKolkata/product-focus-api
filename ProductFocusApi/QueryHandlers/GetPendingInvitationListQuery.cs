@@ -1,12 +1,10 @@
 ﻿using ProductFocus.Domain;
 using ProductFocus.Dtos;
-using System.Collections.Generic;
 using System.Linq;
 using Dapper;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using ProductFocus.ConnectionString;
-using ProductFocus.Services;
 using System.Threading.Tasks;
 
 namespace ProductFocus.AppServices
@@ -33,7 +31,7 @@ namespace ProductFocus.AppServices
             }
             public async Task<GetPendingInvitationDto> Handle(GetPendingInvitationListQuery query)
             {
-                GetPendingInvitationDto pendingInvitationList = new GetPendingInvitationDto();
+                GetPendingInvitationDto pendingInvitationList = new();
                 
                 string sql = @"
                     select count(1) as RecordCount
@@ -53,9 +51,9 @@ namespace ProductFocus.AppServices
                 {
                     var result = await con.QueryMultipleAsync(sql, new
                     {
-                        OrgId = query.OrgId,
-                        Offset = query.Offset,
-                        Count = query.Count
+                        query.OrgId,
+                        query.Offset,
+                        query.Count
                     });
 
                     var pendingInvitations = await result.ReadAsync<GetPendingInvitationDto>();

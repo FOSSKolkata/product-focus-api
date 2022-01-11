@@ -2,7 +2,6 @@
 using ProductFocus.Domain;
 using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
-using ProductFocus.Services;
 using System;
 using System.Threading.Tasks;
 
@@ -13,14 +12,16 @@ namespace ProductFocus.AppServices
         public long Id { get; }
         public string Title { get; }
         public string WorkItemType { get; set; }
-        public long SprintId { get; set; }
+        public long? SprintId { get; set; }
+        public string IdpUserId { get; set; }
 
-        public AddFeatureCommand(long id, string title, string workItemType, long sprintId)
+        public AddFeatureCommand(long id, string title, string workItemType, long? sprintId, string idpUserId)
         {
             Id = id;
             Title = title;
             WorkItemType = workItemType;
             SprintId = sprintId;
+            IdpUserId = idpUserId;
         }
 
         internal sealed class AddFeatureCommandHandler : ICommandHandler<AddFeatureCommand>
@@ -29,28 +30,34 @@ namespace ProductFocus.AppServices
             private readonly IFeatureRepository _featureRepository;
             private readonly ISprintRepository _sprintRepository;
             private readonly IUnitOfWork _unitOfWork;
-            private readonly IEmailService _emailService;
+            private readonly IUserRepository _userRepository;
+            private readonly IFeatureOrderingRepository _featureOrderingRepository;
 
             public AddFeatureCommandHandler(
                 IProductRepository productRepository, IFeatureRepository featureRepository,
                 ISprintRepository sprintRepository,
-                IUnitOfWork unitOfWork, IEmailService emailService)
+                IUnitOfWork unitOfWork,
+                IUserRepository userRepository,
+                IFeatureOrderingRepository featureOrderingRepository)
             {
                 _productRepository = productRepository;
                 _featureRepository = featureRepository;
                 _sprintRepository = sprintRepository;
                 _unitOfWork = unitOfWork;
-                _emailService = emailService;
+                _userRepository = userRepository;
+                _featureOrderingRepository = featureOrderingRepository;
             }
             public async Task<Result> Handle(AddFeatureCommand command)
             {
-                Module module = await _productRepository.GetModuleById(command.Id);
-                if (module == null)
-                    return Result.Failure($"No module found with Module Id '{command.Id}'");
+                Product product = await _productRepository.GetById(command.Id);
+                if (product == null)
+                    return Result.Failure($"No product found with product Id '{command.Id}'");
 
-                Sprint sprint = await _sprintRepository.GetById(command.SprintId);
-                if (sprint == null)
-                    return Result.Failure($"Invalid sprint id : '{command.SprintId}'");
+                Sprint sprint = command.SprintId is null ? null : await _sprintRepository.GetById((long)command.SprintId);
+                /*if (sprint == null)
+                    return Result.Failure($"Invalid sprint id : '{command.SprintId}'");*/
+
+
 
                 bool success = Enum.TryParse(command.WorkItemType, out WorkItemType workItemType);
                 if (!success)
@@ -58,18 +65,20 @@ namespace ProductFocus.AppServices
 
                 try
                 {
-                    var feature = Feature.CreateInstance(module, command.Title, workItemType, sprint);
+                    User updatedByUser = _userRepository.GetByIdpUserId(command.IdpUserId);
+                    var feature = Feature.CreateInstance(product, command.Title, workItemType, sprint, updatedByUser.Id);
+                    
                     _featureRepository.AddFeature(feature);
+                    FeatureOrdering featureOrdering = FeatureOrdering.CreateInstance(feature.Id, long.MaxValue, feature.Sprint?.Id);
+                    _featureOrderingRepository.Add(featureOrdering);
                     await _unitOfWork.CompleteAsync();
-
-                    //_emailService.send();
 
                     return Result.Success();
                 }
                 catch (Exception ex)
                 {
                     return Result.Failure(ex.Message);
-                }             
+                }
                 
             }
 

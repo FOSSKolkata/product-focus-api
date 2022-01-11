@@ -1,10 +1,4 @@
-﻿using System;
-using Common;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ProductFocus.Domain.Model;
+﻿using ProductFocus.Domain.Model;
 
 namespace ProductFocus.Domain.Repositories
 {
@@ -13,5 +7,6 @@ namespace ProductFocus.Domain.Repositories
         void RegisterUser(User user);
         User GetByEmail(string name);
         User GetByIdpUserId(string ipdUserId);
+        User GetById(long id);
     }
 }

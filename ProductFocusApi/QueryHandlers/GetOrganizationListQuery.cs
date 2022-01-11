@@ -21,16 +21,14 @@ namespace ProductFocus.AppServices
         internal sealed class GetOrganizationListQueryHandler : IQueryHandler<GetOrganizationListQuery, List<GetOrganizationDto>>
         {
             private readonly QueriesConnectionString _queriesConnectionString;
-            private readonly IEmailService _emailService;
 
-            public GetOrganizationListQueryHandler(QueriesConnectionString queriesConnectionString, IEmailService emailService)
+            public GetOrganizationListQueryHandler(QueriesConnectionString queriesConnectionString)
             {
                 _queriesConnectionString = queriesConnectionString;
-                _emailService = emailService;
             }
             public async Task<List<GetOrganizationDto>> Handle(GetOrganizationListQuery query)
             {
-                List<GetOrganizationDto> organizationsList = new List<GetOrganizationDto>();
+                List<GetOrganizationDto> organizationsList = new();
 
                 using(IDbConnection con = new SqlConnection(_queriesConnectionString.Value))
                 {

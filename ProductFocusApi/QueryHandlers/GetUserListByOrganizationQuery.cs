@@ -1,12 +1,10 @@
 ﻿using ProductFocus.Domain;
 using ProductFocus.Dtos;
-using System.Collections.Generic;
 using System.Linq;
 using Dapper;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using ProductFocus.ConnectionString;
-using ProductFocus.Services;
 using System.Threading.Tasks;
 
 namespace ProductFocus.AppServices
@@ -30,7 +28,7 @@ namespace ProductFocus.AppServices
             }
             public async Task<GetMemberOfOrganizationDto> Handle(GetUserListByOrganizationQuery query)
             {
-                GetMemberOfOrganizationDto userList = new GetMemberOfOrganizationDto();
+                GetMemberOfOrganizationDto userList = new();
                 
                 string sql = @"
                     select count(1) as RecordCount
@@ -47,7 +45,7 @@ namespace ProductFocus.AppServices
                 {
                     var result = await con.QueryMultipleAsync(sql, new
                     {
-                        OrgId = query.OrgId                        
+                        query.OrgId                        
                     });
 
                     var responseList = await result.ReadAsync<GetMemberOfOrganizationDto>();

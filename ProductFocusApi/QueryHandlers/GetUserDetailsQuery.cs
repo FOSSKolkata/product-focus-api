@@ -22,16 +22,14 @@ namespace ProductFocus.AppServices
         internal sealed class GetUserDetailsQueryHandler : IQueryHandler<GetUserDetailsQuery, List<GetUserDto>>
         {
             private readonly QueriesConnectionString _queriesConnectionString;
-            private readonly IEmailService _emailService;
 
-            public GetUserDetailsQueryHandler(QueriesConnectionString queriesConnectionString, IEmailService emailService)
+            public GetUserDetailsQueryHandler(QueriesConnectionString queriesConnectionString)
             {
                 _queriesConnectionString = queriesConnectionString;
-                _emailService = emailService;
             }
             public async Task<List<GetUserDto>> Handle(GetUserDetailsQuery query)
             {
-                List<GetUserDto> userDetails = new List<GetUserDto>();
+                List<GetUserDto> userDetails = new();
                 
                 string sql = @"
                     select id, name, email 
@@ -42,7 +40,7 @@ namespace ProductFocus.AppServices
                 {
                     userDetails = (await con.QueryAsync<GetUserDto>(sql, new
                     {
-                        Email = query.Email
+                        query.Email
                     })).ToList();
                 }
                 

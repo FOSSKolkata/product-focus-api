@@ -1,11 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ProductFocus.Domain.Model;
+﻿using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProductFocus.Persistence.Repositories
 {
@@ -31,6 +26,10 @@ namespace ProductFocus.Persistence.Repositories
         public void RegisterUser(User user)
         {
             _unitOfWork.Insert<User>(user);
+        }
+        public User GetById(long id)
+        {
+            return _unitOfWork.Query<User>().SingleOrDefault(x => x.Id == id);
         }
     }
 }

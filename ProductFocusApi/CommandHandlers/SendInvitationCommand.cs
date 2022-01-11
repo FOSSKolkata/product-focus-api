@@ -1,5 +1,4 @@
-﻿using Common;
-using CSharpFunctionalExtensions;
+﻿using CSharpFunctionalExtensions;
 using ProductFocus.Domain;
 using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
@@ -12,11 +11,13 @@ namespace ProductFocus.AppServices
     public sealed class SendInvitationCommand : ICommand
     {
         public long OrgId { get; set; }
-        public string Email { get; }              
-        public SendInvitationCommand(long orgId, string email)
+        public string Email { get; }
+        public string ObjectId { get; }
+        public SendInvitationCommand(long orgId, string email, string objectId)
         {
             Email = email;
             OrgId = orgId;
+            ObjectId = objectId;
         }
 
         internal sealed class SendInvitationCommandHandler : ICommandHandler<SendInvitationCommand>
@@ -63,7 +64,8 @@ namespace ProductFocus.AppServices
                 
                 try
                 {
-                    var invitation = Invitation.CreateInstance(existingOrganization, command.Email);
+                    User createdBy = _userRepository.GetByIdpUserId(command.ObjectId);
+                    var invitation = Invitation.CreateInstance(existingOrganization, command.Email, createdBy.Id);
                     _invitationRepository.AddInvitation(invitation);           
                     
                     await _unitOfWork.CompleteAsync();

@@ -1,24 +1,14 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using ProductFocus.Api.AuthorizationPolicies;
-using Common;
 using ProductFocus.Persistence;
 using Microsoft.EntityFrameworkCore;
-using ProductFocus.Domain.Repositories;
-using ProductFocus.Persistence.Repositories;
 using ProductFocus.Domain;
 using ProductFocus.DI.Utils;
 using ProductFocus.AppServices;
@@ -30,6 +20,8 @@ using ProductFocusApi.Validations;
 using Autofac;
 using ProductFocusApi.AutofacModules;
 using Microsoft.Data.SqlClient;
+using ProductFocusApi.ConnectionString;
+using Azure.Storage.Blobs;
 
 namespace ProductFocus.Api
 {
@@ -49,7 +41,6 @@ namespace ProductFocus.Api
                     .AddMicrosoftIdentityWebApi(options =>
                     {
                         Configuration.Bind("AzureAdB2C", options);
-
                         options.TokenValidationParameters.NameClaimType = "name";
                     },
             options => { Configuration.Bind("AzureAdB2C", options); });
@@ -83,7 +74,6 @@ namespace ProductFocus.Api
             //builder.Password = Configuration["DevDbPassword"];
             //builder.UserID = Configuration["DevDbUser"];
             var connection = builder.ConnectionString;
-
             services.AddDbContext<ProductFocusDbContext>(
                 x => x.UseLazyLoadingProxies()
                     .UseSqlServer(connection));
@@ -104,7 +94,9 @@ namespace ProductFocus.Api
             var queryConnection = builder.ConnectionString;
 
             var queriesConnectionString = new QueriesConnectionString(queryConnection);
-            
+            var blobConnection = Configuration.GetConnectionString("BlobConnectionString");
+            services.AddSingleton(new BlobConnectionString(blobConnection));
+            services.AddSingleton(new BlobServiceClient(blobConnection));
             services.AddSingleton(queriesConnectionString);
             services.AddTransient<IEmailService, EmailService>();
         }

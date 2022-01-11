@@ -1,9 +1,7 @@
-﻿using Common;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ProductFocus.AppServices;
 using ProductFocus.Dtos;
 using CSharpFunctionalExtensions;
-using ProductFocus.Domain;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -48,12 +46,12 @@ namespace ProductFocusApi.Controllers
             return Ok(kanbanViewList);
         }
 
-        [HttpGet("{id}/query")]
-        public async Task<IActionResult> GetKanbanViewByProductIdAndQuery(long id, [FromQuery] long SprintId, [FromQuery] List<long> UserIds)
-        {           
+        [HttpGet("{id}/{groupCategoryEnum}/query")]
+        public async Task<IActionResult> GetKanbanViewByProductIdAndQuery(long id, [FromQuery] long? SprintId, [FromQuery] List<long> UserIds, GroupCategoryEnum groupCategoryEnum)
+        {
             string objectId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            List<GetKanbanViewDto> kanbanViewList = await _messages.Dispatch(new GetKanbanViewFilterQuery(id, objectId, SprintId, UserIds));
-            return Ok(kanbanViewList);
+            GetKanbanViewListDto kanban = await _messages.Dispatch(new GetKanbanViewFilterQuery(id, objectId, SprintId, UserIds, groupCategoryEnum));
+            return Ok(kanban);
         }
     }
 }

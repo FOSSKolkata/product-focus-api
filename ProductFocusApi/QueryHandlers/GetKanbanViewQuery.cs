@@ -6,7 +6,6 @@ using Dapper;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using ProductFocus.ConnectionString;
-using ProductFocus.Services;
 using System.Threading.Tasks;
 
 namespace ProductFocus.AppServices
@@ -25,16 +24,15 @@ namespace ProductFocus.AppServices
         internal sealed class GetKanbanViewQueryHandler : IQueryHandler<GetKanbanViewQuery, List<GetKanbanViewDto>>
         {
             private readonly QueriesConnectionString _queriesConnectionString;
-            private readonly IEmailService _emailService;
 
-            public GetKanbanViewQueryHandler(QueriesConnectionString queriesConnectionString, IEmailService emailService)
+            public GetKanbanViewQueryHandler(QueriesConnectionString queriesConnectionString)
             {
                 _queriesConnectionString = queriesConnectionString;
-                _emailService = emailService;
             }
             public async Task<List<GetKanbanViewDto>> Handle(GetKanbanViewQuery query)
             {
-                List<GetKanbanViewDto> kanbanViewList = new List<GetKanbanViewDto>();
+                List<GetKanbanViewDto> kanbanViewList = new();
+                List<GetKanbanViewTempDto> kanbanViewTempList = new();
 
                 string sql1 = @"
                     select Id 
@@ -48,7 +46,7 @@ namespace ProductFocus.AppServices
                 builder.InnerJoin("Users u ON uf.UserId=u.Id");
                 builder.InnerJoin("Modules m ON m.Id=f.ModuleId");
                 builder.InnerJoin("Products p ON m.ProductId=p.Id");
-                builder.Where("p.id = @Prdid");
+                builder.Where("p.id = @PrdId");
 
                 var tempStr = selector.RawSql;
 
@@ -80,7 +78,7 @@ namespace ProductFocus.AppServices
                 {
                     var userId = (await con.QueryAsync<long>(sql1, new
                     {
-                        ObjectId = query.ObjectId
+                        query.ObjectId
                     }));
 
                     var result = await con.QueryMultipleAsync(sql2, new
@@ -90,11 +88,11 @@ namespace ProductFocus.AppServices
                     });
 
                     
-                    var kanbanViews = await result.ReadAsync<GetKanbanViewDto>();
+                    var kanbanViewsTemp = await result.ReadAsync<GetKanbanViewTempDto>();
                     var featureDetails = await result.ReadAsync<FeatureDetail>();
                     var assigneeDetails = await result.ReadAsync<AssigneeDetail>();
 
-                    foreach (var kanbanView in kanbanViews)
+                    foreach (var kanbanView in kanbanViewsTemp)
                     {
                         kanbanView.FeatureDetails = featureDetails.Where(a => a.ModuleId == kanbanView.Id).ToList();
 
@@ -104,10 +102,15 @@ namespace ProductFocus.AppServices
                         }
                     }                                        
 
-                    kanbanViewList = kanbanViews.ToList();
+                    kanbanViewTempList = kanbanViewsTemp.ToList();
                 }
 
-                //_emailService.send();
+                for(int i = 0; i < kanbanViewTempList.Count; i++)
+                {
+                    kanbanViewList.Add(new GetKanbanViewDto());
+                    kanbanViewList[i].GroupList[0].GroupName = kanbanViewTempList[i].GroupName;
+                    kanbanViewList[i].FeatureDetails = kanbanViewTempList[i].FeatureDetails;
+                }
                 
                 return kanbanViewList;
             }

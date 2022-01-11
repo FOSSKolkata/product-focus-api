@@ -6,17 +6,16 @@ using Dapper;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using ProductFocus.ConnectionString;
-using ProductFocus.Services;
 using System.Threading.Tasks;
 
 namespace ProductFocus.AppServices
 {
     public sealed class GetSprintDetailsQuery : IQuery<List<GetSprintDto>>
     {
-        public long Id { get; }
-        public GetSprintDetailsQuery(long id)
+        public long ProductId { get; }
+        public GetSprintDetailsQuery(long productId)
         {
-            Id = id;
+            ProductId = productId;
         }
 
         internal sealed class GetSprintDetailsQueryHandler : IQueryHandler<GetSprintDetailsQuery, List<GetSprintDto>>
@@ -29,7 +28,7 @@ namespace ProductFocus.AppServices
             }
             public async Task<List<GetSprintDto>> Handle(GetSprintDetailsQuery query)
             {
-                List<GetSprintDto> sprintList = new List<GetSprintDto>();
+                List<GetSprintDto> sprintList = new();
                 
                 string sql = @"
                     select Id, Name, StartDate, EndDate 
@@ -41,7 +40,7 @@ namespace ProductFocus.AppServices
                 {
                     sprintList = (await con.QueryAsync<GetSprintDto>(sql, new
                     {
-                        PrdId = query.Id
+                        PrdId = query.ProductId
                     })).ToList();
                 }
                 

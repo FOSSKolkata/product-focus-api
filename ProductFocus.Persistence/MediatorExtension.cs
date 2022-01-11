@@ -1,6 +1,5 @@
 ﻿using Common;
 using MediatR;
-using ProductFocus.Persistence;
 using System.Linq;
 using System.Threading.Tasks;
 
