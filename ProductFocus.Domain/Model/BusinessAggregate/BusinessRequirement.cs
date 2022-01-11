@@ -37,6 +37,26 @@ namespace ProductFocus.Domain.Model
             BusinessRequirement businessRequirement = new(title, receivedOn, sourceEnum, sourceInformation, description, product);
             return businessRequirement;
         }
+        public void UpdateTitle(string title)
+        {
+            Title = title;
+        }
+        public void UpdateReceivedOn(DateTime receivedOn)
+        {
+            ReceivedOn = receivedOn;
+        }
+        public void UpdateSourceEnum(BusinessRequirementSourceEnum sourceEnum)
+        {
+            SourceEnum = sourceEnum;
+        }
+        public void UpdateSourceInformation(string sourceInformation)
+        {
+            SourceInformation = sourceInformation;
+        }
+        public void UpdateDescription(string description)
+        {
+            Description = description;
+        }
     }
 
     public enum BusinessRequirementSourceEnum
