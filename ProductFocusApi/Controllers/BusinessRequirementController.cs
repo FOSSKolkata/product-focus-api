@@ -1,4 +1,5 @@
-﻿using CSharpFunctionalExtensions;
+﻿using Azure.Storage.Blobs.Models;
+using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Mvc;
 using ProductFocus.AppServices;
 using ProductFocusApi.CommandHandlers;
@@ -48,6 +49,28 @@ namespace ProductFocusApi.Controllers
         {
             var command = await _messages.Dispatch(new UpdateBusinessRequirementCommand(dto.Id, dto.Title,
                 dto.ReceivedOn, dto.TagIds, dto.SourceEnum, dto.SourceAdditionalInformation, dto.Description));
+            return command.IsSuccess ? Ok() : BadRequest(command.Error);
+        }
+
+        [HttpPost("{businessRequirementId}")]
+        public async Task<IActionResult> AddAttachments(long businessRequirementId)
+        {
+            var attachments = Request.Form.Files;
+            var command = await _messages.Dispatch(new AddBusinessRequirementAttachmentCommand(businessRequirementId, attachments));
+            return command.IsSuccess ? Ok() : BadRequest(command.Error);
+        }
+
+        [HttpGet("{businessRequirementId}")]
+        public async Task<IActionResult> GetAttachmentsByBusinessRequirementId(long businessRequirementId)
+        {
+            List<GetBusinessRequirementAttachmentDto> attachments = await _messages.Dispatch(new GetBusinessRequirementAttachmentQuery(businessRequirementId));
+            return Ok(attachments);
+        }
+
+        [HttpDelete("{businessRequirementId}/{attachmentId}")]
+        public async Task<IActionResult> DeleteBusinessRequirementAttachment(long businessRequirementId, long attachmentId)
+        {
+            var command = await _messages.Dispatch(new DeleteBusinessRequirementAttachmentCommand(businessRequirementId, attachmentId));
             return command.IsSuccess ? Ok() : BadRequest(command.Error);
         }
     }

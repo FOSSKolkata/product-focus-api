@@ -3,6 +3,7 @@ using CSharpFunctionalExtensions;
 using ProductFocus.Domain.Model.BusinessAggregate;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ProductFocus.Domain.Model
 {
@@ -15,6 +16,9 @@ namespace ProductFocus.Domain.Model
         public virtual BusinessRequirementSourceEnum SourceEnum { get; private set; }
         public virtual string SourceInformation { get; private set; }
         public virtual string Description { get; private set; }
+        public readonly IList<BusinessRequirementAttachment> _businessRequirementAttachments = new List<BusinessRequirementAttachment>();
+        public virtual IReadOnlyList<BusinessRequirementAttachment> BusinessRequirementAttachments => _businessRequirementAttachments.ToList();
+
         protected BusinessRequirement()
         {
             // this protected constructor is for lazy loading to work
@@ -56,6 +60,27 @@ namespace ProductFocus.Domain.Model
         public void UpdateDescription(string description)
         {
             Description = description;
+        }
+        public void AddAttachment(string name, string uri)
+        {
+            BusinessRequirementAttachment businessRequirementAttachment = BusinessRequirementAttachment.CreateInstance(Id, name, uri);
+            _businessRequirementAttachments.Add(businessRequirementAttachment);
+        }
+
+        public Result DeleteAttachment(long id)
+        {
+            var attachmentToBeDeleted = GetAttachmentByAttachmentId(id);
+
+            if (attachmentToBeDeleted == null)
+                return Result.Failure("Attachment not found: " + nameof(BusinessRequirementAttachment));
+
+            _businessRequirementAttachments.Remove(attachmentToBeDeleted);
+            return Result.Success();
+        }
+
+        public BusinessRequirementAttachment GetAttachmentByAttachmentId(long id)
+        {
+            return this.BusinessRequirementAttachments.Where(x => x.Id == id).SingleOrDefault();
         }
     }
 

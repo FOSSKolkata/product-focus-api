@@ -52,9 +52,9 @@ namespace ProductFocusApi.CommandHandlers
                         Hi,
                         You are invited to join {existingInvitation.Organization.Name} on Product Focus by...
                         Click on following link to accept the invitation: 
-                        http://localhost:4200/#/invitation?iid={existingInvitation.Id}";
+                        http://localhost:4200/invitation?iid={existingInvitation.Id}";
 
-                    _emailService.send(emailBody, existingInvitation.Email);
+                    _emailService.Send(emailBody, existingInvitation.Email);
 
                     return Result.Success();
                 }

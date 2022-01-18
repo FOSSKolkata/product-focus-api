@@ -13,7 +13,7 @@ namespace ProductFocus.Persistence.Repositories
         }
         public void Add(BusinessRequirement businessRequirement)
         {
-            _unitOfWork.Insert<BusinessRequirement>(businessRequirement);
+            _unitOfWork.Insert(businessRequirement);
         }
 
         public Task<BusinessRequirement> GetById(long id)

@@ -78,7 +78,7 @@ namespace ProductFocus.AppServices
                     Click on following link to accept the invitation: 
                     http://localhost:4200/#/invitation?iid={newActiveInvitation.Id}";
 
-                    _emailService.send(emailBody, command.Email);
+                    _emailService.Send(emailBody, command.Email);
 
                     return Result.Success();
                 }
