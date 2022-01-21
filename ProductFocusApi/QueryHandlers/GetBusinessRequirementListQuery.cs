@@ -42,7 +42,7 @@ namespace ProductFocusApi.QueryHandlers
                 var builder = new SqlBuilder();
                 var selector = builder.AddTemplate("SELECT br.id, br.title, br.receivedOn, br.productId, brt.TagId FROM BusinessRequirements br/**innerjoin**/ /**where**/ /**orderby**/");
                 builder.InnerJoin("BusinessRequirementTags brt ON br.Id = brt.BusinessRequirementId");
-                builder.Where("br.ProductId = @ProductId");
+                builder.Where("br.ProductId = @ProductId AND br.IsDeleted = 'false'");
                 if (query.TagIds != null && query.TagIds.Count > 0)
                     builder.Where("brt.TagId IN @TagIds");
                 if (query.StartDate != null)
@@ -58,7 +58,7 @@ namespace ProductFocusApi.QueryHandlers
                 var builderCount = new SqlBuilder();
                 var selectorCount = builderCount.AddTemplate("SELECT COUNT(*) FROM BusinessRequirements br/**innerjoin**/ /**where**/ /**orderby**/");
                 builderCount.InnerJoin("BusinessRequirementTags brt ON br.Id = brt.BusinessRequirementId");
-                builderCount.Where("br.ProductId = @ProductId");
+                builderCount.Where("br.ProductId = @ProductId AND br.IsDeleted = 'false'");
                 if (query.TagIds != null && query.TagIds.Count > 0)
                     builderCount.Where("brt.TagId IN @TagIds");
                 if (query.StartDate != null)

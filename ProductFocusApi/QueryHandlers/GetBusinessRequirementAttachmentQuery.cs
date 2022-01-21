@@ -1,5 +1,4 @@
-﻿using Azure.Storage.Blobs;
-using Azure.Storage.Blobs.Models;
+﻿using Azure.Storage.Blobs.Models;
 using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -38,7 +37,7 @@ namespace ProductFocusApi.QueryHandlers
                 List<GetBusinessRequirementAttachmentDto> attachments = new();
                 string sql = @"SELECT productId FROM BusinessRequirements WHERE Id = @BusinessRequirementId";
                 string sql1 = @"SELECT organizationId FROM Products WHERE Id = @ProductId";
-                string sql2 = @"SELECT id, name, uri FROM BusinessRequirementAttachments
+                string sql2 = @"SELECT id, name,fileName, uri FROM BusinessRequirementAttachments
                                 WHERE businessRequirementId = @BusinessRequirementId";
 
                 using (IDbConnection con = new SqlConnection(_queriesConnectionString.Value))

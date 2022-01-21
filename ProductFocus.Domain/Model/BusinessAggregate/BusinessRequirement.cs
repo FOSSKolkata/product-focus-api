@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace ProductFocus.Domain.Model
 {
-    public class BusinessRequirement : AggregateRoot<long>
+    public class BusinessRequirement : AggregateRoot<long>, ISoftDeletable
     {
         public virtual Product Product { get; private set; }
         public virtual long ProductId { get; private set; }
@@ -18,6 +18,9 @@ namespace ProductFocus.Domain.Model
         public virtual string Description { get; private set; }
         public readonly IList<BusinessRequirementAttachment> _businessRequirementAttachments = new List<BusinessRequirementAttachment>();
         public virtual IReadOnlyList<BusinessRequirementAttachment> BusinessRequirementAttachments => _businessRequirementAttachments.ToList();
+        public bool IsDeleted { get; set; }
+        public DateTime DeletedOn { get; set; }
+        public string DeletedBy { get; set; }
 
         protected BusinessRequirement()
         {
@@ -61,9 +64,9 @@ namespace ProductFocus.Domain.Model
         {
             Description = description;
         }
-        public void AddAttachment(string name, string uri)
+        public void AddAttachment(string name, string uri, string fileName)
         {
-            BusinessRequirementAttachment businessRequirementAttachment = BusinessRequirementAttachment.CreateInstance(Id, name, uri);
+            BusinessRequirementAttachment businessRequirementAttachment = BusinessRequirementAttachment.CreateInstance(Id, name, uri, fileName);
             _businessRequirementAttachments.Add(businessRequirementAttachment);
         }
 
@@ -76,6 +79,13 @@ namespace ProductFocus.Domain.Model
 
             _businessRequirementAttachments.Remove(attachmentToBeDeleted);
             return Result.Success();
+        }
+
+        public void Delete(string userId)
+        {
+            IsDeleted = true;
+            DeletedOn = DateTime.Now;
+            DeletedBy = userId;
         }
 
         public BusinessRequirementAttachment GetAttachmentByAttachmentId(long id)

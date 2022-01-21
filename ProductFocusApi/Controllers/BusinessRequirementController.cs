@@ -1,5 +1,5 @@
-﻿using Azure.Storage.Blobs.Models;
-using CSharpFunctionalExtensions;
+﻿using CSharpFunctionalExtensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProductFocus.AppServices;
 using ProductFocusApi.CommandHandlers;
@@ -7,13 +7,15 @@ using ProductFocusApi.Dtos;
 using ProductFocusApi.QueryHandlers;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace ProductFocusApi.Controllers
 {
     [ApiController]
     [Route("[Controller]/[Action]")]
-    //[Authorize]
+    [Authorize]
     public class BusinessRequirementController : ControllerBase
     {
         private readonly Messages _messages;
@@ -28,6 +30,15 @@ namespace ProductFocusApi.Controllers
             var command = new AddBusinessRequirementCommand(dto.Title, dto.ProductId, dto.ReceivedOn, dto.TagIds, dto.SourceEnum, dto.SourceAdditionalInformation, dto.Description);
             Result result = await _messages.Dispatch(command);
             return result.IsSuccess ? Ok(command.Id) : BadRequest(result.Error);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteBusinessRequirement(long id)
+        {
+            string objectId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            var command = new DeleteBusinessRequirementCommand(id, objectId);
+            Result result = await _messages.Dispatch(command);
+            return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }
 
         [HttpGet("{id}")]

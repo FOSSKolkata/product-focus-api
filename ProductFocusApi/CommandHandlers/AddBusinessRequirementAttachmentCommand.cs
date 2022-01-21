@@ -58,7 +58,7 @@ namespace ProductFocusApi.CommandHandlers
                     {
                         BlobClient blobClient = await _blobStorageService.AddAsync(BlobStorageFileTypeEnum.BusinessRequirementAttachments,
                             product.Organization.Id, product.Id, command.BusinessRequirementId, file);
-                        businessRequirement.AddAttachment(blobClient.Name, blobClient.Uri.ToString());
+                        businessRequirement.AddAttachment(blobClient.Name, blobClient.Uri.ToString(), file.FileName);
                     }
                     await _unitOfWork.CompleteAsync();
                 }
