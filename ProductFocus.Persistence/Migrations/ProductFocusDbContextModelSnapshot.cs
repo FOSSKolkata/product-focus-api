@@ -30,6 +30,9 @@ namespace ProductFocus.Persistence.Migrations
                         .HasAnnotation("SqlServer:HiLoSequenceName", "EntityFrameworkHiLoSequence")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
 
+                    b.Property<long>("BusinessRequirementId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -38,6 +41,9 @@ namespace ProductFocus.Persistence.Migrations
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("FileName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
@@ -52,6 +58,8 @@ namespace ProductFocus.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BusinessRequirementId");
 
                     b.ToTable("BusinessRequirementAttachments");
                 });
@@ -109,8 +117,17 @@ namespace ProductFocus.Persistence.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DeletedOn")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
@@ -937,6 +954,15 @@ namespace ProductFocus.Persistence.Migrations
                     b.ToTable("WorkItemDomainEventLogs");
                 });
 
+            modelBuilder.Entity("ProductFocus.Domain.Model.BusinessAggregate.BusinessRequirementAttachment", b =>
+                {
+                    b.HasOne("ProductFocus.Domain.Model.BusinessRequirement", null)
+                        .WithMany("BusinessRequirementAttachments")
+                        .HasForeignKey("BusinessRequirementId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ProductFocus.Domain.Model.BusinessAggregate.BusinessRequirementTag", b =>
                 {
                     b.HasOne("ProductFocus.Domain.Model.Tag", "Tag")
@@ -1126,6 +1152,11 @@ namespace ProductFocus.Persistence.Migrations
                     b.Navigation("Feature");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ProductFocus.Domain.Model.BusinessRequirement", b =>
+                {
+                    b.Navigation("BusinessRequirementAttachments");
                 });
 
             modelBuilder.Entity("ProductFocus.Domain.Model.Feature", b =>

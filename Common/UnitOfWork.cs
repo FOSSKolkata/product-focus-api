@@ -1,18 +1,19 @@
 ﻿using Common;
 using Microsoft.EntityFrameworkCore;
+using ProductFocus.Common;
 using ProductFocus.Domain;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ProductFocus.Persistence
+namespace ProductFocus.Common
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly ProductFocusDbContext _context;
+        private readonly BaseDbContext _context;
 
-        public UnitOfWork(ProductFocusDbContext context)
+        public UnitOfWork(BaseDbContext context)
         {
             _context = context;
         }

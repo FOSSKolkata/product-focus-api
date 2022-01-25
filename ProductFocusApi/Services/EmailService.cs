@@ -5,7 +5,7 @@ namespace ProductFocus.Services
 {
     public class EmailService : IEmailService
     {
-        public void send(string emailBody, string email)
+        public void Send(string emailBody, string email)
         {
             try
             {
@@ -36,13 +36,13 @@ namespace ProductFocus.Services
                     smtpClient.Send(message);
                 }*/
 
-                MailMessage mail = new MailMessage();
+                MailMessage mail = new();
                 mail.To.Add(email);
                 mail.From = new MailAddress("info@intelli-h.com");
                 mail.Subject = "Invitation to join Product Focus.";
                 mail.Body = emailBody;
                 mail.IsBodyHtml = true;
-                SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
+                SmtpClient smtp = new("smtp.gmail.com", 587);
                 smtp.EnableSsl = true;
                 smtp.UseDefaultCredentials = false;
                 smtp.Credentials = new System.Net.NetworkCredential("info@intelli-h.com", "reversal@1");

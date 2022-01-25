@@ -1,5 +1,7 @@
-﻿using ProductFocus.Domain.Model;
+﻿using ProductFocus.Common;
+using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
+using System.Threading.Tasks;
 
 namespace ProductFocus.Persistence.Repositories
 {
@@ -12,7 +14,12 @@ namespace ProductFocus.Persistence.Repositories
         }
         public void Add(BusinessRequirement businessRequirement)
         {
-            _unitOfWork.Insert<BusinessRequirement>(businessRequirement);
+            _unitOfWork.Insert(businessRequirement);
+        }
+
+        public Task<BusinessRequirement> GetById(long id)
+        {
+            return _unitOfWork.GetAsync<BusinessRequirement>(id);
         }
     }
 }

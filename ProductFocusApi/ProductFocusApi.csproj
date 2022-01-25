@@ -35,6 +35,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\ProductDocumentations.Application\ProductDocumentations.Application.csproj" />
     <ProjectReference Include="..\ProductFocus.Domain\ProductFocus.Domain.csproj" />
     <ProjectReference Include="..\ProductFocus.Persistence\ProductFocus.Persistence.csproj" />
   </ItemGroup>

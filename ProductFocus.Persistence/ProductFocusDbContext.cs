@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using ProductFocus.Common;
 using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Model.BusinessAggregate;
 using ProductFocus.Domain.Model.FeatureAggregate;
@@ -21,7 +22,7 @@ namespace ProductFocus.Persistence
              .Property(o => o.Id).UseHiLo();
             modelbuilder.Entity<ScrumDay>()
              .Property(o => o.Id).UseHiLo();
-            modelbuilder.Entity<ProductFocus.Domain.Model.Task>()
+            modelbuilder.Entity<Domain.Model.Task>()
              .Property(o => o.Id).UseHiLo();
             modelbuilder.Entity<Member>()
              .Property(o => o.Id).UseHiLo();

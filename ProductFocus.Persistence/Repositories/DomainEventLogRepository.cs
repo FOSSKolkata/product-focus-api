@@ -1,4 +1,5 @@
-﻿using ProductFocus.Domain.Model;
+﻿using ProductFocus.Common;
+using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
 
 namespace ProductFocus.Persistence.Repositories

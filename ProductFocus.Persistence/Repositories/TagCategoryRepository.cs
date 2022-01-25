@@ -1,4 +1,5 @@
-﻿using ProductFocus.Domain.Model;
+﻿using ProductFocus.Common;
+using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
 using System.Linq;
 using System.Threading.Tasks;
