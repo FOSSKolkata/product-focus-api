@@ -1,0 +1,4 @@
+﻿namespace ProductDocumentations.Domain.Common
+{
+
+}
