@@ -1,8 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using ProductDocumentations.Application.Dtos;
-using ProductDocumentations.CommandHandlers;
-using ProductFocus.AppServices;
+using ProductDocumentations.Application.CommandHandlers.AddProductDocumentation;
+using ProductDocumentations.Domain.Common;
 using System.Threading.Tasks;
 
 namespace ProductDocumentation.Controllers
@@ -12,17 +12,17 @@ namespace ProductDocumentation.Controllers
     //[Authorize]
     public class ProductDocumentationController : ControllerBase
     {
-        private readonly Messages _messages;
-        public ProductDocumentationController(Messages messages)
+        private readonly IMediator _mediator;
+        public ProductDocumentationController(IMediator mediator)
         {
-            _messages = messages;
+            _mediator = mediator;
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddProductDocumentation([FromBody] ProductDocumentationDto dto)
+        public async Task<IActionResult> AddProductDocumentation([FromBody] AddProductDocumentationDto dto)
         {
             var command = new AddProductDocumentationCommand(dto.ParentId, dto.ProductId, dto.Title, dto.Description);
-            Result result = await _messages.Dispatch(command);
+            Result result = await _mediator.Send(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }
     }

@@ -1,5 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
-using ProductFocus.Domain;
+using ProductFocus.Domain.Common;
 using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
 using ProductFocus.Services;
@@ -24,14 +24,12 @@ namespace ProductFocus.AppServices
         {
             private readonly IUserRepository _userRepository;
             private readonly IUnitOfWork _unitOfWork;
-            private readonly IEmailService _emailService;
 
             public RegisterUserCommandHandler(
-                IUserRepository userRepository, IUnitOfWork unitOfWork, IEmailService emailService)
+                IUserRepository userRepository, IUnitOfWork unitOfWork)
             {
                 _userRepository = userRepository;
                 _unitOfWork = unitOfWork;
-                _emailService = emailService;
             }
             public async Task<Result> Handle(RegisterUserCommand command)
             {
@@ -46,8 +44,6 @@ namespace ProductFocus.AppServices
                     _userRepository.RegisterUser(user);
 
                     await _unitOfWork.CompleteAsync();
-
-                    //_emailService.send();
 
                     return Result.Success();
                 }

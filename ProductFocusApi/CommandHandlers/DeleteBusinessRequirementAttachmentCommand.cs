@@ -1,12 +1,10 @@
 ﻿using Azure;
-using Azure.Storage.Blobs;
+using ProductFocus.Domain.Common;
 using CSharpFunctionalExtensions;
-using ProductFocus.Domain;
 using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Model.BusinessAggregate;
 using ProductFocus.Domain.Repositories;
 using ProductFocus.Domain.Services;
-using ProductFocusApi.ConnectionString;
 using System;
 using System.Threading.Tasks;
 

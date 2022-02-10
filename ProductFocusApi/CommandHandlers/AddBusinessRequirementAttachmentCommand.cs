@@ -1,8 +1,7 @@
 ﻿using Azure.Storage.Blobs;
-using Azure.Storage.Blobs.Models;
+using ProductFocus.Domain.Common;
 using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Http;
-using ProductFocus.Domain;
 using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
 using ProductFocus.Domain.Services;

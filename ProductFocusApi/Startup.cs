@@ -9,9 +9,7 @@ using Microsoft.OpenApi.Models;
 using ProductFocus.Api.AuthorizationPolicies;
 using ProductFocus.Persistence;
 using Microsoft.EntityFrameworkCore;
-using ProductFocus.Domain;
 using ProductFocus.DI.Utils;
-using ProductFocus.AppServices;
 using ProductFocus.ConnectionString;
 using ProductFocus.Services;
 using Swashbuckle.AspNetCore.Filters;
@@ -24,6 +22,7 @@ using ProductFocusApi.ConnectionString;
 using Azure.Storage.Blobs;
 using ProductFocus.Persistence.Services;
 using ProductFocus.Domain.Services;
+using ProductFocus.Domain.Common;
 
 namespace ProductFocus.Api
 {
@@ -80,6 +79,10 @@ namespace ProductFocus.Api
                 x => x.UseLazyLoadingProxies()
                     .UseSqlServer(connection));
 
+            services.AddDbContext<ProductDocumentations.Infrastructure.ProductDocumentationDbContext>(
+                x => x.UseLazyLoadingProxies()
+                    .UseSqlServer(connection));
+
             ////services.AddDbContext<ProductFocusDbContext>(
             //    x => x.UseLazyLoadingProxies()
             //        .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
@@ -88,6 +91,8 @@ namespace ProductFocus.Api
             services.AddSingleton<Messages>();
             services.AddTransient<UnitOfWork>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddTransient<ProductDocumentations.Infrastructure.UnitOfWork>();
+            services.AddTransient<ProductDocumentations.Domain.Common.IUnitOfWork, ProductDocumentations.Infrastructure.UnitOfWork>();
 
             var queryBuilder = new SqlConnectionStringBuilder(
                 Configuration.GetConnectionString("QueriesConnectionString"));

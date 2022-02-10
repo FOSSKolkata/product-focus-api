@@ -22,6 +22,11 @@ namespace ProductFocusApi.AutofacModules
             builder.RegisterAssemblyTypes(typeof(WorkItemBlockedDomainEventHandler).GetTypeInfo().Assembly)
               .AsClosedTypesOf(typeof(INotificationHandler<>));
 
+            // Product Documentation registrations
+            builder.RegisterAssemblyTypes(typeof(ProductDocumentations.Application.CommandHandlers.
+                AddProductDocumentation.AddProductDocumentationCommand).GetTypeInfo().Assembly)
+              .AsClosedTypesOf(typeof(IRequestHandler<,>));
+
         }
     }
 }

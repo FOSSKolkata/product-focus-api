@@ -1,7 +1,7 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
 using ProductFocus.ConnectionString;
-using ProductFocus.Domain;
+using ProductFocus.Domain.Common;
 using ProductFocusApi.Dtos;
 using System;
 using System.Collections.Generic;

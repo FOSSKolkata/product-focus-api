@@ -1,10 +1,10 @@
 ﻿using CSharpFunctionalExtensions;
-using ProductFocus.Domain;
 using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
 using ProductFocus.Services;
 using System;
 using System.Threading.Tasks;
+using ProductFocus.Domain.Common;
 
 namespace ProductFocus.AppServices
 {

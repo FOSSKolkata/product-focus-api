@@ -1,4 +1,4 @@
-﻿using ProductFocus.Domain;
+﻿using ProductFocus.Domain.Common;
 using ProductFocus.Dtos;
 using System.Linq;
 using Dapper;
@@ -25,7 +25,7 @@ namespace ProductFocus.AppServices
         {
             private readonly QueriesConnectionString _queriesConnectionString;
 
-            public GetFeatureDetailsQueryHandler(QueriesConnectionString queriesConnectionString, IEmailService emailService)
+            public GetFeatureDetailsQueryHandler(QueriesConnectionString queriesConnectionString)
             {
                 _queriesConnectionString = queriesConnectionString;
             }

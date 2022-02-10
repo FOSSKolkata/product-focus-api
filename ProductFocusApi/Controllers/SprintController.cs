@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ProductFocusApi.CommandHandlers;
 using Microsoft.AspNetCore.Authorization;
 using ProductFocus.Dtos;
+using ProductFocus.Domain.Common;
 
 namespace ProductFocusApi.Controllers
 {

@@ -9,33 +9,6 @@ namespace ProductFocus.Services
         {
             try
             {
-                /*MailMessage mailMessage = new MailMessage();
-                //MailAddress fromAddress = new MailAddress("admin@dumanhilltechnologies.com");
-                MailAddress fromAddress = new MailAddress("info@intelli-h.com");
-                MailAddress toAddress = new MailAddress(email);
-                //const string fromPassword = "Dewsacademy@1a";
-                const string fromPassword = "reversal@1";
-                const string subject = "Invitation to join Product Focus.";
-
-                SmtpClient smtpClient = new SmtpClient
-                {
-                    Host = "smtp.gmail.com",
-                    Port = 578,
-                    EnableSsl = true,
-                    DeliveryMethod = SmtpDeliveryMethod.Network,
-                    UseDefaultCredentials = false,
-                    Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
-                };
-
-                using (var message = new MailMessage(fromAddress, toAddress)
-                {
-                    Subject = subject,
-                    Body = emailBody
-                })
-                {
-                    smtpClient.Send(message);
-                }*/
-
                 MailMessage mail = new();
                 mail.To.Add(email);
                 mail.From = new MailAddress("info@intelli-h.com");

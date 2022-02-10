@@ -5,16 +5,16 @@ using ProductFocus.Domain.Repositories;
 using System;
 using System.Threading;
 using System.Text.Json;
-using ProductFocus.Domain;
+using ProductFocus.Domain.Common;
 
 namespace ProductFocusApi.DomainEventHandlers
 {
     public class WorkItemBlockedDomainEventHandler
          : INotificationHandler<WorkItemBlockedDomainEvent>
     {
-        IDomainEventLogRepository _domainEventLogRepository;
-        IUnitOfWork _unitOfWork;
-        private IUserRepository _userRepository;
+        private readonly IDomainEventLogRepository _domainEventLogRepository;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUserRepository _userRepository;
         public WorkItemBlockedDomainEventHandler(
             IDomainEventLogRepository domainEventLogRepository, 
             IUnitOfWork unitOfWork,
@@ -34,7 +34,7 @@ namespace ProductFocusApi.DomainEventHandlers
             // TODO : workItemMarkedAsBlockedDomainEvent.EventTriggeredBy could not be sent as its type is long, but the CreatedBy field in AggregateRoot is a string, which needs
             // to be converted to long 
             User user = _userRepository.GetById(workItemMarkedAsBlockedDomainEvent.EventTriggeredById);
-            WorkItemDomainEventLog workItemDomainEventLog = new(nameof(WorkItemBlockedDomainEvent), JsonSerializer.Serialize(new { FeatureId = workItemMarkedAsBlockedDomainEvent.Feature.Id, Title = workItemMarkedAsBlockedDomainEvent.Feature.Title }), workItemMarkedAsBlockedDomainEvent.Feature.ModuleId, workItemMarkedAsBlockedDomainEvent.Feature.Module?.Name, workItemMarkedAsBlockedDomainEvent.EventTriggeredById, user.Name, workItemMarkedAsBlockedDomainEvent.ProductId, workItemMarkedAsBlockedDomainEvent.Feature.Id);
+            WorkItemDomainEventLog workItemDomainEventLog = new(nameof(WorkItemBlockedDomainEvent), JsonSerializer.Serialize(new { FeatureId = workItemMarkedAsBlockedDomainEvent.Feature.Id, workItemMarkedAsBlockedDomainEvent.Feature.Title }), workItemMarkedAsBlockedDomainEvent.Feature.ModuleId, workItemMarkedAsBlockedDomainEvent.Feature.Module?.Name, workItemMarkedAsBlockedDomainEvent.EventTriggeredById, user.Name, workItemMarkedAsBlockedDomainEvent.ProductId, workItemMarkedAsBlockedDomainEvent.Feature.Id);
 
             _domainEventLogRepository.AddDomainEventLog(workItemDomainEventLog);
 

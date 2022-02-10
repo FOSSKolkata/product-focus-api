@@ -1,8 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
-using ProductFocus.Domain;
+using ProductFocus.Domain.Common;
 using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
-using ProductFocus.Services;
 using System;
 using System.Threading.Tasks;
 
@@ -23,16 +22,14 @@ namespace ProductFocus.AppServices
             private readonly IOrganizationRepository _organizationRepository;
             private readonly IProductRepository _productRepository;
             private readonly IUnitOfWork _unitOfWork;
-            private readonly IEmailService _emailService;
 
             public AddProductCommandHandler(
-                IOrganizationRepository organizationRepository, IUnitOfWork unitOfWork, IEmailService emailService,
+                IOrganizationRepository organizationRepository, IUnitOfWork unitOfWork,
                 IProductRepository productRepository)
             {
                 _organizationRepository = organizationRepository;
                 _productRepository = productRepository;
                 _unitOfWork = unitOfWork;
-                _emailService = emailService;
             }
             public async Task<Result> Handle(AddProductCommand command)
             {
@@ -49,8 +46,6 @@ namespace ProductFocus.AppServices
                     var product = Product.CreateInstance(organization, command.Name);
                     _productRepository.AddProduct(product);
                     await _unitOfWork.CompleteAsync();
-
-                    //_emailService.send();
 
                     return Result.Success();
                 }

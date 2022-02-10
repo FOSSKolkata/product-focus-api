@@ -1,6 +1,6 @@
-﻿using System;
+﻿using CSharpFunctionalExtensions;
+using System;
 using System.Threading.Tasks;
-using CSharpFunctionalExtensions;
 
 namespace ProductFocus.Domain.Common
 {

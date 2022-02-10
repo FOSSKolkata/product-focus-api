@@ -1,5 +1,4 @@
-﻿using ProductFocus.Common;
-using ProductFocus.Domain.Model.BusinessAggregate;
+﻿using ProductFocus.Domain.Model.BusinessAggregate;
 using ProductFocus.Domain.Repositories;
 
 namespace ProductFocus.Persistence.Repositories

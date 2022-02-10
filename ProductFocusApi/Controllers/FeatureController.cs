@@ -10,6 +10,7 @@ using System.Linq;
 using System.Security.Claims;
 using ProductFocusApi.Dtos;
 using ProductFocusApi.QueryHandlers;
+using ProductFocus.Domain.Common;
 
 namespace ProductFocusApi.Controllers
 {

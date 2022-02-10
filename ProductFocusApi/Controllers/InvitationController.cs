@@ -9,6 +9,7 @@ using System.Linq;
 using ProductFocusApi.QueryHandlers;
 using ProductFocusApi.Dtos;
 using ProductFocusApi.CommandHandlers;
+using ProductFocus.Domain.Common;
 
 namespace ProductFocusApi.Controllers
 {

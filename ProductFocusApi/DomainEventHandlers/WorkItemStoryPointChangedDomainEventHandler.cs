@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using ProductFocus.Domain;
+using ProductFocus.Domain.Common;
 using ProductFocus.Domain.Events;
 using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
@@ -10,9 +10,9 @@ namespace ProductFocusApi.DomainEventHandlers
 {
     public class WorkItemStoryPointChangedDomainEventHandler : INotificationHandler<WorkItemStoryPointChangedDomainEvent>
     {
-        IDomainEventLogRepository _domainEventLogRepository;
-        IUnitOfWork _unitOfWork;
-        private IUserRepository _userRepository;
+        private readonly IDomainEventLogRepository _domainEventLogRepository;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUserRepository _userRepository;
         public WorkItemStoryPointChangedDomainEventHandler(IDomainEventLogRepository domainEventLogRepository, IUnitOfWork unitOfWork, IUserRepository userRepository)
         {
             _domainEventLogRepository = domainEventLogRepository;
@@ -22,7 +22,7 @@ namespace ProductFocusApi.DomainEventHandlers
         public async System.Threading.Tasks.Task Handle(WorkItemStoryPointChangedDomainEvent workItemStoryPointChangedDomainEvent, CancellationToken cancellationToken)
         {
             User user = _userRepository.GetById(workItemStoryPointChangedDomainEvent.EventTriggeredById);
-            WorkItemDomainEventLog workItemDomainEventLog = new(nameof(WorkItemStoryPointChangedDomainEvent), JsonSerializer.Serialize(new { FeatureId = workItemStoryPointChangedDomainEvent.Feature.Id, Title = workItemStoryPointChangedDomainEvent.Feature.Title, PreviousStoryPoint = workItemStoryPointChangedDomainEvent.PreviousStoryPoint, CurrentStoryPoint = workItemStoryPointChangedDomainEvent.CurrentStoryPoint }), workItemStoryPointChangedDomainEvent.Feature.ModuleId, workItemStoryPointChangedDomainEvent.Feature.Module?.Name, workItemStoryPointChangedDomainEvent.EventTriggeredById, user.Name, workItemStoryPointChangedDomainEvent.ProductId, workItemStoryPointChangedDomainEvent.Feature.Id);
+            WorkItemDomainEventLog workItemDomainEventLog = new(nameof(WorkItemStoryPointChangedDomainEvent), JsonSerializer.Serialize(new { workItemStoryPointChangedDomainEvent.Feature.Id, workItemStoryPointChangedDomainEvent.Feature.Title, workItemStoryPointChangedDomainEvent.PreviousStoryPoint, workItemStoryPointChangedDomainEvent.CurrentStoryPoint }), workItemStoryPointChangedDomainEvent.Feature.ModuleId, workItemStoryPointChangedDomainEvent.Feature.Module?.Name, workItemStoryPointChangedDomainEvent.EventTriggeredById, user.Name, workItemStoryPointChangedDomainEvent.ProductId, workItemStoryPointChangedDomainEvent.Feature.Id);
             _domainEventLogRepository.AddDomainEventLog(workItemDomainEventLog);
 
             await _unitOfWork.CompleteAsync(cancellationToken);

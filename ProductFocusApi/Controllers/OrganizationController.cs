@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using System.Linq;
+using ProductFocus.Domain.Common;
 
 namespace ProductFocusApi.Controllers
 {

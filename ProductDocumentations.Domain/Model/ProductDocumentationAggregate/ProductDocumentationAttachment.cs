@@ -1,4 +1,4 @@
-﻿using Common;
+﻿using ProductDocumentations.Domain.Common;
 
 namespace ProductDocumentations.Domain.Model
 {

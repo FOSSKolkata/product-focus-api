@@ -1,4 +1,4 @@
-﻿using ProductFocus.Domain;
+﻿using ProductFocus.Domain.Common;
 using ProductFocus.Dtos;
 using System.Linq;
 using Dapper;

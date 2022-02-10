@@ -1,4 +1,4 @@
-﻿using ProductFocus.Domain;
+﻿using ProductFocus.Domain.Common;
 using ProductFocus.Dtos;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,6 @@ using Dapper;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using ProductFocus.ConnectionString;
-using ProductFocus.Services;
 using System.Threading.Tasks;
 
 namespace ProductFocus.AppServices

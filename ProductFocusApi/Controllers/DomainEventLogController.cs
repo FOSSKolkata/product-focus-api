@@ -5,6 +5,7 @@ using ProductFocusApi.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ProductFocus.Domain.Common;
 
 namespace ProductFocusApi.Controllers
 {

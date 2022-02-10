@@ -3,7 +3,7 @@ using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using ProductFocus.ConnectionString;
-using ProductFocus.Domain;
+using ProductFocus.Domain.Common;
 using ProductFocus.Domain.Services;
 using ProductFocusApi.Dtos;
 using System.Collections.Generic;

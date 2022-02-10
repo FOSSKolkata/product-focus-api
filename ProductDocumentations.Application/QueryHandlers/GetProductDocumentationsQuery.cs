@@ -1,10 +1,10 @@
 ﻿using Dapper;
 using MediatR;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -45,7 +45,7 @@ namespace ProductDocumentations.Application.QueryHandlers
                 }
                  return productDocumentations;
             }
-            private static List<GetProductDocumentationDto> GetProductDocumentationHierarchicalData(List<GetProductDocumentationDto> productDocList, long? parentId = null, string generatedIndex = "")
+            private List<GetProductDocumentationDto> GetProductDocumentationHierarchicalData(List<GetProductDocumentationDto> productDocList, long? parentId = null, string generatedIndex = "")
             {
                 var records = productDocList.Where(x => x.ParentId == parentId).ToList();
                 if (records.Count == 0)

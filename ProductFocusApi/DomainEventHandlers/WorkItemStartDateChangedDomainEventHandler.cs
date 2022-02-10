@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using ProductFocus.Domain;
+using ProductFocus.Domain.Common;
 using ProductFocus.Domain.Events;
 using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
@@ -10,9 +10,9 @@ namespace ProductFocusApi.DomainEventHandlers
 {
     public class WorkItemStartDateChangedDomainEventHandler : INotificationHandler<WorkItemStartDateChangedDomainEvent>
     {
-        IDomainEventLogRepository _domainEventLogRepository;
-        IUnitOfWork _unitOfWork;
-        private IUserRepository _userRepository;
+        private readonly IDomainEventLogRepository _domainEventLogRepository;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUserRepository _userRepository;
         public WorkItemStartDateChangedDomainEventHandler(IDomainEventLogRepository domainEventLogRepository, IUnitOfWork unitOfWork, IUserRepository userRepository)
         {
             _domainEventLogRepository = domainEventLogRepository;
@@ -22,7 +22,7 @@ namespace ProductFocusApi.DomainEventHandlers
         public async System.Threading.Tasks.Task Handle(WorkItemStartDateChangedDomainEvent workItemStartDateChangedDomainEvent, CancellationToken cancellationToken)
         {
             User user = _userRepository.GetById(workItemStartDateChangedDomainEvent.EventTriggeredById);
-            WorkItemDomainEventLog workItemDomainEventLog = new(nameof(WorkItemStartDateChangedDomainEvent), JsonSerializer.Serialize(new { FeatureId = workItemStartDateChangedDomainEvent.Feature.Id, Title = workItemStartDateChangedDomainEvent.Feature.Title, PreviousStartDate = workItemStartDateChangedDomainEvent.PreviousStartDate, CurrentStartDate = workItemStartDateChangedDomainEvent.CurrentStartDate }), workItemStartDateChangedDomainEvent.Feature.ModuleId, workItemStartDateChangedDomainEvent.Feature.Module?.Name, workItemStartDateChangedDomainEvent.EventTriggeredById, user.Name, workItemStartDateChangedDomainEvent.ProductId, workItemStartDateChangedDomainEvent.Feature.Id);
+            WorkItemDomainEventLog workItemDomainEventLog = new(nameof(WorkItemStartDateChangedDomainEvent), JsonSerializer.Serialize(new { workItemStartDateChangedDomainEvent.Feature.Id, workItemStartDateChangedDomainEvent.Feature.Title, workItemStartDateChangedDomainEvent.PreviousStartDate, workItemStartDateChangedDomainEvent.CurrentStartDate }), workItemStartDateChangedDomainEvent.Feature.ModuleId, workItemStartDateChangedDomainEvent.Feature.Module?.Name, workItemStartDateChangedDomainEvent.EventTriggeredById, user.Name, workItemStartDateChangedDomainEvent.ProductId, workItemStartDateChangedDomainEvent.Feature.Id);
             _domainEventLogRepository.AddDomainEventLog(workItemDomainEventLog);
 
             await _unitOfWork.CompleteAsync(cancellationToken);

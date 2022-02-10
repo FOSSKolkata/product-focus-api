@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ProductFocus.AppServices;
+using ProductFocus.Domain.Common;
 using ProductFocusApi.CommandHandlers;
 using ProductFocusApi.Dtos;
 using ProductFocusApi.QueryHandlers;

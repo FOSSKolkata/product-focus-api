@@ -1,5 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
-using ProductFocus.Domain;
+using ProductFocus.Domain.Common;
 using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Model.BusinessAggregate;
 using ProductFocus.Domain.Repositories;

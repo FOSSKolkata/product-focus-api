@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using ProductFocus.Domain;
+using ProductFocus.Domain.Common;
 using ProductFocus.Domain.Events;
 using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
@@ -11,9 +11,9 @@ namespace ProductFocusApi.DomainEventHandlers
 {
     public class AddWorkItemToSprintDomainEventHandler : INotificationHandler<AddWorkItemToSprintDomainEvent>
     {
-        IDomainEventLogRepository _domainEventLogRepository;
-        IUnitOfWork _unitOfWork;
-        private IUserRepository _userRepository;
+        private readonly IDomainEventLogRepository _domainEventLogRepository;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUserRepository _userRepository;
         public AddWorkItemToSprintDomainEventHandler(IDomainEventLogRepository domainEventLogRepository, IUnitOfWork unitOfWork, IUserRepository userRepository)
         {
             _domainEventLogRepository = domainEventLogRepository ?? throw new ArgumentNullException(nameof(domainEventLogRepository));
@@ -23,7 +23,7 @@ namespace ProductFocusApi.DomainEventHandlers
         public async System.Threading.Tasks.Task Handle(AddWorkItemToSprintDomainEvent addWorkItemToSprintDomainEvent, CancellationToken cancellationToken)
         {
             User user = _userRepository.GetById(addWorkItemToSprintDomainEvent.EventTriggeredById);
-            WorkItemDomainEventLog workItemDomainEventLog = new(nameof(AddWorkItemToSprintDomainEvent), JsonSerializer.Serialize(new { FeatureId = addWorkItemToSprintDomainEvent.Feature.Id, Title = addWorkItemToSprintDomainEvent.Feature.Title, PreviousSprint = addWorkItemToSprintDomainEvent.PreviousSprint, CurrentSprint = addWorkItemToSprintDomainEvent.CurrentSprint }), addWorkItemToSprintDomainEvent.Feature.ModuleId, addWorkItemToSprintDomainEvent.Feature.Module?.Name, addWorkItemToSprintDomainEvent.EventTriggeredById, user.Name, addWorkItemToSprintDomainEvent.ProductId, addWorkItemToSprintDomainEvent.Feature.Id);
+            WorkItemDomainEventLog workItemDomainEventLog = new(nameof(AddWorkItemToSprintDomainEvent), JsonSerializer.Serialize(new { addWorkItemToSprintDomainEvent.Feature.Id, addWorkItemToSprintDomainEvent.Feature.Title, addWorkItemToSprintDomainEvent.PreviousSprint, addWorkItemToSprintDomainEvent.CurrentSprint }), addWorkItemToSprintDomainEvent.Feature.ModuleId, addWorkItemToSprintDomainEvent.Feature.Module?.Name, addWorkItemToSprintDomainEvent.EventTriggeredById, user.Name, addWorkItemToSprintDomainEvent.ProductId, addWorkItemToSprintDomainEvent.Feature.Id);
             _domainEventLogRepository.AddDomainEventLog(workItemDomainEventLog);
 
             await _unitOfWork.CompleteAsync(cancellationToken);

@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using ProductFocus.Domain;
+using ProductFocus.Domain.Common;
 using ProductFocus.Domain.Events;
 using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
@@ -11,9 +11,9 @@ namespace ProductFocusApi.DomainEventHandlers
 {
     public class AddWorkItemDomainEventHandler : INotificationHandler<AddWorkItemDomainEvent>
     {
-        IDomainEventLogRepository _domainEventLogRepository;
-        IUnitOfWork _unitOfWork;
-        private IUserRepository _userRepository;
+        private readonly IDomainEventLogRepository _domainEventLogRepository;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUserRepository _userRepository;
         public AddWorkItemDomainEventHandler(IDomainEventLogRepository domainEventLogRepository, IUnitOfWork unitOfWork, IUserRepository userRepository)
         {
             _domainEventLogRepository = domainEventLogRepository ?? throw new ArgumentNullException(nameof(domainEventLogRepository));
@@ -23,7 +23,7 @@ namespace ProductFocusApi.DomainEventHandlers
         public async System.Threading.Tasks.Task Handle(AddWorkItemDomainEvent addWorkItemDomainEvent, CancellationToken cancellationToken)
         {
             User user = _userRepository.GetById(addWorkItemDomainEvent.EventTriggeredById);
-            WorkItemDomainEventLog workItemDomainEventLog = new(nameof(AddWorkItemDomainEvent), JsonSerializer.Serialize(new { FeatureId = addWorkItemDomainEvent.Feature.Id, Title = addWorkItemDomainEvent.Feature.Title }), addWorkItemDomainEvent.Feature.ModuleId, addWorkItemDomainEvent.Feature.Module?.Name, addWorkItemDomainEvent.EventTriggeredById, user.Name, addWorkItemDomainEvent.ProductId, addWorkItemDomainEvent.Feature.Id);
+            WorkItemDomainEventLog workItemDomainEventLog = new(nameof(AddWorkItemDomainEvent), JsonSerializer.Serialize(new { addWorkItemDomainEvent.Feature.Id, addWorkItemDomainEvent.Feature.Title }), addWorkItemDomainEvent.Feature.ModuleId, addWorkItemDomainEvent.Feature.Module?.Name, addWorkItemDomainEvent.EventTriggeredById, user.Name, addWorkItemDomainEvent.ProductId, addWorkItemDomainEvent.Feature.Id);
             _domainEventLogRepository.AddDomainEventLog(workItemDomainEventLog);
 
             await _unitOfWork.CompleteAsync(cancellationToken);

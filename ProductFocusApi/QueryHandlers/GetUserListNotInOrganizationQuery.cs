@@ -1,4 +1,4 @@
-﻿using ProductFocus.Domain;
+﻿using ProductFocus.Domain.Common;
 using ProductFocus.Dtos;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,6 @@ using Dapper;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using ProductFocus.ConnectionString;
-using ProductFocus.Services;
 using System.Threading.Tasks;
 
 namespace ProductFocus.AppServices
@@ -22,16 +21,14 @@ namespace ProductFocus.AppServices
         internal sealed class GetUserListNotInOrganizationQueryHandler : IQueryHandler<GetUserListNotInOrganizationQuery, List<GetUserNotPartOfOrgDto>>
         {
             private readonly QueriesConnectionString _queriesConnectionString;
-            private readonly IEmailService _emailService;
 
-            public GetUserListNotInOrganizationQueryHandler(QueriesConnectionString queriesConnectionString, IEmailService emailService)
+            public GetUserListNotInOrganizationQueryHandler(QueriesConnectionString queriesConnectionString)
             {
                 _queriesConnectionString = queriesConnectionString;
-                _emailService = emailService;
             }
             public async Task<List<GetUserNotPartOfOrgDto>> Handle(GetUserListNotInOrganizationQuery query)
             {
-                List<GetUserNotPartOfOrgDto> userList = new List<GetUserNotPartOfOrgDto>();
+                List<GetUserNotPartOfOrgDto> userList = new();
                 
                 string sql = @"
                     select u.Id, u.Name, u.Email from Users u
@@ -47,8 +44,6 @@ namespace ProductFocus.AppServices
                         OrgId = query.Id
                     })).ToList();
                 }
-                
-                //_emailService.send();
                 
                 return userList;
             }

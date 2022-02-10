@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using ProductFocus.Domain;
+using ProductFocus.Domain.Common;
 
 namespace ProductFocus.DI.Utils
 {
@@ -49,7 +50,7 @@ namespace ProductFocus.DI.Utils
                 })
                 .ToList();
 
-            Func<IServiceProvider, object> func = provider =>
+            object func(IServiceProvider provider)
             {
                 object current = null;
 
@@ -63,7 +64,7 @@ namespace ProductFocus.DI.Utils
                 }
 
                 return current;
-            };
+            }
 
             return func;
         }
@@ -96,7 +97,7 @@ namespace ProductFocus.DI.Utils
 
         private static Type ToDecorator(object attribute)
         {
-            Type type = attribute.GetType();
+            //Type type = attribute.GetType();
 
             //if (type == typeof(DatabaseRetryAttribute))
             //    return typeof(DatabaseRetryDecorator<>);

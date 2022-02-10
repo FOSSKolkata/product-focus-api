@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using ProductFocus.Common;
+using ProductFocus.Domain.Common;
 using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Model.BusinessAggregate;
 using ProductFocus.Domain.Model.FeatureAggregate;

@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using ProductFocus.Domain;
+using ProductFocus.Domain.Common;
 using ProductFocus.Domain.Events;
 using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
@@ -11,9 +11,9 @@ namespace ProductFocusApi.DomainEventHandlers
 {
     public class WorkInProgressDomainEventHandler : INotificationHandler<WorkInProgressDomainEvent>
     {
-        IDomainEventLogRepository _domainEventLogRepository;
-        IUnitOfWork _unitOfWork;
-        private IUserRepository _userRepository;
+        private readonly IDomainEventLogRepository _domainEventLogRepository;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUserRepository _userRepository;
 
         public WorkInProgressDomainEventHandler(
             IDomainEventLogRepository domainEventLogRepository,
@@ -28,7 +28,7 @@ namespace ProductFocusApi.DomainEventHandlers
         public async System.Threading.Tasks.Task Handle(WorkInProgressDomainEvent workInProgressDomainEvent, CancellationToken cancellationToken)
         {
             User user = _userRepository.GetById(workInProgressDomainEvent.EventTriggeredById);
-            WorkItemDomainEventLog workItemDomainEventLog = new(nameof(WorkInProgressDomainEvent), JsonSerializer.Serialize(new { FeatureId = workInProgressDomainEvent.Feature.Id, Title = workInProgressDomainEvent.Feature.Title, OldWorkProgress = workInProgressDomainEvent.OldWorkPercentage, NewWorkProgress = workInProgressDomainEvent.NewWorkPercentage }), workInProgressDomainEvent.Feature.ModuleId, workInProgressDomainEvent.Feature.Module?.Name, workInProgressDomainEvent.EventTriggeredById, user.Name, workInProgressDomainEvent.ProductId, workInProgressDomainEvent.Feature.Id);
+            WorkItemDomainEventLog workItemDomainEventLog = new(nameof(WorkInProgressDomainEvent), JsonSerializer.Serialize(new { workInProgressDomainEvent.Feature.Id, workInProgressDomainEvent.Feature.Title, workInProgressDomainEvent.OldWorkPercentage, workInProgressDomainEvent.NewWorkPercentage }), workInProgressDomainEvent.Feature.ModuleId, workInProgressDomainEvent.Feature.Module?.Name, workInProgressDomainEvent.EventTriggeredById, user.Name, workInProgressDomainEvent.ProductId, workInProgressDomainEvent.Feature.Id);
             _domainEventLogRepository.AddDomainEventLog(workItemDomainEventLog);
 
             await _unitOfWork.CompleteAsync(cancellationToken);

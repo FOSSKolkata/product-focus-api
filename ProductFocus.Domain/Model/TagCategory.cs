@@ -1,4 +1,4 @@
-﻿using Common;
+﻿using ProductFocus.Domain.Common;
 using CSharpFunctionalExtensions;
 using System;
 
