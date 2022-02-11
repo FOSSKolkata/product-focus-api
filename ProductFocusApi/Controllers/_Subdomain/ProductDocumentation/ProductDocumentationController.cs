@@ -2,7 +2,9 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using ProductDocumentations.Application.CommandHandlers.AddProductDocumentation;
+using ProductDocumentations.Application.QueryHandlers;
 using ProductDocumentations.Domain.Common;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ProductDocumentation.Controllers
@@ -24,6 +26,20 @@ namespace ProductDocumentation.Controllers
             var command = new AddProductDocumentationCommand(dto.ParentId, dto.ProductId, dto.Title, dto.Description);
             Result result = await _mediator.Send(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
+        }
+
+        [HttpGet("productId")]
+        public async Task<IActionResult> GetProductDocumentations(long productId)
+        {
+            List<GetProductDocumentationDto> productDocumentations = await _mediator.Send(new GetProductDocumentationsQuery(productId));
+            return Ok(productDocumentations);
+        }
+
+        [HttpGet("{id}/{index}")]
+        public async Task<IActionResult> GetProductDocumentation(long id, int index)
+        {
+            List<GetProductDocumentationDetailsDto> productDocumentationsDetail = await _mediator.Send(new GetProductDocumentationQuery(id, index));
+            return Ok(productDocumentationsDetail);
         }
     }
 }

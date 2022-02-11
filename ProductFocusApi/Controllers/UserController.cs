@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Linq;
 using System.Security.Claims;
 using ProductFocus.Domain.Common;
+using MediatR;
 
 namespace ProductFocusApi.Controllers
 {
@@ -16,24 +17,24 @@ namespace ProductFocusApi.Controllers
     [Authorize]
     public class UserController : ControllerBase
     {
-        private readonly Messages _messages;
+        private readonly IMediator _mediator;
 
-        public UserController(Messages messages)
+        public UserController(IMediator mediator)
         {
-            _messages = messages;
+            _mediator = mediator;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetUserByEmail(string email)
         {
-            List<GetUserDto> userDetails = await _messages.Dispatch(new GetUserDetailsQuery(email));
+            List<GetUserDto> userDetails = await _mediator.Send(new GetUserDetailsQuery(email));
             return Ok(userDetails);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserListByOrganization(long id)
         {
-            GetMemberOfOrganizationDto userDetails = await _messages.Dispatch(new GetUserListByOrganizationQuery(id));
+            GetMemberOfOrganizationDto userDetails = await _mediator.Send(new GetUserListByOrganizationQuery(id));
             return Ok(userDetails);
         }
 
@@ -43,7 +44,7 @@ namespace ProductFocusApi.Controllers
             string objectId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
             
             var command = new RegisterUserCommand(dto.Name, dto.Email, objectId);
-            Result result = await _messages.Dispatch(command);
+            Result result = await _mediator.Send(command);
             
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }        

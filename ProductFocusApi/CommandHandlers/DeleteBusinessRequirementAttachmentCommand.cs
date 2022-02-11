@@ -7,10 +7,12 @@ using ProductFocus.Domain.Repositories;
 using ProductFocus.Domain.Services;
 using System;
 using System.Threading.Tasks;
+using MediatR;
+using System.Threading;
 
 namespace ProductFocusApi.CommandHandlers
 {
-    public sealed class DeleteBusinessRequirementAttachmentCommand : ICommand
+    public sealed class DeleteBusinessRequirementAttachmentCommand : IRequest<Result>
     {
         public long BusinessRequirementId { get; private set; }
         public long AttachmentId { get; private set; }
@@ -20,7 +22,7 @@ namespace ProductFocusApi.CommandHandlers
             AttachmentId = attachmentId;
         }
 
-        public sealed class DeleteBusinessRequirementAttachmentCommandHandler : ICommandHandler<DeleteBusinessRequirementAttachmentCommand>
+        public sealed class DeleteBusinessRequirementAttachmentCommandHandler : IRequestHandler<DeleteBusinessRequirementAttachmentCommand, Result>
         {
             private readonly IBusinessRequirementRepository _businessRequirementRepository;
             private readonly IUnitOfWork _unitOfWork;
@@ -38,15 +40,15 @@ namespace ProductFocusApi.CommandHandlers
                 _blobStorageService = blobStorageService;
                 _productRepository = productRepository;
             }
-            public async Task<Result> Handle(DeleteBusinessRequirementAttachmentCommand command)
+            public async Task<Result> Handle(DeleteBusinessRequirementAttachmentCommand request, CancellationToken cancellationToken)
             {
                 try
                 {
-                    BusinessRequirement businessRequirement = await _businessRequirementRepository.GetById(command.BusinessRequirementId);
-                    BusinessRequirementAttachment attachmentToBeDeleted = businessRequirement.GetAttachmentByAttachmentId(command.AttachmentId);
+                    BusinessRequirement businessRequirement = await _businessRequirementRepository.GetById(request.BusinessRequirementId);
+                    BusinessRequirementAttachment attachmentToBeDeleted = businessRequirement.GetAttachmentByAttachmentId(request.AttachmentId);
                     Product product = await _productRepository.GetById(businessRequirement.ProductId);
                     Response blobClient = await _blobStorageService.DeleteAsync(BlobStorageFileTypeEnum.BusinessRequirementAttachments, attachmentToBeDeleted.Name);
-                    Result result = businessRequirement.DeleteAttachment(command.AttachmentId);
+                    Result result = businessRequirement.DeleteAttachment(request.AttachmentId);
 
                     if (result.IsFailure)
                         return result;

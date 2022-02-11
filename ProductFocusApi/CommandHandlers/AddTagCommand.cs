@@ -4,10 +4,12 @@ using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
 using System;
 using System.Threading.Tasks;
+using MediatR;
+using System.Threading;
 
 namespace ProductFocusApi.CommandHandlers
 {
-    public sealed class AddTagCommand : ICommand
+    public sealed class AddTagCommand : IRequest<Result>
     {
         public long ProductId { get; }
         public string TagName { get; }
@@ -18,7 +20,7 @@ namespace ProductFocusApi.CommandHandlers
             TagName = tagName;
             TagCategoryId = tagCategoryId;
         }
-        internal sealed class AddTagCommandHandler : ICommandHandler<AddTagCommand>
+        internal sealed class AddTagCommandHandler : IRequestHandler<AddTagCommand, Result>
         {
             private readonly IUnitOfWork _unitOfWork;
             private readonly ITagRepository _tagRepository;
@@ -32,17 +34,17 @@ namespace ProductFocusApi.CommandHandlers
                 _tagCategoryRepository = tagCategoryRepository;
             }
 
-            public async Task<Result> Handle(AddTagCommand command)
+            public async Task<Result> Handle(AddTagCommand request, CancellationToken cancellationToken)
             {
 
                 try
                 {
-                    TagCategory tagCategory = command.TagCategoryId == null ? null : await _tagCategoryRepository.GetById((long)command.TagCategoryId);
-                    Tag alreadyPresentTagInProduct = await _tagRepository.GetByNameAndProductId(command.TagName, command.ProductId);
+                    TagCategory tagCategory = request.TagCategoryId == null ? null : await _tagCategoryRepository.GetById((long)request.TagCategoryId);
+                    Tag alreadyPresentTagInProduct = await _tagRepository.GetByNameAndProductId(request.TagName, request.ProductId);
                     if(alreadyPresentTagInProduct == null)
                     {
 
-                        Tag tag = Tag.CreateInstance(command.TagName, command.ProductId, tagCategory).Value;
+                        Tag tag = Tag.CreateInstance(request.TagName, request.ProductId, tagCategory).Value;
                         _tagRepository.AddTag(tag);
                     }
                     else if(alreadyPresentTagInProduct.IsDeleted == true)
@@ -51,7 +53,7 @@ namespace ProductFocusApi.CommandHandlers
                     }
                     else
                     {
-                        return Result.Failure($"Tag is already present with the name {command.TagName}");
+                        return Result.Failure($"Tag is already present with the name {request.TagName}");
                     }
                     await _unitOfWork.CompleteAsync();
                     return Result.Success();

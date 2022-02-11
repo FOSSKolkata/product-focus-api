@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProductFocus.Domain.Common;
@@ -17,24 +18,24 @@ namespace ProductFocusApi.Controllers
     [Authorize]
     public class TagController : Controller
     {
-        private readonly Messages _messages;
-        public TagController(Messages messages)
+        private readonly IMediator _mediator;
+        public TagController(IMediator mediator)
         {
-            _messages = messages;
+            _mediator = mediator;
         }
 
         [HttpPost("{productId}")]
         public async Task<IActionResult> AddTag(long productId,[FromBody] AddTagDto dto)
         {
             var command = new AddTagCommand(productId,dto.Name, dto.TagCategoryId);
-            Result result = await _messages.Dispatch(command);
+            Result result = await _mediator.Send(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }
 
         [HttpGet("{productId}")]
         public async Task<IActionResult> GetTagList(long productId)
         {
-            List<GetTagDto> tagList = await _messages.Dispatch(new GetTagListQuery(productId));
+            List<GetTagDto> tagList = await _mediator.Send(new GetTagListQuery(productId));
             return Ok(tagList);
         }
         [HttpDelete("{id}")]
@@ -42,7 +43,7 @@ namespace ProductFocusApi.Controllers
         {
             string objectId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
             var command = new UpdateTagCommand(id, objectId);
-            Result result = await _messages.Dispatch(command);
+            Result result = await _mediator.Send(command);
             return result.IsSuccess? Ok(): BadRequest(result.Error);
         }
     }

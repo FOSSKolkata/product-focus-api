@@ -1,5 +1,4 @@
-﻿using ProductFocus.Domain.Common;
-using ProductFocus.Dtos;
+﻿using ProductFocus.Dtos;
 using System.Collections.Generic;
 using System.Linq;
 using Dapper;
@@ -7,10 +6,12 @@ using System.Data;
 using Microsoft.Data.SqlClient;
 using ProductFocus.ConnectionString;
 using System.Threading.Tasks;
+using MediatR;
+using System.Threading;
 
 namespace ProductFocus.AppServices
 {
-    public sealed class GetSprintDetailsQuery : IQuery<List<GetSprintDto>>
+    public sealed class GetSprintDetailsQuery : IRequest<List<GetSprintDto>>
     {
         public long ProductId { get; }
         public GetSprintDetailsQuery(long productId)
@@ -18,7 +19,7 @@ namespace ProductFocus.AppServices
             ProductId = productId;
         }
 
-        internal sealed class GetSprintDetailsQueryHandler : IQueryHandler<GetSprintDetailsQuery, List<GetSprintDto>>
+        internal sealed class GetSprintDetailsQueryHandler : IRequestHandler<GetSprintDetailsQuery, List<GetSprintDto>>
         {
             private readonly QueriesConnectionString _queriesConnectionString;            
 
@@ -26,7 +27,7 @@ namespace ProductFocus.AppServices
             {
                 _queriesConnectionString = queriesConnectionString;                
             }
-            public async Task<List<GetSprintDto>> Handle(GetSprintDetailsQuery query)
+            public async Task<List<GetSprintDto>> Handle(GetSprintDetailsQuery query, CancellationToken cancellationToken)
             {
                 List<GetSprintDto> sprintList = new();
                 

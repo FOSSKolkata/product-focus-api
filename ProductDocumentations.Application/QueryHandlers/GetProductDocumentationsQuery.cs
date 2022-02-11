@@ -28,7 +28,7 @@ namespace ProductDocumentations.Application.QueryHandlers
             public async Task<List<GetProductDocumentationDto>> Handle(GetProductDocumentationsQuery request, CancellationToken cancellationToken)
             {
                 List<GetProductDocumentationDto> productDocumentations = new();
-                string sql = @"SELECT Id, Title, Description, ParentId FROM productdoc.ProductDocumentations
+                string sql = @"SELECT Id, Title, Description, ParentId FROM productdocumentation.ProductDocumentations
                     WHERE productId = @ProductId";
                 using(IDbConnection con = new SqlConnection(_queriesConnectionString))
                 {

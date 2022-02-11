@@ -6,10 +6,12 @@ using ProductFocus.Domain.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MediatR;
+using System.Threading;
 
 namespace ProductFocusApi.CommandHandlers
 {
-    public class AddBusinessRequirementCommand : ICommand
+    public class AddBusinessRequirementCommand : IRequest<Result>
     {
         public long Id { get; private set; }
         public long ProductId { get; private set; }
@@ -36,7 +38,7 @@ namespace ProductFocusApi.CommandHandlers
             SourceAdditionalInformation = sourceAdditionalInformation;
             Description = description;
         }
-        internal sealed class AddBusinessRequirementCommandHandler : ICommandHandler<AddBusinessRequirementCommand>
+        internal sealed class AddBusinessRequirementCommandHandler : IRequestHandler<AddBusinessRequirementCommand, Result>
         {
             private readonly IBusinessRequirementRepository _businessRequirementRepository;
             private readonly IBusinessRequirementTagRepository _businessRequirementTagRepository;
@@ -55,7 +57,7 @@ namespace ProductFocusApi.CommandHandlers
                 _businessRequirementTagRepository = businessRequirementTagRepository;
                 _productRepository = productRepository;
             }
-            public async Task<Result> Handle(AddBusinessRequirementCommand command)
+            public async Task<Result> Handle(AddBusinessRequirementCommand request, CancellationToken cancellationToken)
             {
                 try
                 {
@@ -68,18 +70,18 @@ namespace ProductFocusApi.CommandHandlers
                         var attachment = BusinessRequirementAttachment.CreateInstance(blobClient.Name, blobClient.Uri.ToString());
                         attachments.Add(attachment);
                     }*/
-                    Product product = await _productRepository.GetById(command.ProductId);
+                    Product product = await _productRepository.GetById(request.ProductId);
 
                     BusinessRequirement businessRequirement = 
-                        BusinessRequirement.CreateInstance(command.Title,
+                        BusinessRequirement.CreateInstance(request.Title,
                         product,
-                        command.SourceEnum,
-                        command.SourceAdditionalInformation,
-                        command.Description,
-                        command.ReceivedOn).Value;
+                        request.SourceEnum,
+                        request.SourceAdditionalInformation,
+                        request.Description,
+                        request.ReceivedOn).Value;
 
                     _businessRequirementRepository.Add(businessRequirement);
-                    foreach(long tagId in command.TagIds)
+                    foreach(long tagId in request.TagIds)
                     {
                         Tag tag = await _tagRepository.GetById(tagId);
                         BusinessRequirementTag businessRequirementTag = 
@@ -88,7 +90,7 @@ namespace ProductFocusApi.CommandHandlers
 
                         _businessRequirementTagRepository.Add(businessRequirementTag);
                     }
-                    command.Id = businessRequirement.Id;
+                    request.Id = businessRequirement.Id;
                     await _unitOfWork.CompleteAsync();
                     return Result.Success();
                 }

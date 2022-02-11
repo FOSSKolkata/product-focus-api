@@ -1,15 +1,16 @@
-﻿using ProductFocus.Domain.Common;
-using ProductFocus.Dtos;
+﻿using ProductFocus.Dtos;
 using System.Linq;
 using Dapper;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using ProductFocus.ConnectionString;
 using System.Threading.Tasks;
+using MediatR;
+using System.Threading;
 
 namespace ProductFocus.AppServices
 {
-    public sealed class GetUserListByOrganizationQuery : IQuery<GetMemberOfOrganizationDto>
+    public sealed class GetUserListByOrganizationQuery : IRequest<GetMemberOfOrganizationDto>
     {
         public long OrgId { get; set; }
         
@@ -18,7 +19,7 @@ namespace ProductFocus.AppServices
             OrgId = orgId;                        
         }
 
-        internal sealed class GetUserListByOrganizationQueryHandler : IQueryHandler<GetUserListByOrganizationQuery, GetMemberOfOrganizationDto>
+        internal sealed class GetUserListByOrganizationQueryHandler : IRequestHandler<GetUserListByOrganizationQuery, GetMemberOfOrganizationDto>
         {
             private readonly QueriesConnectionString _queriesConnectionString;            
 
@@ -26,7 +27,7 @@ namespace ProductFocus.AppServices
             {
                 _queriesConnectionString = queriesConnectionString;                
             }
-            public async Task<GetMemberOfOrganizationDto> Handle(GetUserListByOrganizationQuery query)
+            public async Task<GetMemberOfOrganizationDto> Handle(GetUserListByOrganizationQuery query, CancellationToken cancellationToken)
             {
                 GetMemberOfOrganizationDto userList = new();
                 

@@ -30,7 +30,7 @@ namespace ProductDocumentations.Application.QueryHandlers
             public async Task<List<GetProductDocumentationDetailsDto>> Handle(GetProductDocumentationQuery request, CancellationToken cancellationToken)
             {
                 List<GetProductDocumentationDetailsDto> productDocumentations = new();
-                string sql = @"SELECT id, title, description, parentId FROM productdoc.ProductDocumentations
+                string sql = @"SELECT id, title, description, parentId FROM productdocumentation.ProductDocumentations
                     WHERE id = @Id;
 
                     WITH CTE AS (

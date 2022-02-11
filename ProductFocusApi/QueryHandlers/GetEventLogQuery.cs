@@ -1,17 +1,18 @@
 ﻿using Dapper;
+using MediatR;
 using Microsoft.Data.SqlClient;
 using ProductFocus.ConnectionString;
-using ProductFocus.Domain.Common;
 using ProductFocusApi.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ProductFocus.AppServices
 {
-    public sealed class GetDomainEventLogQuery : IQuery<List<GetDomainEventLogDto>>
+    public sealed class GetDomainEventLogQuery : IRequest<List<GetDomainEventLogDto>>
     {
         public long ProductId { get; set; }
         public IList<long> ModuleIds { get; set; }
@@ -32,14 +33,14 @@ namespace ProductFocus.AppServices
             Count = count;
             EventType = eventType;
         }
-        internal sealed class GetDomainEventLogQueryHandler : IQueryHandler<GetDomainEventLogQuery, List<GetDomainEventLogDto>>
+        internal sealed class GetDomainEventLogQueryHandler : IRequestHandler<GetDomainEventLogQuery, List<GetDomainEventLogDto>>
         {
             private readonly QueriesConnectionString _queriesConnectionString;
             public GetDomainEventLogQueryHandler(QueriesConnectionString queriesConnectionString)
             {
                 _queriesConnectionString = queriesConnectionString;
             }
-            public async Task<List<GetDomainEventLogDto>> Handle(GetDomainEventLogQuery query)
+            public async Task<List<GetDomainEventLogDto>> Handle(GetDomainEventLogQuery query, CancellationToken cancellationToken)
             {
                 List<GetDomainEventLogDto> eventLogList = new();
 

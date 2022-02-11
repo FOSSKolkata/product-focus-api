@@ -1,15 +1,16 @@
-﻿using ProductFocus.Domain.Common;
-using ProductFocus.Dtos;
+﻿using ProductFocus.Dtos;
 using System.Linq;
 using Dapper;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using ProductFocus.ConnectionString;
 using System.Threading.Tasks;
+using System.Threading;
+using MediatR;
 
 namespace ProductFocus.AppServices
 {
-    public sealed class GetPendingInvitationListQuery : IQuery<GetPendingInvitationDto>
+    public sealed class GetPendingInvitationListQuery : IRequest<GetPendingInvitationDto>
     {
         public long OrgId { get; set; }
         public int Offset { get; set; }
@@ -21,7 +22,7 @@ namespace ProductFocus.AppServices
             Count = count;
         }
 
-        internal sealed class GetPendingInvitationListQueryHandler : IQueryHandler<GetPendingInvitationListQuery, GetPendingInvitationDto>
+        internal sealed class GetPendingInvitationListQueryHandler : IRequestHandler<GetPendingInvitationListQuery, GetPendingInvitationDto>
         {
             private readonly QueriesConnectionString _queriesConnectionString;            
 
@@ -29,7 +30,7 @@ namespace ProductFocus.AppServices
             {
                 _queriesConnectionString = queriesConnectionString;                
             }
-            public async Task<GetPendingInvitationDto> Handle(GetPendingInvitationListQuery query)
+            public async Task<GetPendingInvitationDto> Handle(GetPendingInvitationListQuery query, CancellationToken cancellationToken)
             {
                 GetPendingInvitationDto pendingInvitationList = new();
                 

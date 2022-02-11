@@ -5,10 +5,12 @@ using ProductFocus.Services;
 using System;
 using System.Threading.Tasks;
 using ProductFocus.Domain.Common;
+using MediatR;
+using System.Threading;
 
 namespace ProductFocus.AppServices
 {
-    public sealed class SendInvitationCommand : ICommand
+    public sealed class SendInvitationCommand : IRequest<Result>
     {
         public long OrgId { get; set; }
         public string Email { get; }
@@ -20,7 +22,7 @@ namespace ProductFocus.AppServices
             ObjectId = objectId;
         }
 
-        internal sealed class SendInvitationCommandHandler : ICommandHandler<SendInvitationCommand>
+        internal sealed class SendInvitationCommandHandler : IRequestHandler<SendInvitationCommand, Result>
         {
             private readonly IInvitationRepository _invitationRepository;
             private readonly IOrganizationRepository _organizationRepository;
@@ -40,37 +42,37 @@ namespace ProductFocus.AppServices
                 _unitOfWork = unitOfWork;
                 _emailService = emailService;
             }
-            public async Task<Result> Handle(SendInvitationCommand command)
+            public async Task<Result> Handle(SendInvitationCommand request, CancellationToken cancellationToken)
             {
-                Organization existingOrganization = await _organizationRepository.GetById(command.OrgId);
+                Organization existingOrganization = await _organizationRepository.GetById(request.OrgId);
 
                 if (existingOrganization == null)
-                    return Result.Failure($"Organization doesn't exist with id : '{command.OrgId}'");
+                    return Result.Failure($"Organization doesn't exist with id : '{request.OrgId}'");
 
-                User existingUser = _userRepository.GetByEmail(command.Email);
+                User existingUser = _userRepository.GetByEmail(request.Email);
                 
                 if(existingUser != null)
                 {
                     bool ifUserAlreadyMember = existingOrganization.IfAlreadyMember(existingUser);
 
                     if (ifUserAlreadyMember)
-                        return Result.Failure($"User '{command.Email}' is already a member of Organization id : '{command.OrgId}'");
+                        return Result.Failure($"User '{request.Email}' is already a member of Organization id : '{request.OrgId}'");
                 }
 
-                Invitation existingActiveInvitation = _invitationRepository.GetActiveInvitation(existingOrganization, command.Email);
+                Invitation existingActiveInvitation = _invitationRepository.GetActiveInvitation(existingOrganization, request.Email);
 
                 if (existingActiveInvitation != null)
-                    return Result.Failure($"Already an active invitation exists for '{command.Email}'.");          
+                    return Result.Failure($"Already an active invitation exists for '{request.Email}'.");          
                 
                 try
                 {
-                    User createdBy = _userRepository.GetByIdpUserId(command.ObjectId);
-                    var invitation = Invitation.CreateInstance(existingOrganization, command.Email, createdBy.Id);
+                    User createdBy = _userRepository.GetByIdpUserId(request.ObjectId);
+                    var invitation = Invitation.CreateInstance(existingOrganization, request.Email, createdBy.Id);
                     _invitationRepository.AddInvitation(invitation);           
                     
                     await _unitOfWork.CompleteAsync();
 
-                    Invitation newActiveInvitation = _invitationRepository.GetActiveInvitation(existingOrganization, command.Email);
+                    Invitation newActiveInvitation = _invitationRepository.GetActiveInvitation(existingOrganization, request.Email);
 
                     string emailBody = $@"
                     Hi,
@@ -78,7 +80,7 @@ namespace ProductFocus.AppServices
                     Click on following link to accept the invitation: 
                     http://localhost:4200/#/invitation?iid={newActiveInvitation.Id}";
 
-                    _emailService.Send(emailBody, command.Email);
+                    _emailService.Send(emailBody, request.Email);
 
                     return Result.Success();
                 }

@@ -9,6 +9,7 @@ using System.Security.Claims;
 using System.Linq;
 using ProductFocus.Domain.Common;
 using ProductFocusApi.QueryHandlers;
+using MediatR;
 
 namespace ProductFocusApi.Controllers
 {
@@ -17,18 +18,18 @@ namespace ProductFocusApi.Controllers
     [Authorize]
     public class OrganizationController : ControllerBase
     {
-        private readonly Messages _messages;
+        private readonly IMediator _mediator;
 
-        public OrganizationController(Messages messages)
+        public OrganizationController(IMediator mediator)
         {
-            _messages = messages;
+            _mediator = mediator;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetOrganizationList()
         {
            
-            List<GetOrganizationDto> organizationList = await _messages.Dispatch(new GetOrganizationListQuery());
+            List<GetOrganizationDto> organizationList = await _mediator.Send(new GetOrganizationListQuery());
             return Ok(organizationList);
         }
 
@@ -37,7 +38,7 @@ namespace ProductFocusApi.Controllers
         {
             string objectId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;                      
 
-            List<GetOrganizationByUserDto> organizationList = await _messages.Dispatch(new GetOrganizationListByUserQuery(objectId));
+            List<GetOrganizationByUserDto> organizationList = await _mediator.Send(new GetOrganizationListByUserQuery(objectId));
             return Ok(organizationList);
         }
 
@@ -46,7 +47,7 @@ namespace ProductFocusApi.Controllers
         {
             string objectId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
             var command = new AddOrganizationCommand(dto.OrganizationName, objectId);
-            Result result = await _messages.Dispatch(command);
+            Result result = await _mediator.Send(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }
 
@@ -54,14 +55,14 @@ namespace ProductFocusApi.Controllers
         public async Task<IActionResult> AddProduct(long id, [FromBody] AddProductDto dto)
         {
             var command = new AddProductCommand(id, dto.Name);
-            Result result = await _messages.Dispatch(command);
+            Result result = await _mediator.Send(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProductsById(long id)
         {
-            List<GetProductDto> organizationList = await _messages.Dispatch(new GetProductListQuery(id));
+            List<GetProductDto> organizationList = await _mediator.Send(new GetProductListQuery(id));
             return Ok(organizationList);
         }
     }

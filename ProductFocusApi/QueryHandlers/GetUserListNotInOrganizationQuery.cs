@@ -1,5 +1,4 @@
-﻿using ProductFocus.Domain.Common;
-using ProductFocus.Dtos;
+﻿using ProductFocus.Dtos;
 using System.Collections.Generic;
 using System.Linq;
 using Dapper;
@@ -7,10 +6,12 @@ using System.Data;
 using Microsoft.Data.SqlClient;
 using ProductFocus.ConnectionString;
 using System.Threading.Tasks;
+using MediatR;
+using System.Threading;
 
 namespace ProductFocus.AppServices
 {
-    public sealed class GetUserListNotInOrganizationQuery : IQuery<List<GetUserNotPartOfOrgDto>>
+    public sealed class GetUserListNotInOrganizationQuery : IRequest<List<GetUserNotPartOfOrgDto>>
     {
         public long Id { get; }
         public GetUserListNotInOrganizationQuery(long id)
@@ -18,7 +19,7 @@ namespace ProductFocus.AppServices
             Id = id;
         }
 
-        internal sealed class GetUserListNotInOrganizationQueryHandler : IQueryHandler<GetUserListNotInOrganizationQuery, List<GetUserNotPartOfOrgDto>>
+        internal sealed class GetUserListNotInOrganizationQueryHandler : IRequestHandler<GetUserListNotInOrganizationQuery, List<GetUserNotPartOfOrgDto>>
         {
             private readonly QueriesConnectionString _queriesConnectionString;
 
@@ -26,7 +27,7 @@ namespace ProductFocus.AppServices
             {
                 _queriesConnectionString = queriesConnectionString;
             }
-            public async Task<List<GetUserNotPartOfOrgDto>> Handle(GetUserListNotInOrganizationQuery query)
+            public async Task<List<GetUserNotPartOfOrgDto>> Handle(GetUserListNotInOrganizationQuery query, CancellationToken cancellationToken)
             {
                 List<GetUserNotPartOfOrgDto> userList = new();
                 

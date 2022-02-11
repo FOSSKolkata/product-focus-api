@@ -4,10 +4,12 @@ using ProductFocus.Domain.Repositories;
 using System;
 using System.Threading.Tasks;
 using ProductFocus.Domain.Common;
+using MediatR;
+using System.Threading;
 
 namespace ProductFocus.AppServices
 {
-    public sealed class AcceptInvitationCommand : ICommand
+    public sealed class AcceptInvitationCommand : IRequest<Result>
     {
         public long InvitationId { get; set; }
         public string ObjectId { get; }
@@ -17,7 +19,7 @@ namespace ProductFocus.AppServices
             ObjectId = objectId;
         }
 
-        internal sealed class AcceptInvitationCommandHandler : ICommandHandler<AcceptInvitationCommand>
+        internal sealed class AcceptInvitationCommandHandler : IRequestHandler<AcceptInvitationCommand, Result>
         {
             private readonly IInvitationRepository _invitationRepository;
             private readonly IOrganizationRepository _organizationRepository;
@@ -35,30 +37,30 @@ namespace ProductFocus.AppServices
                 _userRepository = userRepository;
                 _unitOfWork = unitOfWork;                
             }
-            public async Task<Result> Handle(AcceptInvitationCommand command)
+            public async Task<Result> Handle(AcceptInvitationCommand request, CancellationToken cancellationToken)
             {
                 try 
                 {
-                    User existingUser = _userRepository.GetByIdpUserId(command.ObjectId);
+                    User existingUser = _userRepository.GetByIdpUserId(request.ObjectId);
                 
                     if(existingUser == null)
                         return Result.Failure($"User are not a registered user.");
 
-                    Invitation existingActiveInvitation = await _invitationRepository.GetById(command.InvitationId);
+                    Invitation existingActiveInvitation = await _invitationRepository.GetById(request.InvitationId);
 
                     Organization existingOrganization = await _organizationRepository.GetById(existingActiveInvitation.Organization.Id);
 
                     if (existingOrganization == null)
                         return Result.Failure($"Organization doesn't exist with id : '{existingActiveInvitation.Organization.Id}'");
                     if (existingActiveInvitation == null)
-                        return Result.Failure($"No invitation exists for invitation id :'{command.InvitationId}'.");
+                        return Result.Failure($"No invitation exists for invitation id :'{request.InvitationId}'.");
 
                     //Start ---- Check if the invitation is matching with the email and organization 
                     if (existingActiveInvitation.Email != existingUser.Email)
-                        return Result.Failure($"Email sent over request parameter is not matching with the one in the invitation - invitatio id: '{command.InvitationId}'");
+                        return Result.Failure($"Email sent over request parameter is not matching with the one in the invitation - invitatio id: '{request.InvitationId}'");
 
                     if (existingActiveInvitation.Organization != existingOrganization)
-                        return Result.Failure($"Organization sent is not matching with the organization present against invitation id: '{command.InvitationId}'");
+                        return Result.Failure($"Organization sent is not matching with the organization present against invitation id: '{request.InvitationId}'");
                     //End ---- Check if the invitation is matching with the email and organization 
                                         
                     existingOrganization.AddMember(existingUser, false);

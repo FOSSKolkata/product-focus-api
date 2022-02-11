@@ -4,10 +4,12 @@ using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
 using System;
 using System.Threading.Tasks;
+using MediatR;
+using System.Threading;
 
 namespace ProductFocusApi.CommandHandlers
 {
-    public class AddSprintCommand : ICommand
+    public class AddSprintCommand : IRequest<Result>
     {
         public virtual string Name { get; set; }
         public virtual DateTime StartDate { get; set; }
@@ -21,7 +23,7 @@ namespace ProductFocusApi.CommandHandlers
             EndDate = endDate;
         }
 
-        internal sealed class AddSprintCommandHandler : ICommandHandler<AddSprintCommand>
+        internal sealed class AddSprintCommandHandler : IRequestHandler<AddSprintCommand, Result>
         {
             private readonly ISprintRepository _sprintRepository;
             private readonly IProductRepository _productRepository;
@@ -37,19 +39,19 @@ namespace ProductFocusApi.CommandHandlers
                 _unitOfWork = unitOfWork;
             }
 
-            public async Task<Result> Handle(AddSprintCommand command)
+            public async Task<Result> Handle(AddSprintCommand request, CancellationToken cancellationToken)
             {
-                Sprint sprintWithSameName = _sprintRepository.GetByName(command.Name);
+                Sprint sprintWithSameName = _sprintRepository.GetByName(request.Name);
 
                 if (sprintWithSameName != null)
-                    return Result.Failure($"Sprint '{command.Name}' already exists");
+                    return Result.Failure($"Sprint '{request.Name}' already exists");
 
-                Product product = await _productRepository.GetById(command.ProductId);
+                Product product = await _productRepository.GetById(request.ProductId);
 
                 if (product == null)
                     return Result.Failure("Invalid product id");
 
-                var sprintResult = Sprint.CreateInstance(product, command.Name, command.StartDate, command.EndDate);
+                var sprintResult = Sprint.CreateInstance(product, request.Name, request.StartDate, request.EndDate);
                 
                 if (sprintResult.IsFailure)
                     return Result.Failure(sprintResult.Error);

@@ -1,16 +1,16 @@
-﻿using ProductFocus.Domain.Common;
-using ProductFocus.Dtos;
+﻿using ProductFocus.Dtos;
 using System.Linq;
 using Dapper;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using ProductFocus.ConnectionString;
-using ProductFocus.Services;
 using System.Threading.Tasks;
+using MediatR;
+using System.Threading;
 
 namespace ProductFocus.AppServices
 {
-    public sealed class GetFeatureDetailsQuery : IQuery<GetFeatureDetailsDto>
+    public sealed class GetFeatureDetailsQuery : IRequest<GetFeatureDetailsDto>
     {
         public long OrgId { get; set; }
         public long Id { get; set; }
@@ -21,7 +21,7 @@ namespace ProductFocus.AppServices
             OrgId = orgId;
         }
 
-        internal sealed class GetFeatureDetailsQueryHandler : IQueryHandler<GetFeatureDetailsQuery, GetFeatureDetailsDto>
+        internal sealed class GetFeatureDetailsQueryHandler : IRequestHandler<GetFeatureDetailsQuery, GetFeatureDetailsDto>
         {
             private readonly QueriesConnectionString _queriesConnectionString;
 
@@ -29,7 +29,7 @@ namespace ProductFocus.AppServices
             {
                 _queriesConnectionString = queriesConnectionString;
             }
-            public async Task<GetFeatureDetailsDto> Handle(GetFeatureDetailsQuery query)
+            public async Task<GetFeatureDetailsDto> Handle(GetFeatureDetailsQuery query, CancellationToken cancellationToken)
             {
                 GetFeatureDetailsDto featureDetails = new();
                 

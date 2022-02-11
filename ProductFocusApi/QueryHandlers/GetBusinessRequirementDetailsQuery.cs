@@ -1,22 +1,23 @@
 ﻿using Dapper;
+using MediatR;
 using Microsoft.Data.SqlClient;
 using ProductFocus.ConnectionString;
-using ProductFocus.Domain.Common;
 using ProductFocusApi.Dtos;
 using System.Data;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ProductFocusApi.QueryHandlers
 {
-    public sealed class GetBusinessRequirementDetailsQuery : IQuery<GetBusinessRequirementDetailsDto>
+    public sealed class GetBusinessRequirementDetailsQuery : IRequest<GetBusinessRequirementDetailsDto>
     {
         public long Id { get; set; }
         public GetBusinessRequirementDetailsQuery(long id)
         {
             Id = id;
         }
-        internal sealed class GetBusinessRequirementDetialsQueryHandler : IQueryHandler<GetBusinessRequirementDetailsQuery, GetBusinessRequirementDetailsDto>
+        internal sealed class GetBusinessRequirementDetialsQueryHandler : IRequestHandler<GetBusinessRequirementDetailsQuery, GetBusinessRequirementDetailsDto>
         {
             private readonly QueriesConnectionString _queriesConnectionString;
 
@@ -24,7 +25,7 @@ namespace ProductFocusApi.QueryHandlers
             {
                 _queriesConnectionString = queriesConnectionString;
             }
-            public async Task<GetBusinessRequirementDetailsDto> Handle(GetBusinessRequirementDetailsQuery query)
+            public async Task<GetBusinessRequirementDetailsDto> Handle(GetBusinessRequirementDetailsQuery query, CancellationToken cancellationToken)
             {
                 GetBusinessRequirementDetailsDto businessRequirementDetails = new();
 
