@@ -6,13 +6,13 @@ namespace ProductDocumentations.Domain.Model
 {
     public class ProductDocumentation : AggregateRoot<long>
     {
-        public virtual long? ParentId { get; set; }
-        public virtual long ProductId { get; set; }
-        public virtual string Title { get; set; }
-        public virtual string Description { get; set; }
+        public virtual long? ParentId { get; private set; }
+        public virtual long ProductId { get; private set; }
+        public virtual string Title { get; private set; }
+        public virtual string Description { get; private set; }
         public readonly IList<ProductDocumentationAttachment> _productDocumentationAttachments = new List<ProductDocumentationAttachment>();
-        public virtual IReadOnlyList<ProductDocumentationAttachment> ProductdocumentationAttachments => _productDocumentationAttachments.ToList();
-        public virtual long OrderNumber { get; set; }
+        public virtual IReadOnlyList<ProductDocumentationAttachment> ProductDocumentationAttachments => _productDocumentationAttachments.ToList();
+        public virtual long OrderNumber { get; private set; }
         
         protected ProductDocumentation()
         {
@@ -35,12 +35,17 @@ namespace ProductDocumentations.Domain.Model
             return productDocumentation;
         }
 
-        public void UpdateTitle(string title)
+        public virtual void AddAttachment(string name, string uri, string fileName)
+        {
+            _productDocumentationAttachments.Add(ProductDocumentationAttachment.CreateInstance(Id, name, uri, fileName));
+        }
+
+        public virtual void UpdateTitle(string title)
         {
             Title = title;
         }
 
-        public void UpdateDescription(string description)
+        public virtual void UpdateDescription(string description)
         {
             Description = description;
         }

@@ -10,14 +10,14 @@ using ProductDocumentations.Infrastructure;
 namespace ProductDocumentations.Infrastructure.Migrations
 {
     [DbContext(typeof(ProductDocumentationDbContext))]
-    [Migration("20220130124705_product-documentations")]
-    partial class productdocumentations
+    [Migration("20220211080552_product-documentation")]
+    partial class productdocumentation
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasDefaultSchema("productdoc")
+                .HasDefaultSchema("productdocumentation")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.5")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -51,6 +51,9 @@ namespace ProductDocumentations.Infrastructure.Migrations
                     b.Property<DateTime>("LastModifiedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<long>("OrderNumber")
+                        .HasColumnType("bigint");
+
                     b.Property<long?>("ParentId")
                         .HasColumnType("bigint");
 
@@ -70,7 +73,8 @@ namespace ProductDocumentations.Infrastructure.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasAnnotation("SqlServer:HiLoSequenceName", "EntityFrameworkHiLoSequence")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -103,7 +107,7 @@ namespace ProductDocumentations.Infrastructure.Migrations
 
                     b.HasIndex("ProductDocumentationId");
 
-                    b.ToTable("ProductDocumentationAttachment");
+                    b.ToTable("ProductDocumentationAttachments");
                 });
 
             modelBuilder.Entity("ProductDocumentations.Domain.Model.ProductDocumentationAttachment", b =>

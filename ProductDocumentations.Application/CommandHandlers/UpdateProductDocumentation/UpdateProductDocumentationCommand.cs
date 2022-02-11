@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ProductDocumentations.Application.CommandHandlers.UpdateProductDocumentation
 {
-    public sealed class UpdateProductDocumentationCommand : IRequest<Result<int>>
+    public sealed class UpdateProductDocumentationCommand : IRequest<Result>
     {
         public long Id { get; private set; }
         public string Title { get; private set; }
@@ -28,7 +28,7 @@ namespace ProductDocumentations.Application.CommandHandlers.UpdateProductDocumen
             Description = description;
             FieldName = fieldName;
         }
-        internal sealed class UpdateProductcommandHandler : IRequestHandler<UpdateProductDocumentationCommand, Result<int>>
+        internal sealed class UpdateProductcommandHandler : IRequestHandler<UpdateProductDocumentationCommand, Result>
         {
             private readonly IProductDocumentationRepository _productDocumentationRepository;
             private readonly IUnitOfWork _unitOfWork;
@@ -37,7 +37,7 @@ namespace ProductDocumentations.Application.CommandHandlers.UpdateProductDocumen
                 _productDocumentationRepository = productDocumentationRepository;
                 _unitOfWork = unitOfWork;
             }
-            public async Task<Result<int>> Handle(UpdateProductDocumentationCommand request, CancellationToken cancellationToken)
+            public async Task<Result> Handle(UpdateProductDocumentationCommand request, CancellationToken cancellationToken)
             {
                 ProductDocumentation productDocumentation = await _productDocumentationRepository.GetById(request.Id);
                 if (productDocumentation == null)
@@ -55,11 +55,11 @@ namespace ProductDocumentations.Application.CommandHandlers.UpdateProductDocumen
                     }
 
                     await _unitOfWork.CompleteAsync(cancellationToken);
-                    return Result.Success(1);
+                    return Result.Success();
                 }
                 catch(Exception ex)
                 {
-                    return Result.Failure<int>(ex.Message);
+                    return Result.Failure(ex.Message);
                 }
             }
         }

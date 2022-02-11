@@ -15,6 +15,9 @@ namespace ProductDocumentations.Infrastructure
         {
             modelBuilder.Entity<ProductDocumentation>()
                 .Property(o => o.Id).UseHiLo();
+            modelBuilder.Entity<ProductDocumentationAttachment>()
+                .Property(o => o.Id).UseHiLo();
+            modelBuilder.HasDefaultSchema("productdocumentation");
 
         }
         public ProductDocumentationDbContext(DbContextOptions<ProductDocumentationDbContext> options) : base(options)
@@ -31,6 +34,7 @@ namespace ProductDocumentations.Infrastructure
         }
 
         public DbSet<ProductDocumentation> ProductDocumentations { get; set; }
+        public DbSet<ProductDocumentationAttachment> ProductDocumentationAttachments { get; set; }
 
         private readonly IMediator _mediator;
         public async Task<int> SaveEntitiesAsync(CancellationToken cancellationToken = default)

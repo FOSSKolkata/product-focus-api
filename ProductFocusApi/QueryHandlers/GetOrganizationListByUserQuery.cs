@@ -6,10 +6,9 @@ using Dapper;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using ProductFocus.ConnectionString;
-using ProductFocus.Services;
 using System.Threading.Tasks;
 
-namespace ProductFocus.AppServices
+namespace ProductFocusApi.QueryHandlers
 {
     public sealed class GetOrganizationListByUserQuery : IQuery<List<GetOrganizationByUserDto>>
     {
@@ -55,8 +54,6 @@ namespace ProductFocus.AppServices
                         UserId = userId
                     })).ToList();                    
                 }
-                
-                //_emailService.send();
                 
                 return organizationList;
             }

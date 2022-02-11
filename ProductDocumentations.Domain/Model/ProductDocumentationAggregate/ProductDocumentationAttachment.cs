@@ -1,7 +1,9 @@
 ﻿using ProductDocumentations.Domain.Common;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProductDocumentations.Domain.Model
 {
+    [Table("ProductDocumentationAttachments")]
     public class ProductDocumentationAttachment : AggregateRoot<long>
     {
         public virtual long ProductDocumentationId { get; private set; }

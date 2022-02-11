@@ -15,7 +15,7 @@ namespace ProductDocumentations.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasDefaultSchema("productdoc")
+                .HasDefaultSchema("productdocumentation")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.5")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -71,7 +71,8 @@ namespace ProductDocumentations.Infrastructure.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasAnnotation("SqlServer:HiLoSequenceName", "EntityFrameworkHiLoSequence")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -104,7 +105,7 @@ namespace ProductDocumentations.Infrastructure.Migrations
 
                     b.HasIndex("ProductDocumentationId");
 
-                    b.ToTable("ProductDocumentationAttachment");
+                    b.ToTable("ProductDocumentationAttachments");
                 });
 
             modelBuilder.Entity("ProductDocumentations.Domain.Model.ProductDocumentationAttachment", b =>
