@@ -34,13 +34,13 @@ namespace ProductDocumentations.Application.QueryHandlers
                     WHERE id = @Id;
 
                     WITH CTE AS (
-                        SELECT id, title, description, parentId FROM productdoc.ProductDocumentations
+                        SELECT id, title, description, parentId FROM productdocumentation.ProductDocumentations
                         WHERE ParentId = @Id
 		
 	                    UNION ALL
 
                         SELECT t.id, t.title, t.description, t.ParentId
-                        FROM productdoc.ProductDocumentations t
+                        FROM productdocumentation.ProductDocumentations t
                         INNER JOIN CTE c ON t.ParentId = c.id
                     )
                     SELECT * FROM CTE ORDER BY id;";
