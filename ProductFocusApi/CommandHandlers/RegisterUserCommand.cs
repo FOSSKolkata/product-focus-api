@@ -44,7 +44,7 @@ namespace ProductFocus.AppServices
                     var user = User.CreateInstance(request.Name, request.Email, request.ObjectId);
                     _userRepository.RegisterUser(user);
 
-                    await _unitOfWork.CompleteAsync();
+                    await _unitOfWork.CompleteAsync(cancellationToken);
 
                     return Result.Success();
                 }

@@ -57,7 +57,7 @@ namespace ProductFocusApi.CommandHandlers
                     return Result.Failure(sprintResult.Error);
 
                 _sprintRepository.AddSprint(sprintResult.Value);
-                await _unitOfWork.CompleteAsync();
+                await _unitOfWork.CompleteAsync(cancellationToken);
 
 
                 return Result.Success();

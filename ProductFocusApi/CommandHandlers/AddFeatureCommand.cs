@@ -73,7 +73,7 @@ namespace ProductFocus.AppServices
                     _featureRepository.AddFeature(feature);
                     FeatureOrdering featureOrdering = FeatureOrdering.CreateInstance(feature.Id, long.MaxValue, feature.Sprint?.Id);
                     _featureOrderingRepository.Add(featureOrdering);
-                    await _unitOfWork.CompleteAsync();
+                    await _unitOfWork.CompleteAsync(cancellationToken);
 
                     return Result.Success();
                 }

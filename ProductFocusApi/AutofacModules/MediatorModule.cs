@@ -17,7 +17,7 @@ namespace ProductFocusApi.AutofacModules
             builder.Register<ServiceFactory>(context =>
             {
                 var componentContext = context.Resolve<IComponentContext>();
-                return t => { object o; return componentContext.TryResolve(t, out o) ? o : null; };
+                return t => { return componentContext.TryResolve(t, out object o) ? o : null; };
             });
 
             builder.RegisterAssemblyTypes(typeof(WorkItemBlockedDomainEventHandler).GetTypeInfo().Assembly)

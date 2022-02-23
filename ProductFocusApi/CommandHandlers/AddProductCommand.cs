@@ -47,7 +47,7 @@ namespace ProductFocus.AppServices
                 {
                     var product = Product.CreateInstance(organization, request.Name);
                     _productRepository.AddProduct(product);
-                    await _unitOfWork.CompleteAsync();
+                    await _unitOfWork.CompleteAsync(cancellationToken);
 
                     return Result.Success();
                 }

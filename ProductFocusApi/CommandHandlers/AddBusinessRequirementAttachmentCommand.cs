@@ -61,7 +61,7 @@ namespace ProductFocusApi.CommandHandlers
                             product.Organization.Id, product.Id, request.BusinessRequirementId, file);
                         businessRequirement.AddAttachment(blobClient.Name, blobClient.Uri.ToString(), file.FileName);
                     }
-                    await _unitOfWork.CompleteAsync();
+                    await _unitOfWork.CompleteAsync(cancellationToken);
                 }
                     catch(Exception ex)
                 {

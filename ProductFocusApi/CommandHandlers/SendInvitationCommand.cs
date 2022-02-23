@@ -70,7 +70,7 @@ namespace ProductFocus.AppServices
                     var invitation = Invitation.CreateInstance(existingOrganization, request.Email, createdBy.Id);
                     _invitationRepository.AddInvitation(invitation);           
                     
-                    await _unitOfWork.CompleteAsync();
+                    await _unitOfWork.CompleteAsync(cancellationToken);
 
                     Invitation newActiveInvitation = _invitationRepository.GetActiveInvitation(existingOrganization, request.Email);
 

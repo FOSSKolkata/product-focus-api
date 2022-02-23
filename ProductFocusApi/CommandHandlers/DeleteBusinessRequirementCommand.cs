@@ -36,7 +36,7 @@ namespace ProductFocusApi.CommandHandlers
                 {
                     BusinessRequirement businessRequirement = await _businessRequirementRepository.GetById(request.Id);
                     businessRequirement.Delete(request.UserId);
-                    await _unitOfWork.CompleteAsync();
+                    await _unitOfWork.CompleteAsync(cancellationToken);
                     return Result.Success();
                 }
                 catch(Exception ex)

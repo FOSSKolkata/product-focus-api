@@ -13,7 +13,7 @@ namespace ProductDocumentations.Application.QueryHandlers
 {
     public sealed class GetProductDocumentationsQuery : IRequest<List<GetProductDocumentationDto>>
     {
-        public long ProductId { get; set; }
+        public long ProductId { get; private set; }
         public GetProductDocumentationsQuery(long productId)
         {
             ProductId = productId;
@@ -28,7 +28,7 @@ namespace ProductDocumentations.Application.QueryHandlers
             public async Task<List<GetProductDocumentationDto>> Handle(GetProductDocumentationsQuery request, CancellationToken cancellationToken)
             {
                 List<GetProductDocumentationDto> productDocumentations = new();
-                string sql = @"SELECT Id, Title, Description, ParentId FROM productdocumentation.ProductDocumentations
+                string sql = @"SELECT Id, Title, Description, ParentId, OrderNumber FROM productdocumentation.ProductDocumentations
                     WHERE productId = @ProductId";
                 using(IDbConnection con = new SqlConnection(_queriesConnectionString))
                 {
@@ -43,11 +43,11 @@ namespace ProductDocumentations.Application.QueryHandlers
                     }
                     productDocumentations = GetProductDocumentationHierarchicalData(dtos);
                 }
-                 return productDocumentations;
+                return productDocumentations;
             }
             private List<GetProductDocumentationDto> GetProductDocumentationHierarchicalData(List<GetProductDocumentationDto> productDocList, long? parentId = null, string generatedIndex = "")
             {
-                var records = productDocList.Where(x => x.ParentId == parentId).ToList();
+                var records = productDocList.Where(x => x.ParentId == parentId).OrderBy(x => x.OrderNumber).ToList();
                 if (records.Count == 0)
                     return new List<GetProductDocumentationDto>();
                 int index = 1;

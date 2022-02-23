@@ -55,7 +55,7 @@ namespace ProductFocusApi.CommandHandlers
                     {
                         return Result.Failure($"Tag is already present with the name {request.TagName}");
                     }
-                    await _unitOfWork.CompleteAsync();
+                    await _unitOfWork.CompleteAsync(cancellationToken);
                     return Result.Success();
                 } catch(Exception ex)
                 {

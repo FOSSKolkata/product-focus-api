@@ -11,10 +11,10 @@ namespace ProductDocumentations.Application.CommandHandlers.UpdateProductDocumen
 {
     public sealed class UpdateProductDocumentationCommand : IRequest<Result>
     {
-        public long Id { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public UpdateDocumentationFieldName FieldName { get; set; }
+        public long Id { get; private set; }
+        public string Title { get; private set; }
+        public string Description { get; private set; }
+        public UpdateDocumentationFieldName FieldName { get; private set; }
         
         public enum UpdateDocumentationFieldName
         {
@@ -28,11 +28,11 @@ namespace ProductDocumentations.Application.CommandHandlers.UpdateProductDocumen
             Description = description;
             FieldName = fieldName;
         }
-        internal sealed class UpdateProductcommandHandler : IRequestHandler<UpdateProductDocumentationCommand, Result>
+        internal sealed class UpdateProductCommandHandler : IRequestHandler<UpdateProductDocumentationCommand, Result>
         {
             private readonly IProductDocumentationRepository _productDocumentationRepository;
             private readonly IUnitOfWork _unitOfWork;
-            public UpdateProductcommandHandler(IProductDocumentationRepository productDocumentationRepository, IUnitOfWork unitOfWork)
+            public UpdateProductCommandHandler(IProductDocumentationRepository productDocumentationRepository, IUnitOfWork unitOfWork)
             {
                 _productDocumentationRepository = productDocumentationRepository;
                 _unitOfWork = unitOfWork;

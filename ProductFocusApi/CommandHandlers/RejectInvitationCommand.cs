@@ -64,7 +64,7 @@ namespace ProductFocus.AppServices
 
                     existingActiveInvitation.UpdateInvitationAsRejected();
                     
-                    await _unitOfWork.CompleteAsync();                    
+                    await _unitOfWork.CompleteAsync(cancellationToken);                    
 
                     return Result.Success();
                 }

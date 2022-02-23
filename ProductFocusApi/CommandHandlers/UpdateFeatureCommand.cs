@@ -151,7 +151,7 @@ namespace ProductFocus.AppServices
                         Module module = request.UpdateFeatureDto.ModuleId != null ? await _moduleRepository.GetById(request.UpdateFeatureDto.ModuleId??0) : null;
                         feature.UpdateModule(module);
                     }
-                    await _unitOfWork.CompleteAsync();
+                    await _unitOfWork.CompleteAsync(cancellationToken);
 
 
                     return Result.Success();

@@ -49,7 +49,7 @@ namespace ProductFocusApi.CommandHandlers
                     existingInvitation.LastModifiedBy = modifiedBy.Name;
                     existingInvitation.Status = InvitationStatus.Resent;
 
-                    await _unitOfWork.CompleteAsync();
+                    await _unitOfWork.CompleteAsync(cancellationToken);
                     string emailBody = $@"
                         Hi,
                         You are invited to join {existingInvitation.Organization.Name} on Product Focus by...

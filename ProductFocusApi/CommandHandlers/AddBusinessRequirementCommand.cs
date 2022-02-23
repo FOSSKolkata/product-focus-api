@@ -91,7 +91,7 @@ namespace ProductFocusApi.CommandHandlers
                         _businessRequirementTagRepository.Add(businessRequirementTag);
                     }
                     request.Id = businessRequirement.Id;
-                    await _unitOfWork.CompleteAsync();
+                    await _unitOfWork.CompleteAsync(cancellationToken);
                     return Result.Success();
                 }
                 catch(Exception ex)

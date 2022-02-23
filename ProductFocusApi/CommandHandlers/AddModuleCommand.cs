@@ -45,7 +45,7 @@ namespace ProductFocus.AppServices
                 try
                 {
                     product.AddModule(request.Name);
-                    await _unitOfWork.CompleteAsync();
+                    await _unitOfWork.CompleteAsync(cancellationToken);
                     
                     return Result.Success();
                 }

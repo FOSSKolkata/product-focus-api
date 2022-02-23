@@ -50,7 +50,7 @@ namespace ProductFocusApi.CommandHandlers
                     if (result.IsFailure)
                         return result;
 
-                    await _unitOfWork.CompleteAsync();
+                    await _unitOfWork.CompleteAsync(cancellationToken);
 
                     return Result.Success();
                 }

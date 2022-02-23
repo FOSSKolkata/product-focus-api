@@ -42,7 +42,7 @@ namespace ProductFocusApi.CommandHandlers
                         var newFeatureOrdering = FeatureOrdering.CreateInstance(featureOrdering.FeatureId, featureOrdering.OrderNumber, request.OrderingInfo.SprintId);
                         _featureOrderRepository.Add(newFeatureOrdering);
                     }
-                    await _unitOfWork.CompleteAsync();
+                    await _unitOfWork.CompleteAsync(cancellationToken);
                     return Result.Success();
                 }
                 catch(Exception ex)

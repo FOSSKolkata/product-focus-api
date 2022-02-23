@@ -49,5 +49,9 @@ namespace ProductDocumentations.Domain.Model
         {
             Description = description;
         }
+        public virtual void UpdateOrderingNumber(long orderingNumber)
+        {
+            OrderNumber = orderingNumber;
+        }
     }
 }

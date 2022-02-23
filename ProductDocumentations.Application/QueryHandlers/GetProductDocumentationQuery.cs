@@ -30,20 +30,20 @@ namespace ProductDocumentations.Application.QueryHandlers
             public async Task<List<GetProductDocumentationDetailsDto>> Handle(GetProductDocumentationQuery request, CancellationToken cancellationToken)
             {
                 List<GetProductDocumentationDetailsDto> productDocumentations = new();
-                string sql = @"SELECT id, title, description, parentId FROM productdocumentation.ProductDocumentations
+                string sql = @"SELECT id, title, description, parentId, orderNumber FROM productdocumentation.ProductDocumentations
                     WHERE id = @Id;
 
                     WITH CTE AS (
-                        SELECT id, title, description, parentId FROM productdocumentation.ProductDocumentations
+                        SELECT id, title, description, parentId, orderNumber FROM productdocumentation.ProductDocumentations
                         WHERE ParentId = @Id
 		
 	                    UNION ALL
 
-                        SELECT t.id, t.title, t.description, t.ParentId
+                        SELECT t.id, t.title, t.description, t.ParentId, t.orderNumber
                         FROM productdocumentation.ProductDocumentations t
                         INNER JOIN CTE c ON t.ParentId = c.id
                     )
-                    SELECT * FROM CTE ORDER BY id;";
+                    SELECT * FROM CTE ORDER BY orderNumber;";
 
                 using (IDbConnection con = new SqlConnection(_queriesConnectionString))
                 {
@@ -58,7 +58,7 @@ namespace ProductDocumentations.Application.QueryHandlers
                 }
                 return productDocumentations;
             }
-            private static void ProductDocumentationLevelGenerator(List<ProductDocumentationsQueryResult> queryList, List<GetProductDocumentationDetailsDto> dtos, int level, long parentId, string generatedIndex)
+            private  void ProductDocumentationLevelGenerator(List<ProductDocumentationsQueryResult> queryList, List<GetProductDocumentationDetailsDto> dtos, int level, long parentId, string generatedIndex)
             {
                 var records = queryList.Where(x => x.ParentId == parentId).ToList();
                 int index = 1;

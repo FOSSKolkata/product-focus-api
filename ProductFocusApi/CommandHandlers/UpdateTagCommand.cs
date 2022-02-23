@@ -38,7 +38,7 @@ namespace ProductFocusApi.CommandHandlers
                 try
                 {
                     tag.Delete(request.UserId);
-                    await _unitOfWork.CompleteAsync();
+                    await _unitOfWork.CompleteAsync(cancellationToken);
                 }
                 catch(Exception ex)
                 {

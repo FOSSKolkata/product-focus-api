@@ -55,7 +55,7 @@ namespace ProductFocusApi.CommandHandlers
                     businessRequirement.UpdateSourceInformation(request.SourceAdditionalInformation);
                     businessRequirement.UpdateDescription(request.Description);
 
-                    await _unitOfWork.CompleteAsync();
+                    await _unitOfWork.CompleteAsync(cancellationToken);
                     return Result.Success();
                 }catch(Exception ex)
                 {

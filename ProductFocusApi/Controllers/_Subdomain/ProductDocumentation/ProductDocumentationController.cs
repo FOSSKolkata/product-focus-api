@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using ProductDocumentations.Application.CommandHandlers.AddProductDocumentation;
 using ProductDocumentations.Application.CommandHandlers.UpdateProductDocumentation;
 using ProductDocumentations.Application.QueryHandlers;
-using ProductDocumentations.Domain.Common;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -45,6 +44,13 @@ namespace ProductDocumentation.Controllers
 
         [HttpPut]
         public async Task<IActionResult> UpdateProductDocumentation(UpdateProductDocumentationCommand command)
+        {
+            Result result = await _mediator.Send(command);
+            return result.IsSuccess ? Ok() : BadRequest(result.Error);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateProductDocumentationOrdering([FromBody] UpdateProductDocumentationOrderingCommand command)
         {
             Result result = await _mediator.Send(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
