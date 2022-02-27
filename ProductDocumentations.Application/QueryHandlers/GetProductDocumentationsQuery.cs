@@ -29,7 +29,7 @@ namespace ProductDocumentations.Application.QueryHandlers
             {
                 List<GetProductDocumentationDto> productDocumentations = new();
                 string sql = @"SELECT Id, Title, Description, ParentId, OrderNumber FROM productdocumentation.ProductDocumentations
-                    WHERE productId = @ProductId";
+                    WHERE productId = @ProductId AND IsDeleted = 'false'";
                 using(IDbConnection con = new SqlConnection(_queriesConnectionString))
                 {
                     var result = (await con.QueryAsync<ProductDocumentationsQueryResult>(sql, new

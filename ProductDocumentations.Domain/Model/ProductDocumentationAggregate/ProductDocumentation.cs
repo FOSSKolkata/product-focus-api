@@ -1,10 +1,11 @@
 ﻿using ProductDocumentations.Domain.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace ProductDocumentations.Domain.Model
 {
-    public class ProductDocumentation : AggregateRoot<long>
+    public class ProductDocumentation : AggregateRoot<long>, ISoftDeletable
     {
         public virtual long? ParentId { get; private set; }
         public virtual long ProductId { get; private set; }
@@ -13,7 +14,10 @@ namespace ProductDocumentations.Domain.Model
         public readonly IList<ProductDocumentationAttachment> _productDocumentationAttachments = new List<ProductDocumentationAttachment>();
         public virtual IReadOnlyList<ProductDocumentationAttachment> ProductDocumentationAttachments => _productDocumentationAttachments.ToList();
         public virtual long OrderNumber { get; private set; }
-        
+        public virtual bool IsDeleted { get; set; }
+        public virtual DateTime DeletedOn { get; set; }
+        public virtual string DeletedBy { get; set; }
+
         protected ProductDocumentation()
         {
 
@@ -52,6 +56,13 @@ namespace ProductDocumentations.Domain.Model
         public virtual void UpdateOrderingNumber(long orderingNumber)
         {
             OrderNumber = orderingNumber;
+        }
+
+        public void Delete(string userId)
+        {
+            IsDeleted = true;
+            DeletedOn = DateTime.Now;
+            DeletedBy = userId;
         }
     }
 }

@@ -2,9 +2,12 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using ProductDocumentations.Application.CommandHandlers.AddProductDocumentation;
+using ProductDocumentations.Application.CommandHandlers.DeleteProductDocumentation;
 using ProductDocumentations.Application.CommandHandlers.UpdateProductDocumentation;
 using ProductDocumentations.Application.QueryHandlers;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace ProductDocumentation.Controllers
@@ -53,6 +56,14 @@ namespace ProductDocumentation.Controllers
         public async Task<IActionResult> UpdateProductDocumentationOrdering([FromBody] UpdateProductDocumentationOrderingCommand command)
         {
             Result result = await _mediator.Send(command);
+            return result.IsSuccess ? Ok() : BadRequest(result.Error);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteProductDocumentation(long id)
+        {
+            string objectId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            Result result = await _mediator.Send(new DeleteProductDocumentationCommand(id, objectId));
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }
     }

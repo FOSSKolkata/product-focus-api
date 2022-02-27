@@ -31,17 +31,17 @@ namespace ProductDocumentations.Application.QueryHandlers
             {
                 List<GetProductDocumentationDetailsDto> productDocumentations = new();
                 string sql = @"SELECT id, title, description, parentId, orderNumber FROM productdocumentation.ProductDocumentations
-                    WHERE id = @Id;
+                    WHERE id = @Id AND IsDeleted = 'false';
 
                     WITH CTE AS (
                         SELECT id, title, description, parentId, orderNumber FROM productdocumentation.ProductDocumentations
-                        WHERE ParentId = @Id
+                        WHERE ParentId = @Id AND IsDeleted = 'false'
 		
 	                    UNION ALL
 
                         SELECT t.id, t.title, t.description, t.ParentId, t.orderNumber
                         FROM productdocumentation.ProductDocumentations t
-                        INNER JOIN CTE c ON t.ParentId = c.id
+                        INNER JOIN CTE c ON t.ParentId = c.id AND IsDeleted = 'false'
                     )
                     SELECT * FROM CTE ORDER BY orderNumber;";
 
