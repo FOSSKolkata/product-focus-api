@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using ProductFocus.Domain;
+using ProductFocus.Domain.Common;
 using ProductFocus.Domain.Events;
 using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
@@ -11,9 +11,9 @@ namespace ProductFocusApi.DomainEventHandlers
 {
     public class RemoveOwnerFromWorkItemDomainEventhandler : INotificationHandler<RemoveOwnerFromWorkItemDomainEvent>
     {
-        IDomainEventLogRepository _domainEventLogRepository;
-        IUnitOfWork _unitOfWork;
-        private IUserRepository _userRepository;
+        private readonly IDomainEventLogRepository _domainEventLogRepository;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUserRepository _userRepository;
         public RemoveOwnerFromWorkItemDomainEventhandler(IDomainEventLogRepository domainEventLogRepository, IUnitOfWork unitOfWork, IUserRepository userRepository)
         {
             _domainEventLogRepository = domainEventLogRepository ?? throw new ArgumentNullException(nameof(domainEventLogRepository));
@@ -23,7 +23,7 @@ namespace ProductFocusApi.DomainEventHandlers
         public async System.Threading.Tasks.Task Handle(RemoveOwnerFromWorkItemDomainEvent removeOwnerToWorkItemDomainEvent, CancellationToken cancellationToken)
         {
             User user = _userRepository.GetById(removeOwnerToWorkItemDomainEvent.EventTriggeredById);
-            WorkItemDomainEventLog workItemDomainEventLog = new(nameof(RemoveOwnerFromWorkItemDomainEvent), JsonSerializer.Serialize(new { FeatureId = removeOwnerToWorkItemDomainEvent.Feature.Id, Title = removeOwnerToWorkItemDomainEvent.Feature.Title, OwnerName = removeOwnerToWorkItemDomainEvent.OwnerName, OwnerEmail = removeOwnerToWorkItemDomainEvent.OwnerEmail }), removeOwnerToWorkItemDomainEvent.Feature.Module?.Id, removeOwnerToWorkItemDomainEvent.Feature.Module?.Name, removeOwnerToWorkItemDomainEvent.EventTriggeredById, user.Name, removeOwnerToWorkItemDomainEvent.ProductId, removeOwnerToWorkItemDomainEvent.Feature.Id);
+            WorkItemDomainEventLog workItemDomainEventLog = new(nameof(RemoveOwnerFromWorkItemDomainEvent), JsonSerializer.Serialize(new { removeOwnerToWorkItemDomainEvent.Feature.Id, removeOwnerToWorkItemDomainEvent.Feature.Title, removeOwnerToWorkItemDomainEvent.OwnerName, removeOwnerToWorkItemDomainEvent.OwnerEmail }), removeOwnerToWorkItemDomainEvent.Feature.Module?.Id, removeOwnerToWorkItemDomainEvent.Feature.Module?.Name, removeOwnerToWorkItemDomainEvent.EventTriggeredById, user.Name, removeOwnerToWorkItemDomainEvent.ProductId, removeOwnerToWorkItemDomainEvent.Feature.Id);
             _domainEventLogRepository.AddDomainEventLog(workItemDomainEventLog);
 
             await _unitOfWork.CompleteAsync(cancellationToken);

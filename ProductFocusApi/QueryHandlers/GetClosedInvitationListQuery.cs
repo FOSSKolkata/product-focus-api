@@ -1,15 +1,16 @@
-﻿using ProductFocus.Domain;
-using ProductFocus.Dtos;
+﻿using ProductFocus.Dtos;
 using System.Linq;
 using Dapper;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using ProductFocus.ConnectionString;
 using System.Threading.Tasks;
+using MediatR;
+using System.Threading;
 
 namespace ProductFocus.AppServices
 {
-    public sealed class GetClosedInvitationListQuery : IQuery<GetClosedInvitationDto>
+    public sealed class GetClosedInvitationListQuery : IRequest<GetClosedInvitationDto>
     {
         public long OrgId { get; set; }
         public int Offset { get; set; }
@@ -21,7 +22,7 @@ namespace ProductFocus.AppServices
             Count = count;
         }
 
-        internal sealed class GetClosedInvitationListQueryHandler : IQueryHandler<GetClosedInvitationListQuery, GetClosedInvitationDto>
+        internal sealed class GetClosedInvitationListQueryHandler : IRequestHandler<GetClosedInvitationListQuery, GetClosedInvitationDto>
         {
             private readonly QueriesConnectionString _queriesConnectionString;            
 
@@ -29,7 +30,7 @@ namespace ProductFocus.AppServices
             {
                 _queriesConnectionString = queriesConnectionString;                
             }
-            public async Task<GetClosedInvitationDto> Handle(GetClosedInvitationListQuery query)
+            public async Task<GetClosedInvitationDto> Handle(GetClosedInvitationListQuery query, CancellationToken cancellationToken)
             {
                 GetClosedInvitationDto closedInvitationList = new();
                 

@@ -1,14 +1,15 @@
 ﻿using CSharpFunctionalExtensions;
-using ProductFocus.Domain;
+using ProductFocus.Domain.Common;
 using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
-using ProductFocus.Services;
 using System;
 using System.Threading.Tasks;
+using MediatR;
+using System.Threading;
 
 namespace ProductFocus.AppServices
 {
-    public sealed class AddProductCommand : ICommand
+    public sealed class AddProductCommand : IRequest<Result>
     {
         public long Id { get; }
         public string Name { get; }
@@ -18,39 +19,35 @@ namespace ProductFocus.AppServices
             Name = name;
         }
 
-        internal sealed class AddProductCommandHandler : ICommandHandler<AddProductCommand>
+        internal sealed class AddProductCommandHandler : IRequestHandler<AddProductCommand, Result>
         {
             private readonly IOrganizationRepository _organizationRepository;
             private readonly IProductRepository _productRepository;
             private readonly IUnitOfWork _unitOfWork;
-            private readonly IEmailService _emailService;
 
             public AddProductCommandHandler(
-                IOrganizationRepository organizationRepository, IUnitOfWork unitOfWork, IEmailService emailService,
+                IOrganizationRepository organizationRepository, IUnitOfWork unitOfWork,
                 IProductRepository productRepository)
             {
                 _organizationRepository = organizationRepository;
                 _productRepository = productRepository;
                 _unitOfWork = unitOfWork;
-                _emailService = emailService;
             }
-            public async Task<Result> Handle(AddProductCommand command)
+            public async Task<Result> Handle(AddProductCommand request, CancellationToken cancellationToken)
             {
-                Organization organization = await _organizationRepository.GetById(command.Id);                
+                Organization organization = await _organizationRepository.GetById(request.Id);                
                 if (organization == null)
-                    return Result.Failure($"No Organization found with Id '{command.Id}'");
+                    return Result.Failure($"No Organization found with Id '{request.Id}'");
 
-                bool ifProductExists = organization.IfProductExists(command.Name);
+                bool ifProductExists = organization.IfProductExists(request.Name);
                 if (ifProductExists)
-                    return Result.Failure($"Product '{command.Name}' already present");
+                    return Result.Failure($"Product '{request.Name}' already present");
 
                 try
                 {
-                    var product = Product.CreateInstance(organization, command.Name);
+                    var product = Product.CreateInstance(organization, request.Name);
                     _productRepository.AddProduct(product);
-                    await _unitOfWork.CompleteAsync();
-
-                    //_emailService.send();
+                    await _unitOfWork.CompleteAsync(cancellationToken);
 
                     return Result.Success();
                 }
@@ -60,7 +57,6 @@ namespace ProductFocus.AppServices
                 }       
                             
             }
-
         }
     }
 }

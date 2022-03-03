@@ -1,17 +1,18 @@
 ﻿using Dapper;
+using MediatR;
 using Microsoft.Data.SqlClient;
 using ProductFocus.ConnectionString;
-using ProductFocus.Domain;
 using ProductFocusApi.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ProductFocusApi.QueryHandlers
 {
-    public sealed class GetBusinessRequirementListQuery : IQuery<GetBusinessRequirementsDto>
+    public sealed class GetBusinessRequirementListQuery : IRequest<GetBusinessRequirementsDto>
     {
         public long ProductId { get; set; }
         public List<long> TagIds { get; set; }
@@ -29,14 +30,14 @@ namespace ProductFocusApi.QueryHandlers
             Offset = offset;
             Count = count;
         }
-        internal sealed class GetBusinessRequirementListQueryHandler : IQueryHandler<GetBusinessRequirementListQuery, GetBusinessRequirementsDto>
+        internal sealed class GetBusinessRequirementListQueryHandler : IRequestHandler<GetBusinessRequirementListQuery, GetBusinessRequirementsDto>
         {
             private readonly QueriesConnectionString _queriesConnectionString;
             public GetBusinessRequirementListQueryHandler(QueriesConnectionString queriesConnectionString)
             {
                 _queriesConnectionString = queriesConnectionString;
             }
-            public async Task<GetBusinessRequirementsDto> Handle(GetBusinessRequirementListQuery query)
+            public async Task<GetBusinessRequirementsDto> Handle(GetBusinessRequirementListQuery query, CancellationToken cancellationToken)
             {
                 GetBusinessRequirementsDto getBusinessRequirements = new();
                 var builder = new SqlBuilder();

@@ -1,5 +1,4 @@
-﻿using Common;
-using CSharpFunctionalExtensions;
+﻿using ProductFocus.Domain.Common;
 using System;
 
 namespace ProductFocus.Domain.Model

@@ -1,9 +1,5 @@
-﻿using Common;
-using System;
-using System.Collections.Generic;
+﻿using ProductFocus.Domain.Common;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ProductFocus.Domain.Model
 {

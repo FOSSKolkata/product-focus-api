@@ -1,14 +1,15 @@
 ﻿using CSharpFunctionalExtensions;
-using ProductFocus.Domain;
+using ProductFocus.Domain.Common;
 using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
-using ProductFocus.Services;
 using System;
 using System.Threading.Tasks;
+using MediatR;
+using System.Threading;
 
 namespace ProductFocus.AppServices
 {
-    public sealed class AddModuleCommand : ICommand
+    public sealed class AddModuleCommand : IRequest<Result>
     {
         public long Id { get; }
         public string Name { get; }
@@ -18,7 +19,7 @@ namespace ProductFocus.AppServices
             Name = name;
         }
 
-        internal sealed class AddModuleCommandHandler : ICommandHandler<AddModuleCommand>
+        internal sealed class AddModuleCommandHandler : IRequestHandler<AddModuleCommand, Result>
         {
             private readonly IProductRepository _productRepository;
             private readonly IUnitOfWork _unitOfWork;
@@ -33,18 +34,18 @@ namespace ProductFocus.AppServices
                 _unitOfWork = unitOfWork;
                 _moduleRepository = moduleRepository;
             }
-            public async Task<Result> Handle(AddModuleCommand command)
+            public async Task<Result> Handle(AddModuleCommand request, CancellationToken cancellationToken)
             {
-                Product product = await _productRepository.GetById(command.Id);
+                Product product = await _productRepository.GetById(request.Id);
                 if (product == null)
-                    return Result.Failure($"No product found with Id '{command.Id}'");
-                Module module = await _moduleRepository.GetByName(command.Name);
+                    return Result.Failure($"No product found with Id '{request.Id}'");
+                Module module = await _moduleRepository.GetByName(request.Name);
                 if (module != null)
-                    return Result.Failure($"Module already exist with the name '{command.Name}'");
+                    return Result.Failure($"Module already exist with the name '{request.Name}'");
                 try
                 {
-                    product.AddModule(command.Name);
-                    await _unitOfWork.CompleteAsync();
+                    product.AddModule(request.Name);
+                    await _unitOfWork.CompleteAsync(cancellationToken);
                     
                     return Result.Success();
                 }

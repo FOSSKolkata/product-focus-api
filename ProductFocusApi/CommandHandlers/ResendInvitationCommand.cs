@@ -1,14 +1,16 @@
 ﻿using CSharpFunctionalExtensions;
-using ProductFocus.Domain;
+using ProductFocus.Domain.Common;
 using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
 using ProductFocus.Services;
 using System;
 using System.Threading.Tasks;
+using MediatR;
+using System.Threading;
 
 namespace ProductFocusApi.CommandHandlers
 {
-    public class ResendInvitationCommand : ICommand
+    public class ResendInvitationCommand : IRequest<Result>
     {
         public long InvitationId { get; }
         public string ObjectId { get; }
@@ -17,7 +19,7 @@ namespace ProductFocusApi.CommandHandlers
             InvitationId = invitationId;
             ObjectId = objectId;
         }
-        internal sealed class ResendInvitationCommandHandler : ICommandHandler<ResendInvitationCommand>
+        internal sealed class ResendInvitationCommandHandler : IRequestHandler<ResendInvitationCommand, Result>
         {
             private readonly IInvitationRepository _invitationRepository;
             private readonly IUserRepository _userRepository;
@@ -33,9 +35,9 @@ namespace ProductFocusApi.CommandHandlers
                 _unitOfWork = unitOfWork;
                 _emailService = emailService;
             }
-            public async Task<Result> Handle(ResendInvitationCommand command)
+            public async Task<Result> Handle(ResendInvitationCommand request, CancellationToken cancellationToken)
             {
-                Invitation existingInvitation = await _invitationRepository.GetById(command.InvitationId);
+                Invitation existingInvitation = await _invitationRepository.GetById(request.InvitationId);
                 if (existingInvitation == null)
                     return Result.Failure("Invitation doesn't exist.");
                 if (existingInvitation.Status == InvitationStatus.Accepted)
@@ -43,11 +45,11 @@ namespace ProductFocusApi.CommandHandlers
                 try
                 {
 
-                    User modifiedBy = _userRepository.GetByIdpUserId(command.ObjectId);
+                    User modifiedBy = _userRepository.GetByIdpUserId(request.ObjectId);
                     existingInvitation.LastModifiedBy = modifiedBy.Name;
                     existingInvitation.Status = InvitationStatus.Resent;
 
-                    await _unitOfWork.CompleteAsync();
+                    await _unitOfWork.CompleteAsync(cancellationToken);
                     string emailBody = $@"
                         Hi,
                         You are invited to join {existingInvitation.Organization.Name} on Product Focus by...

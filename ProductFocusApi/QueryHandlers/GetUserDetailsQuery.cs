@@ -1,17 +1,17 @@
-﻿using ProductFocus.Domain;
-using ProductFocus.Dtos;
+﻿using ProductFocus.Dtos;
 using System.Collections.Generic;
 using System.Linq;
 using Dapper;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using ProductFocus.ConnectionString;
-using ProductFocus.Services;
 using System.Threading.Tasks;
+using MediatR;
+using System.Threading;
 
 namespace ProductFocus.AppServices
 {
-    public sealed class GetUserDetailsQuery : IQuery<List<GetUserDto>>
+    public sealed class GetUserDetailsQuery : IRequest<List<GetUserDto>>
     {
         public string Email { get; }
         public GetUserDetailsQuery(string email)
@@ -19,7 +19,7 @@ namespace ProductFocus.AppServices
             Email = email;
         }
 
-        internal sealed class GetUserDetailsQueryHandler : IQueryHandler<GetUserDetailsQuery, List<GetUserDto>>
+        internal sealed class GetUserDetailsQueryHandler : IRequestHandler<GetUserDetailsQuery, List<GetUserDto>>
         {
             private readonly QueriesConnectionString _queriesConnectionString;
 
@@ -27,7 +27,7 @@ namespace ProductFocus.AppServices
             {
                 _queriesConnectionString = queriesConnectionString;
             }
-            public async Task<List<GetUserDto>> Handle(GetUserDetailsQuery query)
+            public async Task<List<GetUserDto>> Handle(GetUserDetailsQuery query, CancellationToken cancellationToken)
             {
                 List<GetUserDto> userDetails = new();
                 

@@ -1,27 +1,30 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using ProductDocumentations.Domain.Common;
 using ProductDocumentations.Domain.Model;
-using ProductFocus.Common;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace ProductDocumentations.Infrastructure
 {
-    public class ProductDocumentationDbContext : BaseDbContext
+    public class ProductDocumentationDbContext : DbContext
     {
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ProductDocumentation>()
                 .Property(o => o.Id).UseHiLo();
+            modelBuilder.Entity<ProductDocumentationAttachment>()
+                .Property(o => o.Id).UseHiLo();
+            modelBuilder.HasDefaultSchema("productdocumentation");
 
         }
         public ProductDocumentationDbContext(DbContextOptions<ProductDocumentationDbContext> options) : base(options)
         {
 
         }
-        public ProductDocumentationDbContext(DbContextOptions<ProductDocumentationDbContext> options, IMediator mediator) : base(options, mediator)
+        public ProductDocumentationDbContext(DbContextOptions<ProductDocumentationDbContext> options, IMediator mediator) : base(options)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
 
@@ -31,6 +34,7 @@ namespace ProductDocumentations.Infrastructure
         }
 
         public DbSet<ProductDocumentation> ProductDocumentations { get; set; }
+        public DbSet<ProductDocumentationAttachment> ProductDocumentationAttachments { get; set; }
 
         private readonly IMediator _mediator;
         public async Task<int> SaveEntitiesAsync(CancellationToken cancellationToken = default)

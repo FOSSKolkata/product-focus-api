@@ -1,18 +1,19 @@
 ﻿using Azure.Storage.Blobs;
-using Azure.Storage.Blobs.Models;
+using ProductFocus.Domain.Common;
 using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Http;
-using ProductFocus.Domain;
 using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
 using ProductFocus.Domain.Services;
 using ProductFocusApi.ConnectionString;
 using System;
 using System.Threading.Tasks;
+using MediatR;
+using System.Threading;
 
 namespace ProductFocusApi.CommandHandlers
 {
-    public sealed class AddBusinessRequirementAttachmentCommand : ICommand
+    public sealed class AddBusinessRequirementAttachmentCommand : IRequest<Result>
     {
         public long BusinessRequirementId { get; private set; }
         public IFormFileCollection Attachments { get; private set; }
@@ -22,7 +23,7 @@ namespace ProductFocusApi.CommandHandlers
             BusinessRequirementId = businessRequirementId;
             Attachments = attachments;
         }
-        public sealed class AddBusinessRequirementAttachmentCommandHandler : ICommandHandler<AddBusinessRequirementAttachmentCommand>
+        public sealed class AddBusinessRequirementAttachmentCommandHandler : IRequestHandler<AddBusinessRequirementAttachmentCommand, Result>
         {
             private readonly IUnitOfWork _unitOfWork;
             private readonly IBusinessRequirementRepository _businessRequirementRepository;
@@ -46,21 +47,21 @@ namespace ProductFocusApi.CommandHandlers
                 _productRepository = productRepository;
             }
 
-            public async Task<Result> Handle(AddBusinessRequirementAttachmentCommand command)
+            public async Task<Result> Handle(AddBusinessRequirementAttachmentCommand request, CancellationToken cancellationToken)
             {
                 try
                 {
-                    BusinessRequirement businessRequirement = await _businessRequirementRepository.GetById(command.BusinessRequirementId);
+                    BusinessRequirement businessRequirement = await _businessRequirementRepository.GetById(request.BusinessRequirementId);
                     BlobContainerClient containerClient = _blobServiceClient.GetBlobContainerClient(_businessRequirementContainerName.Value);
                     Product product = await _productRepository.GetById(businessRequirement.ProductId);
 
-                    foreach (var file in command.Attachments)
+                    foreach (var file in request.Attachments)
                     {
                         BlobClient blobClient = await _blobStorageService.AddAsync(BlobStorageFileTypeEnum.BusinessRequirementAttachments,
-                            product.Organization.Id, product.Id, command.BusinessRequirementId, file);
+                            product.Organization.Id, product.Id, request.BusinessRequirementId, file);
                         businessRequirement.AddAttachment(blobClient.Name, blobClient.Uri.ToString(), file.FileName);
                     }
-                    await _unitOfWork.CompleteAsync();
+                    await _unitOfWork.CompleteAsync(cancellationToken);
                 }
                     catch(Exception ex)
                 {

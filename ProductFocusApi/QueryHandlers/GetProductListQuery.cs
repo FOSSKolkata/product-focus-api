@@ -1,5 +1,4 @@
-﻿using ProductFocus.Domain;
-using ProductFocus.Dtos;
+﻿using ProductFocus.Dtos;
 using System.Collections.Generic;
 using System.Linq;
 using Dapper;
@@ -7,10 +6,12 @@ using System.Data;
 using Microsoft.Data.SqlClient;
 using ProductFocus.ConnectionString;
 using System.Threading.Tasks;
+using MediatR;
+using System.Threading;
 
 namespace ProductFocus.AppServices
 {
-    public sealed class GetProductListQuery : IQuery<List<GetProductDto>>
+    public sealed class GetProductListQuery : IRequest<List<GetProductDto>>
     {
         public long Id { get; }
         public GetProductListQuery(long id)
@@ -18,7 +19,7 @@ namespace ProductFocus.AppServices
             Id = id;
         }
 
-        internal sealed class GetProductListQueryHandler : IQueryHandler<GetProductListQuery, List<GetProductDto>>
+        internal sealed class GetProductListQueryHandler : IRequestHandler<GetProductListQuery, List<GetProductDto>>
         {
             private readonly QueriesConnectionString _queriesConnectionString;
 
@@ -26,7 +27,7 @@ namespace ProductFocus.AppServices
             {
                 _queriesConnectionString = queriesConnectionString;
             }
-            public async Task<List<GetProductDto>> Handle(GetProductListQuery query)
+            public async Task<List<GetProductDto>> Handle(GetProductListQuery query, CancellationToken cancellationToken)
             {
                 List<GetProductDto> productList = new();
                 

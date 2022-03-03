@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using System.Linq;
 using System.Security.Claims;
+using ProductFocus.Domain.Common;
+using MediatR;
 
 namespace ProductFocusApi.Controllers
 {
@@ -14,11 +16,11 @@ namespace ProductFocusApi.Controllers
     [Authorize]
     public class ModuleController : ControllerBase
     {
-        private readonly Messages _messages;
+        private readonly IMediator _mediator;
 
-        public ModuleController(Messages messages)
+        public ModuleController(IMediator mediator)
         {
-            _messages = messages;
+            _mediator = mediator;
         }
 
 
@@ -28,7 +30,7 @@ namespace ProductFocusApi.Controllers
             string objectId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
 
             var command = new AddFeatureCommand(id, dto.Title, dto.WorkItemType, dto.SprintId, objectId);
-            Result result = await _messages.Dispatch(command);
+            Result result = await _mediator.Send(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }
     }

@@ -1,4 +1,4 @@
-﻿/*using Common;
+﻿using ProductFocus.Domain.Common;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -15,4 +15,3 @@ namespace ProductFocus.Domain.Model
         }
     }
 }
-*/

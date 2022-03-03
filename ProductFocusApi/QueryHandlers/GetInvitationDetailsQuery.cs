@@ -1,17 +1,18 @@
 ﻿using CSharpFunctionalExtensions;
 using Dapper;
+using MediatR;
 using Microsoft.Data.SqlClient;
 using ProductFocus.ConnectionString;
-using ProductFocus.Domain;
 using ProductFocus.Domain.Model;
 using ProductFocusApi.Dtos;
 using System.Data;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ProductFocusApi.QueryHandlers
 {
-    public class GetInvitationDetailsQuery : IQuery<Result<GetInvitationDetailsDto>>
+    public class GetInvitationDetailsQuery : IRequest<Result<GetInvitationDetailsDto>>
     {
         public long Id { get; set; }
         public string ObjectId { get; set; }
@@ -20,14 +21,14 @@ namespace ProductFocusApi.QueryHandlers
             Id = id;
             ObjectId = objectId;
         }
-        internal sealed class GetInvitationDetailsQueryHandler : IQueryHandler<GetInvitationDetailsQuery, Result<GetInvitationDetailsDto>>
+        internal sealed class GetInvitationDetailsQueryHandler : IRequestHandler<GetInvitationDetailsQuery, Result<GetInvitationDetailsDto>>
         {
             private readonly QueriesConnectionString _queriesConnectionString;
             public GetInvitationDetailsQueryHandler(QueriesConnectionString queriesConnectionString)
             {
                 _queriesConnectionString = queriesConnectionString;
             }
-            public async Task<Result<GetInvitationDetailsDto>> Handle(GetInvitationDetailsQuery query)
+            public async Task<Result<GetInvitationDetailsDto>> Handle(GetInvitationDetailsQuery query, CancellationToken cancellationToken)
             {
                 GetInvitationDetailsDto invitationDetails = new();
                 string sql1 = @"SELECT Email FROM Users WHERE ObjectId = @ObjectId";

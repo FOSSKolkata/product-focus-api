@@ -1,4 +1,4 @@
-﻿using Common;
+﻿using ProductFocus.Domain.Common;
 
 namespace ProductFocus.Domain.Model.BusinessAggregate
 {

@@ -1,23 +1,24 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
 using ProductFocus.ConnectionString;
-using ProductFocus.Domain;
 using ProductFocusApi.Dtos;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using MediatR;
+using System.Threading;
 
 namespace ProductFocusApi.QueryHandlers
 {
-    public sealed class GetTagCategoryListQuery : IQuery<List<GetTagCategoryDto>>
+    public sealed class GetTagCategoryListQuery : IRequest<List<GetTagCategoryDto>>
     {
         public long ProductId { get; set; }
         public GetTagCategoryListQuery(long productId)
         {
             ProductId = productId;
         }
-        internal sealed class GetTagCategoryListQueryHandler : IQueryHandler<GetTagCategoryListQuery, List<GetTagCategoryDto>>
+        internal sealed class GetTagCategoryListQueryHandler : IRequestHandler<GetTagCategoryListQuery, List<GetTagCategoryDto>>
         {
             private readonly QueriesConnectionString _queriesConnectionString;
 
@@ -25,7 +26,7 @@ namespace ProductFocusApi.QueryHandlers
             {
                 _queriesConnectionString = queriesConnectionString;
             }
-            public async Task<List<GetTagCategoryDto>> Handle(GetTagCategoryListQuery query)
+            public async Task<List<GetTagCategoryDto>> Handle(GetTagCategoryListQuery query, CancellationToken cancellationToken)
             {
                 List<GetTagCategoryDto> tagCategoryList = new();
 

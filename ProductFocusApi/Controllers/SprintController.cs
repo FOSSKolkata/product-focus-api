@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using ProductFocusApi.CommandHandlers;
 using Microsoft.AspNetCore.Authorization;
 using ProductFocus.Dtos;
+using ProductFocus.Domain.Common;
+using MediatR;
 
 namespace ProductFocusApi.Controllers
 {
@@ -14,11 +16,11 @@ namespace ProductFocusApi.Controllers
     [Authorize]
     public class SprintController : ControllerBase
     {
-        private readonly Messages _messages;
+        private readonly IMediator _mediator;
 
-        public SprintController(Messages messages)
+        public SprintController(IMediator mediator)
         {
-            _messages = messages;
+            _mediator = mediator;
         }
 
 
@@ -26,14 +28,14 @@ namespace ProductFocusApi.Controllers
         public async Task<IActionResult> AddSprint([FromBody] AddSprintCommand command)
         {
 
-            Result result = await _messages.Dispatch(command);
+            Result result = await _mediator.Send(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetSprintsByProductId(long id)
         {
-            List<GetSprintDto> sprintList = await _messages.Dispatch(new GetSprintDetailsQuery(id));
+            List<GetSprintDto> sprintList = await _mediator.Send(new GetSprintDetailsQuery(id));
             return Ok(sprintList);
         }
     }

@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using System.Linq;
 using System.Security.Claims;
+using ProductFocus.Domain.Common;
+using MediatR;
 
 namespace ProductFocusApi.Controllers
 {
@@ -15,11 +17,11 @@ namespace ProductFocusApi.Controllers
     [Authorize]
     public class ProductController : ControllerBase
     {
-        private readonly Messages _messages;
+        private readonly IMediator _mediator;
 
-        public ProductController(Messages messages)
+        public ProductController(IMediator mediator)
         {
-            _messages = messages;
+            _mediator = mediator;
         }
 
 
@@ -27,14 +29,14 @@ namespace ProductFocusApi.Controllers
         public async Task<IActionResult> AddModule(long id, [FromBody] AddModuleDto dto)
         {
             var command = new AddModuleCommand(id, dto.Name);
-            Result result = await _messages.Dispatch(command);
+            Result result = await _mediator.Send(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetModulesByProductId(long id)
         {
-            List<GetModuleDto> moduleList = await _messages.Dispatch(new GetModuleListQuery(id));
+            List<GetModuleDto> moduleList = await _mediator.Send(new GetModuleListQuery(id));
             return Ok(moduleList);
         }
 
@@ -42,7 +44,7 @@ namespace ProductFocusApi.Controllers
         public async Task<IActionResult> GetKanbanViewByProductId(long id)
         {
             string objectId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            List<GetKanbanViewDto> kanbanViewList = await _messages.Dispatch(new GetKanbanViewQuery(id, objectId));
+            List<GetKanbanViewDto> kanbanViewList = await _mediator.Send(new GetKanbanViewQuery(id, objectId));
             return Ok(kanbanViewList);
         }
 
@@ -50,7 +52,7 @@ namespace ProductFocusApi.Controllers
         public async Task<IActionResult> GetKanbanViewByProductIdAndQuery(long id, [FromQuery] long? SprintId, [FromQuery] List<long> UserIds, GroupCategoryEnum groupCategoryEnum)
         {
             string objectId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            GetKanbanViewListDto kanban = await _messages.Dispatch(new GetKanbanViewFilterQuery(id, objectId, SprintId, UserIds, groupCategoryEnum));
+            GetKanbanViewListDto kanban = await _mediator.Send(new GetKanbanViewFilterQuery(id, objectId, SprintId, UserIds, groupCategoryEnum));
             return Ok(kanban);
         }
     }

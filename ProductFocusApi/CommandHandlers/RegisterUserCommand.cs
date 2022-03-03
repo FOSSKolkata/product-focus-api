@@ -1,14 +1,15 @@
 ﻿using CSharpFunctionalExtensions;
-using ProductFocus.Domain;
+using ProductFocus.Domain.Common;
 using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
-using ProductFocus.Services;
 using System;
 using System.Threading.Tasks;
+using MediatR;
+using System.Threading;
 
 namespace ProductFocus.AppServices
 {
-    public sealed class RegisterUserCommand : ICommand
+    public sealed class RegisterUserCommand : IRequest<Result>
     {
         public string Name { get; }
         public string Email { get; set; }
@@ -20,34 +21,30 @@ namespace ProductFocus.AppServices
             ObjectId = objectid;
         }
 
-        internal sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand>
+        internal sealed class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, Result>
         {
             private readonly IUserRepository _userRepository;
             private readonly IUnitOfWork _unitOfWork;
-            private readonly IEmailService _emailService;
 
             public RegisterUserCommandHandler(
-                IUserRepository userRepository, IUnitOfWork unitOfWork, IEmailService emailService)
+                IUserRepository userRepository, IUnitOfWork unitOfWork)
             {
                 _userRepository = userRepository;
                 _unitOfWork = unitOfWork;
-                _emailService = emailService;
             }
-            public async Task<Result> Handle(RegisterUserCommand command)
+            public async Task<Result> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
             {
-                User existingUserWithSameEmail = _userRepository.GetByEmail(command.Email);
+                User existingUserWithSameEmail = _userRepository.GetByEmail(request.Email);
 
                 if (existingUserWithSameEmail != null)
-                    return Result.Failure($"User wih email '{command.Email}' already exists");
+                    return Result.Failure($"User wih email '{request.Email}' already exists");
 
                 try
                 {
-                    var user = User.CreateInstance(command.Name, command.Email, command.ObjectId);
+                    var user = User.CreateInstance(request.Name, request.Email, request.ObjectId);
                     _userRepository.RegisterUser(user);
 
-                    await _unitOfWork.CompleteAsync();
-
-                    //_emailService.send();
+                    await _unitOfWork.CompleteAsync(cancellationToken);
 
                     return Result.Success();
                 }

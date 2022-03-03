@@ -1,4 +1,4 @@
-﻿using Common;
+﻿using ProductFocus.Domain.Common;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 

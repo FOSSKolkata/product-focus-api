@@ -1,26 +1,27 @@
 ﻿using Azure.Storage.Blobs.Models;
 using Dapper;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using ProductFocus.ConnectionString;
-using ProductFocus.Domain;
 using ProductFocus.Domain.Services;
 using ProductFocusApi.Dtos;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ProductFocusApi.QueryHandlers
 {
-    public sealed class GetBusinessRequirementAttachmentQuery : IQuery<List<GetBusinessRequirementAttachmentDto>>
+    public sealed class GetBusinessRequirementAttachmentQuery : IRequest<List<GetBusinessRequirementAttachmentDto>>
     {
         public long BusinessRequirementId { get; private set; }
         public GetBusinessRequirementAttachmentQuery(long businessReqirementId)
         {
             BusinessRequirementId = businessReqirementId;
         }
-        public sealed class GetBusinessRequirementAttachmentQueryHandler : IQueryHandler<GetBusinessRequirementAttachmentQuery, List<GetBusinessRequirementAttachmentDto>>
+        public sealed class GetBusinessRequirementAttachmentQueryHandler : IRequestHandler<GetBusinessRequirementAttachmentQuery, List<GetBusinessRequirementAttachmentDto>>
         {
             private readonly QueriesConnectionString _queriesConnectionString;
             private readonly IBlobStorageService _blobStorageService;
@@ -32,7 +33,7 @@ namespace ProductFocusApi.QueryHandlers
                 _queriesConnectionString = queriesConnectionString;
                 _blobStorageService = blobStorageService;
             }
-            public async Task<List<GetBusinessRequirementAttachmentDto>> Handle(GetBusinessRequirementAttachmentQuery query)
+            public async Task<List<GetBusinessRequirementAttachmentDto>> Handle(GetBusinessRequirementAttachmentQuery query, CancellationToken cancellationToken)
             {
                 List<GetBusinessRequirementAttachmentDto> attachments = new();
                 string sql = @"SELECT productId FROM BusinessRequirements WHERE Id = @BusinessRequirementId";

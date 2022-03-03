@@ -1,14 +1,16 @@
 ﻿using CSharpFunctionalExtensions;
-using ProductFocus.Domain;
+using ProductFocus.Domain.Common;
 using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MediatR;
+using System.Threading;
 
 namespace ProductFocusApi.CommandHandlers
 {
-    public sealed class UpdateBusinessRequirementCommand: ICommand
+    public sealed class UpdateBusinessRequirementCommand: IRequest<Result>
     {
         public long Id { get; private set; }
         public string Title { get; private set; }
@@ -32,7 +34,7 @@ namespace ProductFocusApi.CommandHandlers
             SourceAdditionalInformation = sourceAdditionalInformation;
             Description = description;
         }
-        internal sealed class UpdateBusinessRequirementCommandHandler : ICommandHandler<UpdateBusinessRequirementCommand>
+        internal sealed class UpdateBusinessRequirementCommandHandler : IRequestHandler<UpdateBusinessRequirementCommand, Result>
         {
             private readonly IBusinessRequirementRepository _businessRequirementRepository;
             private readonly IUnitOfWork _unitOfWork;
@@ -42,18 +44,18 @@ namespace ProductFocusApi.CommandHandlers
                 _businessRequirementRepository = businessRequirementRepository;
                 _unitOfWork = unitOfWork;
             }
-            public async Task<Result> Handle(UpdateBusinessRequirementCommand command)
+            public async Task<Result> Handle(UpdateBusinessRequirementCommand request, CancellationToken cancellationToken)
             {
                 try
                 {
-                    BusinessRequirement businessRequirement = await _businessRequirementRepository.GetById(command.Id);
-                    businessRequirement.UpdateTitle(command.Title);
-                    businessRequirement.UpdateReceivedOn(command.ReceivedOn);
-                    businessRequirement.UpdateSourceEnum(command.SourceEnum);
-                    businessRequirement.UpdateSourceInformation(command.SourceAdditionalInformation);
-                    businessRequirement.UpdateDescription(command.Description);
+                    BusinessRequirement businessRequirement = await _businessRequirementRepository.GetById(request.Id);
+                    businessRequirement.UpdateTitle(request.Title);
+                    businessRequirement.UpdateReceivedOn(request.ReceivedOn);
+                    businessRequirement.UpdateSourceEnum(request.SourceEnum);
+                    businessRequirement.UpdateSourceInformation(request.SourceAdditionalInformation);
+                    businessRequirement.UpdateDescription(request.Description);
 
-                    await _unitOfWork.CompleteAsync();
+                    await _unitOfWork.CompleteAsync(cancellationToken);
                     return Result.Success();
                 }catch(Exception ex)
                 {

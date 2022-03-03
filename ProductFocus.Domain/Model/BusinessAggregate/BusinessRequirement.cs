@@ -1,5 +1,5 @@
-﻿using Common;
-using CSharpFunctionalExtensions;
+﻿using CSharpFunctionalExtensions;
+using ProductFocus.Domain.Common;
 using ProductFocus.Domain.Model.BusinessAggregate;
 using System;
 using System.Collections.Generic;

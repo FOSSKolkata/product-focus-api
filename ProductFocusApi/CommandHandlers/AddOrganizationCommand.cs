@@ -1,14 +1,15 @@
 ﻿using CSharpFunctionalExtensions;
-using ProductFocus.Domain;
+using ProductFocus.Domain.Common;
 using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
-using ProductFocus.Services;
 using System;
 using System.Threading.Tasks;
+using MediatR;
+using System.Threading;
 
 namespace ProductFocus.AppServices
 {
-    public sealed class AddOrganizationCommand : ICommand
+    public sealed class AddOrganizationCommand : IRequest<Result>
     {
         public string OrganizationName { get; }      
         public string IdpUserId { get; set; }
@@ -18,7 +19,7 @@ namespace ProductFocus.AppServices
             IdpUserId = idpUserId;
         }
 
-        internal sealed class AddOrganizationCommandHandler : ICommandHandler<AddOrganizationCommand>
+        internal sealed class AddOrganizationCommandHandler : IRequestHandler<AddOrganizationCommand, Result>
         {
             private readonly IOrganizationRepository _organizationRepository;
             private readonly IUserRepository _userRepository;
@@ -32,26 +33,26 @@ namespace ProductFocus.AppServices
                 _userRepository = userRepository;
                 _unitOfWork = unitOfWork;
             }
-            public async Task<Result> Handle(AddOrganizationCommand command)
+            public async Task<Result> Handle(AddOrganizationCommand request, CancellationToken cancellationToken)
             {
-                Organization existingOrganizationWithSameName = _organizationRepository.GetByName(command.OrganizationName);
+                Organization existingOrganizationWithSameName = _organizationRepository.GetByName(request.OrganizationName);
 
                 if (existingOrganizationWithSameName != null)
-                    return Result.Failure($"Organization '{command.OrganizationName}' already exists");
+                    return Result.Failure($"Organization '{request.OrganizationName}' already exists");
                 
-                var user = _userRepository.GetByIdpUserId(command.IdpUserId);
+                var user = _userRepository.GetByIdpUserId(request.IdpUserId);
 
                 if (user == null)
-                    return Result.Failure($"User with IdpUserId '{command.IdpUserId}' doesn't exist");
+                    return Result.Failure($"User with IdpUserId '{request.IdpUserId}' doesn't exist");
 
                 try
                 {
-                    var organization = Organization.CreateInstance(command.OrganizationName);
+                    var organization = Organization.CreateInstance(request.OrganizationName);
                     _organizationRepository.AddOrganization(organization);
                     
                     organization.AddMember(user, true);
 
-                    await _unitOfWork.CompleteAsync();
+                    await _unitOfWork.CompleteAsync(cancellationToken);
 
                     return Result.Success();
                 }

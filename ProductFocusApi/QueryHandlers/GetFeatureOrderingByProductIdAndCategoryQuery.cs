@@ -1,15 +1,16 @@
 ﻿using Dapper;
+using MediatR;
 using Microsoft.Data.SqlClient;
 using ProductFocus.ConnectionString;
-using ProductFocus.Domain;
 using ProductFocusApi.Dtos;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading;
 
 namespace ProductFocusApi.QueryHandlers
 {
-    public sealed class GetFeatureOrderingByProductIdAndCategoryQuery : IQuery<List<FeatureOrderDto>>
+    public sealed class GetFeatureOrderingByProductIdAndCategoryQuery : IRequest<List<FeatureOrderDto>>
     {
         public long ProductId { get; set; }
         public long SprintId { get; set; }
@@ -18,14 +19,14 @@ namespace ProductFocusApi.QueryHandlers
             ProductId = productId;
             SprintId = sprintId;
         }
-        internal sealed class GetFeatureOrderingByProductIdAndCategoryQueryHandler : IQueryHandler<GetFeatureOrderingByProductIdAndCategoryQuery, List<FeatureOrderDto>>
+        internal sealed class GetFeatureOrderingByProductIdAndCategoryQueryHandler : IRequestHandler<GetFeatureOrderingByProductIdAndCategoryQuery, List<FeatureOrderDto>>
         {
             private readonly QueriesConnectionString _queriesConnectionString;
             public GetFeatureOrderingByProductIdAndCategoryQueryHandler(QueriesConnectionString queriesConnectionString)
             {
                 _queriesConnectionString = queriesConnectionString;
             }
-            public async System.Threading.Tasks.Task<List<FeatureOrderDto>> Handle(GetFeatureOrderingByProductIdAndCategoryQuery query)
+            public async System.Threading.Tasks.Task<List<FeatureOrderDto>> Handle(GetFeatureOrderingByProductIdAndCategoryQuery query, CancellationToken cancellationToken)
             {
                 List<FeatureOrderDto> featureOrders = new();
 

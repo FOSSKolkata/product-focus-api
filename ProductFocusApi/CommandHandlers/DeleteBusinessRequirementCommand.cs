@@ -1,13 +1,15 @@
 ﻿using CSharpFunctionalExtensions;
-using ProductFocus.Domain;
+using ProductFocus.Domain.Common;
 using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
 using System;
 using System.Threading.Tasks;
+using MediatR;
+using System.Threading;
 
 namespace ProductFocusApi.CommandHandlers
 {
-    public class DeleteBusinessRequirementCommand : ICommand
+    public class DeleteBusinessRequirementCommand : IRequest<Result>
     {
         public virtual long Id { get; private set; }
         public virtual string UserId { get; private set; }
@@ -16,7 +18,7 @@ namespace ProductFocusApi.CommandHandlers
             Id = id;
             UserId = userId;
         }
-        public sealed class DeleteBusinessRequirementCommandHandler : ICommandHandler<DeleteBusinessRequirementCommand>
+        public sealed class DeleteBusinessRequirementCommandHandler : IRequestHandler<DeleteBusinessRequirementCommand, Result>
         {
             private readonly IBusinessRequirementRepository _businessRequirementRepository;
             private readonly IUnitOfWork _unitOfWork;
@@ -28,13 +30,13 @@ namespace ProductFocusApi.CommandHandlers
                 _unitOfWork = unitOfWork;
             }
 
-            public async Task<Result> Handle(DeleteBusinessRequirementCommand command)
+            public async Task<Result> Handle(DeleteBusinessRequirementCommand request, CancellationToken cancellationToken)
             {
                 try
                 {
-                    BusinessRequirement businessRequirement = await _businessRequirementRepository.GetById(command.Id);
-                    businessRequirement.Delete(command.UserId);
-                    await _unitOfWork.CompleteAsync();
+                    BusinessRequirement businessRequirement = await _businessRequirementRepository.GetById(request.Id);
+                    businessRequirement.Delete(request.UserId);
+                    await _unitOfWork.CompleteAsync(cancellationToken);
                     return Result.Success();
                 }
                 catch(Exception ex)

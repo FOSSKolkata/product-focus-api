@@ -1,13 +1,15 @@
 ﻿using CSharpFunctionalExtensions;
-using ProductFocus.Domain;
+using ProductFocus.Domain.Common;
 using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
 using System;
 using System.Threading.Tasks;
+using MediatR;
+using System.Threading;
 
 namespace ProductFocusApi.CommandHandlers
 {
-    public class UpsertScrumCommentCommand : ICommand
+    public class UpsertScrumCommentCommand : IRequest<Result>
     {
         public long FeatureId { get; private set; }
         public DateTime ScrumDate { get; private set; }
@@ -20,7 +22,7 @@ namespace ProductFocusApi.CommandHandlers
             ScrumComment = scrumComment;
         }
 
-        internal sealed class UpsertScrumCommentCommandHandler : ICommandHandler<UpsertScrumCommentCommand>
+        internal sealed class UpsertScrumCommentCommandHandler : IRequestHandler<UpsertScrumCommentCommand, Result>
         {
             private readonly IFeatureRepository _featureRepository;
             private readonly IUnitOfWork _unitOfWork;
@@ -33,21 +35,21 @@ namespace ProductFocusApi.CommandHandlers
                 _unitOfWork = unitOfWork;
             }
 
-            public async Task<Result> Handle(UpsertScrumCommentCommand command)
+            public async Task<Result> Handle(UpsertScrumCommentCommand request, CancellationToken cancellationToken)
             {
-                Feature feature = await _featureRepository.GetById(command.FeatureId);
+                Feature feature = await _featureRepository.GetById(request.FeatureId);
 
                 if (feature == null) return Result.Failure("Invalid feature id");
 
-                if (command.ScrumDate.TimeOfDay.TotalSeconds != 0)
+                if (request.ScrumDate.TimeOfDay.TotalSeconds != 0)
                     return Result.Failure("Invalid scrum date value");
 
-                Result result = feature.UpsertScrumComment(command.ScrumDate, command.ScrumComment);
+                Result result = feature.UpsertScrumComment(request.ScrumDate, request.ScrumComment);
 
                 if (result.IsFailure)
                     return result;
 
-                await _unitOfWork.CompleteAsync();
+                await _unitOfWork.CompleteAsync(cancellationToken);
 
                 return Result.Success();
             }

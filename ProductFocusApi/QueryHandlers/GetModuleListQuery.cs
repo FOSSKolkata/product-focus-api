@@ -1,17 +1,17 @@
-﻿using ProductFocus.Domain;
-using ProductFocus.Dtos;
+﻿using ProductFocus.Dtos;
 using System.Collections.Generic;
 using System.Linq;
 using Dapper;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using ProductFocus.ConnectionString;
-using ProductFocus.Services;
 using System.Threading.Tasks;
+using MediatR;
+using System.Threading;
 
 namespace ProductFocus.AppServices
 {
-    public sealed class GetModuleListQuery : IQuery<List<GetModuleDto>>
+    public sealed class GetModuleListQuery : IRequest<List<GetModuleDto>>
     {
         public long Id { get; }
         public GetModuleListQuery(long id)
@@ -19,7 +19,7 @@ namespace ProductFocus.AppServices
             Id = id;
         }
 
-        internal sealed class GetModuleListQueryHandler : IQueryHandler<GetModuleListQuery, List<GetModuleDto>>
+        internal sealed class GetModuleListQueryHandler : IRequestHandler<GetModuleListQuery, List<GetModuleDto>>
         {
             private readonly QueriesConnectionString _queriesConnectionString;
 
@@ -27,7 +27,7 @@ namespace ProductFocus.AppServices
             {
                 _queriesConnectionString = queriesConnectionString;
             }
-            public async Task<List<GetModuleDto>> Handle(GetModuleListQuery query)
+            public async Task<List<GetModuleDto>> Handle(GetModuleListQuery query, CancellationToken cancellationToken)
             {
                 List<GetModuleDto> moduleList = new();
                 

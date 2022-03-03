@@ -1,7 +1,5 @@
-﻿using Common;
+﻿using ProductFocus.Domain.Common;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ProductFocus.Domain.Model
 {

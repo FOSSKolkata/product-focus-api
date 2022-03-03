@@ -1,5 +1,4 @@
-﻿using ProductFocus.Domain;
-using ProductFocus.Dtos;
+﻿using ProductFocus.Dtos;
 using System.Collections.Generic;
 using System.Linq;
 using Dapper;
@@ -8,10 +7,12 @@ using Microsoft.Data.SqlClient;
 using ProductFocus.ConnectionString;
 using System.Threading.Tasks;
 using System;
+using MediatR;
+using System.Threading;
 
 namespace ProductFocus.AppServices
 {
-    public sealed class GetKanbanViewFilterQuery : IQuery<GetKanbanViewListDto>
+    public sealed class GetKanbanViewFilterQuery : IRequest<GetKanbanViewListDto>
     {
         public string ObjectId { get; }
         public long Id { get; }
@@ -28,7 +29,7 @@ namespace ProductFocus.AppServices
             GroupCategoryEnum = groupCategoryEnum;
         }
 
-        internal sealed class GetKanbanViewFilterQueryHandler : IQueryHandler<GetKanbanViewFilterQuery, GetKanbanViewListDto>
+        internal sealed class GetKanbanViewFilterQueryHandler : IRequestHandler<GetKanbanViewFilterQuery, GetKanbanViewListDto>
         {
             private readonly QueriesConnectionString _queriesConnectionString;
 
@@ -36,7 +37,7 @@ namespace ProductFocus.AppServices
             {
                 _queriesConnectionString = queriesConnectionString;
             }
-            public async Task<GetKanbanViewListDto> Handle(GetKanbanViewFilterQuery query)
+            public async Task<GetKanbanViewListDto> Handle(GetKanbanViewFilterQuery query, CancellationToken cancellationToken)
             {
                 List<GetKanbanViewDto> kanbanViewList = new();
                 List<GetKanbanViewDto> userGroupKanban = new();

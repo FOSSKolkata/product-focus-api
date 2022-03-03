@@ -10,6 +10,8 @@ using System.Linq;
 using System.Security.Claims;
 using ProductFocusApi.Dtos;
 using ProductFocusApi.QueryHandlers;
+using ProductFocus.Domain.Common;
+using MediatR;
 
 namespace ProductFocusApi.Controllers
 {
@@ -18,13 +20,12 @@ namespace ProductFocusApi.Controllers
     [Authorize]
     public class FeatureController : ControllerBase
     {
-        private readonly Messages _messages;
-        
+        private readonly IMediator _mediator;
         
         public FeatureController(
-            Messages messages)
+            IMediator mediator)
         {
-            _messages = messages;
+            _mediator = mediator;
         }
 
 
@@ -34,21 +35,21 @@ namespace ProductFocusApi.Controllers
             string objectId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
 
             var command = new UpdateFeatureCommand(dto, objectId);
-            Result result = await _messages.Dispatch(command);
+            Result result = await _mediator.Send(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }
 
         [HttpPost]
         public async Task<IActionResult> UpsertScrumComment(UpsertScrumCommentCommand command)
         {
-            Result result = await _messages.Dispatch(command);
+            Result result = await _mediator.Send(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }
 
         [HttpPost]
         public async Task<IActionResult> UpsertScrumWorkCompletionPercentage(UpsertScrumWorkCompletionPercentageCommand command)
         {
-            Result result = await _messages.Dispatch(command);
+            Result result = await _mediator.Send(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }
 
@@ -56,7 +57,7 @@ namespace ProductFocusApi.Controllers
         [HttpGet("{orgid}/{id}")]
         public async Task<IActionResult> GetFeatureDetailsById(long orgid, long id)
         {
-            GetFeatureDetailsDto featureDetails = await _messages.Dispatch(new GetFeatureDetailsQuery(orgid, id));
+            GetFeatureDetailsDto featureDetails = await _mediator.Send(new GetFeatureDetailsQuery(orgid, id));
             return Ok(featureDetails);
         }
 
@@ -64,14 +65,14 @@ namespace ProductFocusApi.Controllers
         public async Task<IActionResult> UpdateFeaturesOrdering([FromBody] OrderingInfoDto dto)
         {
             var command = new UpdateFeatureOrderingCommand(dto);
-            Result result = await _messages.Dispatch(command);
+            Result result = await _mediator.Send(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }
 
         [HttpGet("{prodId}/{sprintId}/{category}")]
         public async Task<IActionResult> GetFeatureOrderingByProductIdAndCategory(long prodId, long sprintId)
         {
-            List<FeatureOrderDto> featureOrder = await _messages.Dispatch(new GetFeatureOrderingByProductIdAndCategoryQuery(prodId, sprintId));
+            List<FeatureOrderDto> featureOrder = await _mediator.Send(new GetFeatureOrderingByProductIdAndCategoryQuery(prodId, sprintId));
             return Ok(featureOrder);
         }
     }

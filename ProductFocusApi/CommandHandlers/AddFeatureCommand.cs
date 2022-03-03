@@ -1,13 +1,15 @@
 ﻿using CSharpFunctionalExtensions;
-using ProductFocus.Domain;
+using ProductFocus.Domain.Common;
 using ProductFocus.Domain.Model;
 using ProductFocus.Domain.Repositories;
 using System;
 using System.Threading.Tasks;
+using MediatR;
+using System.Threading;
 
 namespace ProductFocus.AppServices
 {
-    public sealed class AddFeatureCommand : ICommand
+    public sealed class AddFeatureCommand : IRequest<Result>
     {
         public long Id { get; }
         public string Title { get; }
@@ -24,7 +26,7 @@ namespace ProductFocus.AppServices
             IdpUserId = idpUserId;
         }
 
-        internal sealed class AddFeatureCommandHandler : ICommandHandler<AddFeatureCommand>
+        internal sealed class AddFeatureCommandHandler : IRequestHandler<AddFeatureCommand, Result>
         {
             private readonly IProductRepository _productRepository;
             private readonly IFeatureRepository _featureRepository;
@@ -47,31 +49,31 @@ namespace ProductFocus.AppServices
                 _userRepository = userRepository;
                 _featureOrderingRepository = featureOrderingRepository;
             }
-            public async Task<Result> Handle(AddFeatureCommand command)
+            public async Task<Result> Handle(AddFeatureCommand request, CancellationToken cancellationToken)
             {
-                Product product = await _productRepository.GetById(command.Id);
+                Product product = await _productRepository.GetById(request.Id);
                 if (product == null)
-                    return Result.Failure($"No product found with product Id '{command.Id}'");
+                    return Result.Failure($"No product found with product Id '{request.Id}'");
 
-                Sprint sprint = command.SprintId is null ? null : await _sprintRepository.GetById((long)command.SprintId);
+                Sprint sprint = request.SprintId is null ? null : await _sprintRepository.GetById((long)request.SprintId);
                 /*if (sprint == null)
-                    return Result.Failure($"Invalid sprint id : '{command.SprintId}'");*/
+                    return Result.Failure($"Invalid sprint id : '{request.SprintId}'");*/
 
 
 
-                bool success = Enum.TryParse(command.WorkItemType, out WorkItemType workItemType);
+                bool success = Enum.TryParse(request.WorkItemType, out WorkItemType workItemType);
                 if (!success)
-                    return Result.Failure($"Work item type '{command.WorkItemType}' is incorrect");
+                    return Result.Failure($"Work item type '{request.WorkItemType}' is incorrect");
 
                 try
                 {
-                    User updatedByUser = _userRepository.GetByIdpUserId(command.IdpUserId);
-                    var feature = Feature.CreateInstance(product, command.Title, workItemType, sprint, updatedByUser.Id);
+                    User updatedByUser = _userRepository.GetByIdpUserId(request.IdpUserId);
+                    var feature = Feature.CreateInstance(product, request.Title, workItemType, sprint, updatedByUser.Id);
                     
                     _featureRepository.AddFeature(feature);
                     FeatureOrdering featureOrdering = FeatureOrdering.CreateInstance(feature.Id, long.MaxValue, feature.Sprint?.Id);
                     _featureOrderingRepository.Add(featureOrdering);
-                    await _unitOfWork.CompleteAsync();
+                    await _unitOfWork.CompleteAsync(cancellationToken);
 
                     return Result.Success();
                 }
@@ -81,7 +83,6 @@ namespace ProductFocus.AppServices
                 }
                 
             }
-
         }
     }
 }
