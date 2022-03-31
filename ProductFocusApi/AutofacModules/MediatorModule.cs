@@ -28,6 +28,10 @@ namespace ProductFocusApi.AutofacModules
                 AddProductDocumentation.AddProductDocumentationCommand).GetTypeInfo().Assembly)
               .AsClosedTypesOf(typeof(IRequestHandler<,>));
 
+            // Product Test registrations
+            builder.RegisterAssemblyTypes(typeof(ProductTests.Application.CommandHandler.TestPlanCommands.AddTestPlanCommand)
+                .GetTypeInfo().Assembly).AsClosedTypesOf(typeof(IRequestHandler<,>));
+
             builder.RegisterAssemblyTypes(typeof(GetOrganizationListByUserQuery).GetTypeInfo().Assembly)
               .AsClosedTypesOf(typeof(IRequestHandler<,>));
 

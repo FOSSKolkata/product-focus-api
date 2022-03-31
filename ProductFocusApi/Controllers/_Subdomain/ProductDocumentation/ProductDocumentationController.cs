@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProductDocumentations.Application.CommandHandlers.AddProductDocumentation;
 using ProductDocumentations.Application.CommandHandlers.DeleteProductDocumentation;
@@ -14,7 +15,7 @@ namespace ProductDocumentation.Controllers
 {
     [ApiController]
     [Route("[Controller]/[Action]")]
-    //[Authorize]
+    [Authorize]
     public class ProductDocumentationController : ControllerBase
     {
         private readonly IMediator _mediator;

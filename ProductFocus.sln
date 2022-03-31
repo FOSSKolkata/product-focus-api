@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.31019.35
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductFocusApi", "ProductFocusApi\ProductFocusApi.csproj", "{AA8CF121-062D-4197-9BD2-106D85B3BDF8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6B836B8C-CD04-48D2-A162-7D90FC11ABEC} = {6B836B8C-CD04-48D2-A162-7D90FC11ABEC}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductFocus.Domain", "ProductFocus.Domain\ProductFocus.Domain.csproj", "{1B6A7D0F-CCAE-4C75-BC8D-D3A439A36FB0}"
 EndProject
@@ -16,6 +19,14 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductDocumentations.Infrastructure", "ProductDocumentations.Infrastructure\ProductDocumentations.Infrastructure.csproj", "{A4970DB4-91C9-480D-99CF-2442CB8A11DE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductDocumentations.Domain", "ProductDocumentations.Domain\ProductDocumentations.Domain.csproj", "{7EAAEB04-188D-4BF2-9D60-D2BB67701C55}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ProductTestManagement", "ProductTestManagement", "{7B360A4F-CFA3-4B4B-87C0-503CA4F49EF1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductTests.Application", "ProductTests.Application\ProductTests.Application.csproj", "{E74130D9-4A62-4222-83C8-697E6DFB2B2D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductTests.Domain", "ProductTests.Domain\ProductTests.Domain.csproj", "{E08F07E1-2490-4466-86A8-A6FC3AD99FA0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductTests.Infrastructure", "ProductTests.Infrastructure\ProductTests.Infrastructure.csproj", "{6B836B8C-CD04-48D2-A162-7D90FC11ABEC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +58,18 @@ Global
 		{7EAAEB04-188D-4BF2-9D60-D2BB67701C55}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7EAAEB04-188D-4BF2-9D60-D2BB67701C55}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7EAAEB04-188D-4BF2-9D60-D2BB67701C55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E74130D9-4A62-4222-83C8-697E6DFB2B2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E74130D9-4A62-4222-83C8-697E6DFB2B2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E74130D9-4A62-4222-83C8-697E6DFB2B2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E74130D9-4A62-4222-83C8-697E6DFB2B2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E08F07E1-2490-4466-86A8-A6FC3AD99FA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E08F07E1-2490-4466-86A8-A6FC3AD99FA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E08F07E1-2490-4466-86A8-A6FC3AD99FA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E08F07E1-2490-4466-86A8-A6FC3AD99FA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B836B8C-CD04-48D2-A162-7D90FC11ABEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B836B8C-CD04-48D2-A162-7D90FC11ABEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B836B8C-CD04-48D2-A162-7D90FC11ABEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B836B8C-CD04-48D2-A162-7D90FC11ABEC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,6 +78,9 @@ Global
 		{6B727263-3873-40DA-8E9C-D21C2F0D1E64} = {B2E4D1FA-7A34-4460-B690-3975E9D95D18}
 		{A4970DB4-91C9-480D-99CF-2442CB8A11DE} = {B2E4D1FA-7A34-4460-B690-3975E9D95D18}
 		{7EAAEB04-188D-4BF2-9D60-D2BB67701C55} = {B2E4D1FA-7A34-4460-B690-3975E9D95D18}
+		{E74130D9-4A62-4222-83C8-697E6DFB2B2D} = {7B360A4F-CFA3-4B4B-87C0-503CA4F49EF1}
+		{E08F07E1-2490-4466-86A8-A6FC3AD99FA0} = {7B360A4F-CFA3-4B4B-87C0-503CA4F49EF1}
+		{6B836B8C-CD04-48D2-A162-7D90FC11ABEC} = {7B360A4F-CFA3-4B4B-87C0-503CA4F49EF1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AB9011D1-6710-44D3-9FD2-BD56D5E40DFD}

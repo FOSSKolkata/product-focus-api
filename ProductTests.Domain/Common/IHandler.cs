@@ -1,0 +1,4 @@
+﻿namespace ProductTests.Domain.Common
+{
+
+}

@@ -10,6 +10,7 @@
     <PackageReference Include="Amazon.Extensions.Configuration.SystemsManager" Version="2.1.0" />
     <PackageReference Include="Autofac" Version="6.2.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="Azure.Storage.Blobs" Version="12.10.0" />
     <PackageReference Include="CSharpFunctionalExtensions" Version="2.15.1" />
     <PackageReference Include="Dapper" Version="2.0.78" />
@@ -38,6 +39,8 @@
 	  <ProjectReference Include="..\ProductDocumentations.Infrastructure\ProductDocumentations.Infrastructure.csproj" />
     <ProjectReference Include="..\ProductFocus.Domain\ProductFocus.Domain.csproj" />
     <ProjectReference Include="..\ProductFocus.Persistence\ProductFocus.Persistence.csproj" />
+    <ProjectReference Include="..\ProductTests.Application\ProductTests.Application.csproj" />
+    <ProjectReference Include="..\ProductTests.Infrastructure\ProductTests.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

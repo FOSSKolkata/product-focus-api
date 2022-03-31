@@ -38,6 +38,8 @@ namespace ProductFocus.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper(typeof(Startup));
+            services.AddControllersWithViews();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddMicrosoftIdentityWebApi(options =>
                     {
@@ -83,6 +85,10 @@ namespace ProductFocus.Api
                 x => x.UseLazyLoadingProxies()
                     .UseSqlServer(connection));
 
+            services.AddDbContext<ProductTests.Infrastructure.ProductTestDbContext>(
+                x => x.UseLazyLoadingProxies()
+                    .UseSqlServer(connection));
+
             ////services.AddDbContext<ProductFocusDbContext>(
             //    x => x.UseLazyLoadingProxies()
             //        .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
@@ -93,6 +99,8 @@ namespace ProductFocus.Api
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<ProductDocumentations.Infrastructure.UnitOfWork>();
             services.AddTransient<ProductDocumentations.Domain.Common.IUnitOfWork, ProductDocumentations.Infrastructure.UnitOfWork>();
+            services.AddTransient<ProductTests.Infrastructure.UnitOfWork>();
+            services.AddTransient<ProductTests.Domain.Common.IUnitOfWork, ProductTests.Infrastructure.UnitOfWork>();
 
             var queryBuilder = new SqlConnectionStringBuilder(
                 Configuration.GetConnectionString("QueriesConnectionString"));
