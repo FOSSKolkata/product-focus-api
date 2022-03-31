@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ProductTests.Infrastructure.Migrations
 {
-    public partial class testplan : Migration
+    public partial class TestPlan : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -76,8 +76,7 @@ namespace ProductTests.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false),
-                    SuiteId = table.Column<long>(type: "bigint", nullable: false),
-                    TestSuiteId = table.Column<long>(type: "bigint", nullable: true),
+                    TestSuiteId = table.Column<long>(type: "bigint", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Preconditions = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
@@ -98,7 +97,7 @@ namespace ProductTests.Infrastructure.Migrations
                         principalSchema: "producttest",
                         principalTable: "TestSuites",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(

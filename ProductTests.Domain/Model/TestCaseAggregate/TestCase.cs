@@ -8,7 +8,7 @@ namespace ProductTests.Domain.Model.TestCaseAggregate
 {
     public class TestCase : AggregateRoot<long>, ISoftDeletable
     {
-        public virtual long SuiteId { get; private set; }
+        public virtual long TestSuiteId { get; private set; }
         public virtual TestSuite TestSuite { get; private set; }
         public virtual string Title { get; private set; }
         public virtual string Preconditions { get; private set; }
@@ -28,7 +28,7 @@ namespace ProductTests.Domain.Model.TestCaseAggregate
         private TestCase(long suiteId, string title, string preconditions, List<TestStep> testSteps)
         {
             Title = title;
-            SuiteId = suiteId;
+            TestSuiteId = suiteId;
             Preconditions = preconditions;
             _testSteps = testSteps;
         }

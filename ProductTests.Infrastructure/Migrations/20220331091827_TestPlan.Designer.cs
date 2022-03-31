@@ -10,8 +10,8 @@ using ProductTests.Infrastructure;
 namespace ProductTests.Infrastructure.Migrations
 {
     [DbContext(typeof(ProductTestDbContext))]
-    [Migration("20220327131759_test-plan")]
-    partial class testplan
+    [Migration("20220331091827_TestPlan")]
+    partial class TestPlan
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -60,10 +60,7 @@ namespace ProductTests.Infrastructure.Migrations
                     b.Property<string>("Preconditions")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("SuiteId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("TestSuiteId")
+                    b.Property<long>("TestSuiteId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Title")
@@ -222,7 +219,9 @@ namespace ProductTests.Infrastructure.Migrations
                 {
                     b.HasOne("ProductTests.Domain.Model.TestPlanAggregate.TestSuite", "TestSuite")
                         .WithMany()
-                        .HasForeignKey("TestSuiteId");
+                        .HasForeignKey("TestSuiteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("TestSuite");
                 });

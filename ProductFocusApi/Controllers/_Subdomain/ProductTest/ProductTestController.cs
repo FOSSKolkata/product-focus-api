@@ -7,7 +7,6 @@ using ProductTests.Application.CommandHandler.TestCaseCommands;
 using ProductTests.Application.CommandHandler.TestPlanCommands;
 using ProductTests.Application.CommandHandler.TestSuiteCommands;
 using ProductTests.Application.QueryHandler.GetTestPlanQueries;
-using ProductTests.Domain.Model.TestCaseAggregate;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -21,11 +20,9 @@ namespace ProductFocusApi.Controllers._Subdomain.ProductTest
     public class ProductTestController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly IMapper _mapper;
-        public ProductTestController(IMediator mediator, IMapper mapper)
+        public ProductTestController(IMediator mediator)
         {
             _mediator = mediator;
-            _mapper = mapper;
         }
 
         [HttpPost]
@@ -53,10 +50,12 @@ namespace ProductFocusApi.Controllers._Subdomain.ProductTest
             return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetTestPlanDetails(long id)
-        {
-            var command = new 
+        [HttpGet("{id}/{productId}")]
+        public async Task<IActionResult> GetTestPlanDetails(long id, long productId)
+        {//Working
+            var command = new GetTestPlanDetailsQuery(productId, id);
+            Result<GetTestPlanDetailsDto> result = await _mediator.Send(command);
+            return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
         }
 
         [HttpPost]

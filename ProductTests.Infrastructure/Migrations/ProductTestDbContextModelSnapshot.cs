@@ -58,10 +58,7 @@ namespace ProductTests.Infrastructure.Migrations
                     b.Property<string>("Preconditions")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("SuiteId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("TestSuiteId")
+                    b.Property<long>("TestSuiteId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Title")
@@ -220,7 +217,9 @@ namespace ProductTests.Infrastructure.Migrations
                 {
                     b.HasOne("ProductTests.Domain.Model.TestPlanAggregate.TestSuite", "TestSuite")
                         .WithMany()
-                        .HasForeignKey("TestSuiteId");
+                        .HasForeignKey("TestSuiteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("TestSuite");
                 });
