@@ -47,9 +47,10 @@ namespace ProductFocusApi.Controllers._Subdomain.ProductTest
         [HttpPost("{id}")]
         public async Task<IActionResult> ReleaseTestCase(long id)
         {
-            var command = new PublishTestCaseCommand(id);
+            /*var command = new PublishTestCaseCommand(id);
             Result result = await _mediator.Send(command);
-            return result.IsSuccess ? Ok() : BadRequest(result.Error);
+            return result.IsSuccess ? Ok() : BadRequest(result.Error);*/
+            return Ok();
         }
     }
 }
