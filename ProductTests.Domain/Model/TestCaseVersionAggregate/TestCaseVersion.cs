@@ -16,7 +16,7 @@ namespace ProductTests.Domain.Model.TestCaseVersionAggregate
 
         private readonly IList<TestStepVersion> _testStepsVersion = new List<TestStepVersion>();
         public virtual IReadOnlyList<TestStepVersion> TestSteps => _testStepsVersion.ToList();
-
+        public virtual bool IsIncluded { get; private set; }
         public bool IsDeleted { get; set; }
         public DateTime DeletedOn { get; set; }
         public string DeletedBy { get; set; }
@@ -33,6 +33,10 @@ namespace ProductTests.Domain.Model.TestCaseVersionAggregate
             {
                 _testStepsVersion.Add(TestStepVersion.CreateInstance(testStep, Id));
             }
+        }
+        public void IncludeTestCast(bool isIncluded)
+        {
+            IsIncluded = isIncluded;
         }
         public static TestCaseVersion CreateInstance(TestCase testCase, long testSuiteVersionId, List<TestStep> testSteps)
         {

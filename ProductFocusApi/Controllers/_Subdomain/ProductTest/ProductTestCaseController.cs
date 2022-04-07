@@ -21,36 +21,29 @@ namespace ProductFocusApi.Controllers._Subdomain.ProductTest
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddTestCase(AddTestCaseDto dto)
-        {//Working
-            var command = new AddTestCaseCommand(dto.Title, dto.Preconditions, dto.SuiteId, dto.TestSteps);
+        public async Task<IActionResult> AddTestCase([FromBody] AddTestCaseDto dto)
+        {
+            var command = new AddTestCaseCommand(dto.Title, dto.Preconditions,dto.TestPlanId, dto.TestSuiteId, dto.TestSteps);
             Result result = await _mediator.Send(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTestCase(long id)
-        {//Working
+        [HttpDelete]
+        public async Task<IActionResult> DeleteTestCase([FromBody] DeleteTestCaseDto dto)
+        {
             string objectId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            var command = new DeleteTestCaseCommand(id, objectId);
+            var command = new DeleteTestCaseCommand(dto.Id, dto.TestPlanId, dto.TestSuiteId, objectId);
             Result result = await _mediator.Send(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTestCase(long id, [FromBody] UpdateTestCaseDto dto)
-        {//Working
-            var command = new UpdateTestCaseCommand(id, dto.Title, dto.Preconditions, dto.TestSteps);
+        {
+            string objectId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            var command = new UpdateTestCaseCommand(id, dto.Title, dto.Preconditions, dto.TestSteps, objectId);
             Result result = await _mediator.Send(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
-        }
-        [HttpPost("{id}")]
-        public async Task<IActionResult> ReleaseTestCase(long id)
-        {
-            /*var command = new PublishTestCaseCommand(id);
-            Result result = await _mediator.Send(command);
-            return result.IsSuccess ? Ok() : BadRequest(result.Error);*/
-            return Ok();
         }
     }
 }

@@ -21,11 +21,16 @@ namespace ProductTests.Domain.Model.TestPlanVersionAggregate
         public virtual bool IsDeleted { get; set; }
         public virtual DateTime DeletedOn { get; set; }
         public virtual string DeletedBy { get; set; }
+        public virtual Status RunningStatus { get; set; }
         protected TestPlanVersion()
         {
 
         }
-        private TestPlanVersion(TestPlan testPlan, List<TestSuite> testSuites)
+        public void ChangeRunningStatus(Status runningStatus)
+        {
+            RunningStatus = runningStatus;
+        }
+        private TestPlanVersion(TestPlan testPlan)
         {
             Name = testPlan.Name;
             TestPlanId = testPlan.Id;
@@ -35,14 +40,19 @@ namespace ProductTests.Domain.Model.TestPlanVersionAggregate
             TestType = testPlan.TestType;
             ProductDocumentationId = testPlan.ProductDocumentationId;
             WorkItemId = testPlan.WorkItemId;
-            foreach(TestSuite testSuite in testSuites)
+            foreach(TestSuite testSuite in testPlan.TestSuites)
             {
                 _testSuitesVersion.Add(TestSuiteVersion.CreateInstance(testSuite, Id));
             }
         }
-        public static TestPlanVersion CreateInstance(TestPlan testPlan, List<TestSuite> testSuites)
+        public static TestPlanVersion CreateInstance(TestPlan testPlan)
         {
-            return new TestPlanVersion(testPlan, testSuites);
+            return new TestPlanVersion(testPlan);
+        }
+        public enum Status
+        {
+            Completed = 1,
+            Incompleted = 2
         }
     }
 }

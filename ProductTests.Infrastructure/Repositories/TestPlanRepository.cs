@@ -1,5 +1,7 @@
-﻿using ProductTests.Domain.Model.TestPlanAggregate;
+﻿using Microsoft.EntityFrameworkCore;
+using ProductTests.Domain.Model.TestPlanAggregate;
 using ProductTests.Domain.Repositories;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ProductTests.Infrastructure.Repositories
@@ -15,6 +17,7 @@ namespace ProductTests.Infrastructure.Repositories
         {
             _unitOfWork.Insert(testPlan);
         }
+
         public Task<TestPlan> GetById(long id)
         {
             return _unitOfWork.GetAsync<TestPlan>(id);

@@ -1,15 +1,18 @@
 ﻿using ProductTests.Domain.Common;
+using System;
 
 namespace ProductTests.Domain.Model.TestCaseAggregate
 {
-    public class TestStep : Entity<long>
+    public class TestStep : Entity<long>, ISoftDeletable
     {
         public virtual long TestCaseId { get; private set; }
         public virtual TestCase TestCase { get; private set; }
         public virtual long StepNo { get; private set; }
         public virtual string Action { get; private set; }
         public virtual string ExpectedResult { get; private set; }
-
+        public virtual bool IsDeleted { get; set; }
+        public virtual DateTime DeletedOn { get; set; }
+        public virtual string DeletedBy { get; set; }
         protected TestStep()
         {
 
@@ -29,8 +32,13 @@ namespace ProductTests.Domain.Model.TestCaseAggregate
             Action = action;
             ExpectedResult = expectedResult;
         }
-
-        public void Update(long stepNo, string action, string expectedResult)
+        internal void Delete(string userId)
+        {
+            DeletedBy = userId;
+            DeletedOn = DateTime.Now;
+            IsDeleted = true;
+        }
+        internal void Update(long stepNo, string action, string expectedResult)
         {
             StepNo = stepNo;
             Action = action;

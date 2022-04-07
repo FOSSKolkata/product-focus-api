@@ -7,7 +7,8 @@ namespace ProductTests.Application.CommandHandler.TestCaseCommands
     {
         public string Title { get; set; }
         public string Preconditions { get; set; }
-        public long SuiteId { get; set; }
+        public long? TestPlanId { get; set; }
+        public long? TestSuiteId { get; set; }
         public List<AddTestStepDto> TestSteps { get; set; }
     }
     public sealed class AddTestStepDto

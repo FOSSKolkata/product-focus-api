@@ -23,7 +23,7 @@ namespace ProductFocusApi.Controllers._Subdomain.ProductTest
         }
         [HttpPost]
         public async Task<IActionResult> AddTestPlan(AddTestPlanDto dto)
-        {//Working
+        {
             var command = new AddTestPlanCommand(dto.ProductId, dto.SprintId, dto.Title, dto.TestType, dto.ProductDocumentationId, dto.WorkItemId);
             Result result = await _mediator.Send(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
@@ -31,7 +31,7 @@ namespace ProductFocusApi.Controllers._Subdomain.ProductTest
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTestPlan(long id)
-        {//Working
+        {
             string objectId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
             var command = new DeleteTestPlanCommand(id, objectId);
             Result result = await _mediator.Send(command);
@@ -40,7 +40,7 @@ namespace ProductFocusApi.Controllers._Subdomain.ProductTest
 
         [HttpGet("{productId}")]
         public async Task<IActionResult> GetTestPlans(long productId)
-        {//Working
+        {
             var command = new GetTestPlansQuery(productId);
             Result<List<GetTestPlansDto>> result = await _mediator.Send(command);
             return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
@@ -48,7 +48,7 @@ namespace ProductFocusApi.Controllers._Subdomain.ProductTest
 
         [HttpGet("{id}/{productId}")]
         public async Task<IActionResult> GetTestPlanDetails(long id, long productId)
-        {//Working
+        {
             var command = new GetTestPlanDetailsQuery(productId, id);
             Result<GetTestPlanDetailsDto> result = await _mediator.Send(command);
             return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);

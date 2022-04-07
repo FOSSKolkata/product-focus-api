@@ -35,7 +35,7 @@ namespace ProductTests.Application.QueryHandler.GetTestPlanQueries
                 string sql = @"SELECT tplan.Id as TestPlanId,
                     tplan.TestType, tplan.Name as TestPlanTitle
                     FROM producttest.TestPlans tplan
-                    WHERE tplan.Id = @Id AND tplan.ProductId = @ProductId;
+                    WHERE tplan.Id = @Id AND tplan.ProductId = @ProductId AND tplan.IsDeleted = 'False';
 
                     SELECT tplan.Id as TestPlanId, 
                     tsuite.Id as TestSuiteId,

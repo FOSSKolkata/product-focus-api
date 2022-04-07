@@ -1,4 +1,5 @@
 ﻿using ProductTests.Domain.Common;
+using ProductTests.Domain.Model.TestCaseAggregate;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,16 @@ namespace ProductTests.Domain.Model.TestPlanAggregate
         {
 
         }
-
+        public void AddTestSuiteTestCaseMapping(long testSuiteId, TestCase testCase)
+        {
+            TestSuite testSuite = TestSuites.Where(x => x.Id == testSuiteId).SingleOrDefault();
+            testSuite.AddTestCaseToTestSuiteMapping(testCase);
+        }
+        public void DeleteTestSuiteTestCaseMapping(long testSuiteId, long testCaseId, string userId)
+        {
+            TestSuite testSuite = TestSuites.Where(x => x.Id == testSuiteId).SingleOrDefault();
+            testSuite.DeleteTestSuiteTestCaseMapping(testCaseId, userId);
+        }
         private TestPlan(string name, long productId, long? sprintId, TestTypeEnum testType, long productDocumentationId, long? workItemId)
         {
             Name = name;
@@ -40,7 +50,7 @@ namespace ProductTests.Domain.Model.TestPlanAggregate
         }
         public void DeleteTestSuite(long suiteId, string userId)
         {
-            var deleteSuite = this.TestSuites.Where(x => x.Id == suiteId).SingleOrDefault();
+            var deleteSuite = TestSuites.Where(x => x.Id == suiteId).SingleOrDefault();
             deleteSuite.Delete(userId);
             //this._testSuites.Remove(deleteSuite); // Will be deleted permanently
         }

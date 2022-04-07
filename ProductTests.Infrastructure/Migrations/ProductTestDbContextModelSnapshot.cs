@@ -58,15 +58,10 @@ namespace ProductTests.Infrastructure.Migrations
                     b.Property<string>("Preconditions")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("TestSuiteId")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("TestSuiteId");
 
                     b.ToTable("TestCases");
                 });
@@ -91,8 +86,17 @@ namespace ProductTests.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DeletedOn")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("ExpectedResult")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
@@ -213,15 +217,50 @@ namespace ProductTests.Infrastructure.Migrations
                     b.ToTable("TestSuites");
                 });
 
-            modelBuilder.Entity("ProductTests.Domain.Model.TestCaseAggregate.TestCase", b =>
+            modelBuilder.Entity("ProductTests.Domain.Model.TestPlanAggregate.TestSuiteTestCaseMapping", b =>
                 {
-                    b.HasOne("ProductTests.Domain.Model.TestPlanAggregate.TestSuite", "TestSuite")
-                        .WithMany()
-                        .HasForeignKey("TestSuiteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Navigation("TestSuite");
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("CreatedById")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("LastModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("TestCaseId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("TestSuiteId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TestCaseId");
+
+                    b.HasIndex("TestSuiteId");
+
+                    b.ToTable("TestSuiteTestCaseMapping");
                 });
 
             modelBuilder.Entity("ProductTests.Domain.Model.TestCaseAggregate.TestStep", b =>
@@ -246,6 +285,21 @@ namespace ProductTests.Infrastructure.Migrations
                     b.Navigation("TestPlan");
                 });
 
+            modelBuilder.Entity("ProductTests.Domain.Model.TestPlanAggregate.TestSuiteTestCaseMapping", b =>
+                {
+                    b.HasOne("ProductTests.Domain.Model.TestCaseAggregate.TestCase", "TestCase")
+                        .WithMany()
+                        .HasForeignKey("TestCaseId");
+
+                    b.HasOne("ProductTests.Domain.Model.TestPlanAggregate.TestSuite", "TestSuite")
+                        .WithMany("TestSuiteTestCaseMappings")
+                        .HasForeignKey("TestSuiteId");
+
+                    b.Navigation("TestCase");
+
+                    b.Navigation("TestSuite");
+                });
+
             modelBuilder.Entity("ProductTests.Domain.Model.TestCaseAggregate.TestCase", b =>
                 {
                     b.Navigation("TestSteps");
@@ -254,6 +308,11 @@ namespace ProductTests.Infrastructure.Migrations
             modelBuilder.Entity("ProductTests.Domain.Model.TestPlanAggregate.TestPlan", b =>
                 {
                     b.Navigation("TestSuites");
+                });
+
+            modelBuilder.Entity("ProductTests.Domain.Model.TestPlanAggregate.TestSuite", b =>
+                {
+                    b.Navigation("TestSuiteTestCaseMappings");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,5 +1,4 @@
 ﻿using ProductTests.Domain.Common;
-using ProductTests.Domain.Model.TestPlanAggregate;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,34 +7,31 @@ namespace ProductTests.Domain.Model.TestCaseAggregate
 {
     public class TestCase : AggregateRoot<long>, ISoftDeletable
     {
-        public virtual long TestSuiteId { get; private set; }
-        public virtual TestSuite TestSuite { get; private set; }
         public virtual string Title { get; private set; }
         public virtual string Preconditions { get; private set; }
 
         private readonly IList<TestStep> _testSteps = new List<TestStep>();
         public virtual IReadOnlyList<TestStep> TestSteps => _testSteps.ToList();
 
-        public bool IsDeleted { get; set; }
-        public DateTime DeletedOn { get; set; }
-        public string DeletedBy { get; set; }
+        public virtual bool IsDeleted { get; set; }
+        public virtual DateTime DeletedOn { get; set; }
+        public virtual string DeletedBy { get; set; }
 
         protected TestCase()
         {
 
         }
 
-        private TestCase(long suiteId, string title, string preconditions, List<TestStep> testSteps)
+        private TestCase(string title, string preconditions, List<TestStep> testSteps)
         {
             Title = title;
-            TestSuiteId = suiteId;
             Preconditions = preconditions;
             _testSteps = testSteps;
         }
 
-        public static TestCase CreateInstance(long suiteId, string title, string precondition, List<TestStep> testSteps)
+        public static TestCase CreateInstance(string title, string precondition, List<TestStep> testSteps)
         {
-            TestCase testCase = new(suiteId, title, precondition, testSteps);
+            TestCase testCase = new(title, precondition, testSteps);
             return testCase;
         }
         public void UpdateTitle(string title)
@@ -56,18 +52,21 @@ namespace ProductTests.Domain.Model.TestCaseAggregate
             TestStep testStep = TestSteps.Where(x => x.Id == id).SingleOrDefault();
             testStep.Update(stepNo, action, expectedResult);
         }
-        public void UpdateTestSteps(List<TestStep> newTestSteps)
+        public void UpdateTestSteps(List<TestStep> newTestSteps, string userId)
         {
-            var deletedTestSteps = TestSteps.Where(x => !newTestSteps.Select(y => y.Id).Contains(x.Id)).ToList();
+            var deletedTestSteps = TestSteps.Where(x => !newTestSteps.Select(y => y.Id).Contains(x.Id) && !x.IsDeleted).ToList();
             var addedTestSteps = newTestSteps.Where(x => x.Id == 0).ToList();
             foreach (TestStep deletedTestStep in deletedTestSteps)
             {
-                _testSteps.Remove(deletedTestStep);
+                // _testSteps.Remove(deletedTestStep); // Permanently delete
+                deletedTestStep.Delete(userId); // Soft Delete
+
             }
             foreach(TestStep oldTestStep in TestSteps)
             {
-                TestStep updatedTestStep = newTestSteps.Where(x => x.Id == oldTestStep.Id).Single();
-                oldTestStep.Update(updatedTestStep.StepNo, updatedTestStep.Action, updatedTestStep.ExpectedResult);
+                TestStep updatedTestStep = newTestSteps.Where(x => x.Id == oldTestStep.Id).SingleOrDefault();
+                if(updatedTestStep != null)
+                    oldTestStep.Update(updatedTestStep.StepNo, updatedTestStep.Action, updatedTestStep.ExpectedResult);
             }
             foreach(TestStep addedTestStep in addedTestSteps)
             {

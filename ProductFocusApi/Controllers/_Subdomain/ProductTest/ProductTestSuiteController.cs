@@ -22,7 +22,7 @@ namespace ProductFocusApi.Controllers._Subdomain.ProductTest
         }
         [HttpPost]
         public async Task<IActionResult> AddTestSuite(AddTestSuiteDto dto)
-        {//Working
+        {
             var command = new AddTestSuiteCommand(dto.Title, dto.TestPlanId);
             Result result = await _mediator.Send(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
@@ -30,7 +30,7 @@ namespace ProductFocusApi.Controllers._Subdomain.ProductTest
 
         [HttpDelete("{planId}/{suiteId}")]
         public async Task<IActionResult> DeleteTestSuite(long planId, long suiteId)
-        {//Working
+        {
             string objectId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
             var command = new DeleteTestSuiteCommand(planId, suiteId, objectId);
             Result result = await _mediator.Send(command);

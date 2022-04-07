@@ -16,12 +16,14 @@ namespace ProductTests.Application.CommandHandler.TestCaseCommands
         public string Title { get; private set; }
         public string Preconditions { get; private set; }
         public List<UpdateTestStepDto> TestSteps { get; private set; }
-        public UpdateTestCaseCommand(long id, string title, string preconditions, List<UpdateTestStepDto> testSteps)
+        public string UserId { get; private set; }
+        public UpdateTestCaseCommand(long id, string title, string preconditions, List<UpdateTestStepDto> testSteps, string userId)
         {
             Id = id;
             Title = title;
             Preconditions = preconditions;
             TestSteps = testSteps;
+            UserId = userId;
         }
         internal sealed class UpdateTestCaseCommandHandler : IRequestHandler<UpdateTestCaseCommand, Result>
         {
@@ -48,7 +50,7 @@ namespace ProductTests.Application.CommandHandler.TestCaseCommands
                         else
                             testSteps.Add(testStep.ToTestStep(0, i + 1));
                     }
-                    testCase.UpdateTestSteps(testSteps);
+                    testCase.UpdateTestSteps(testSteps, request.UserId);
                     await _unitOfWork.CompleteAsync(cancellationToken);
                     return Result.Success();
                 }
