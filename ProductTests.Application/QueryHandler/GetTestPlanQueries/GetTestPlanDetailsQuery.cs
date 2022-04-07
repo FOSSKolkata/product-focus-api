@@ -42,7 +42,7 @@ namespace ProductTests.Application.QueryHandler.GetTestPlanQueries
                     tsuite.Name as TestSuiteTitle
                     FROM producttest.TestPlans tplan
                     INNER JOIN producttest.TestSuites tsuite ON tplan.Id = tsuite.TestPlanId
-                    WHERE tplan.Id = @Id AND tplan.ProductId = @ProductId;
+                    WHERE tplan.Id = @Id AND tplan.ProductId = @ProductId AND tSuite.IsDeleted = 'False';
 
                     SELECT tsuite.Id as TestSuiteId,
                     tcase.Id as TestCaseId,
@@ -50,17 +50,19 @@ namespace ProductTests.Application.QueryHandler.GetTestPlanQueries
                     tcase.Preconditions
                     FROM producttest.TestPlans tplan
                     INNER JOIN producttest.TestSuites tsuite ON tplan.Id = tsuite.TestPlanId
-                    INNER JOIN producttest.TestCases tcase ON tsuite.Id = tcase.TestSuiteId
-                    WHERE tplan.Id = @Id AND tplan.ProductId = @ProductId;
+                    INNER JOIN producttest.TestSuiteTestCaseMapping tstcm ON tstcm.TestSuiteId = tsuite.Id
+                    INNER JOIN producttest.TestCases tcase ON tcase.Id = tstcm.TestCaseId
+                    WHERE tplan.Id = @Id AND tplan.ProductId = @ProductId AND tcase.IsDeleted = 'False';
 
                     SELECT tcase.Id as TestCaseId,
                     tstep.Id as TestStepId,
                     tstep.StepNo, tstep.Action, tstep.ExpectedResult
                     FROM producttest.TestPlans tplan
                     INNER JOIN producttest.TestSuites tsuite ON tplan.Id = tsuite.TestPlanId
-                    INNER JOIN producttest.TestCases tcase ON tsuite.Id = tcase.TestSuiteId
-                    INNER JOIN producttest.TestSteps tstep ON tcase.Id = tstep.TestCaseId
-                    WHERE tplan.Id = @Id AND tplan.ProductId = @ProductId;";
+                    INNER JOIN producttest.TestSuiteTestCaseMapping tstcm ON tstcm.TestSuiteId = tsuite.Id
+                    INNER JOIN producttest.TestCases tcase ON tcase.Id = tstcm.TestCaseId
+                    INNER JOIN producttest.TestSteps tstep ON tstep.TestCaseId = tcase.Id
+                    WHERE tplan.Id = @Id AND tplan.ProductId = @ProductId AND tstep.IsDeleted = 'False';";
 
                 using (IDbConnection con = new SqlConnection(_queriesConnectionString))
                 {
@@ -79,6 +81,7 @@ namespace ProductTests.Application.QueryHandler.GetTestPlanQueries
                         foreach(TestCaseDetailsDto testcase in testSuite.TestCases)
                         {
                             testcase.TestSteps = allTestSteps.Where(teststep => teststep.TestCaseId == testcase.TestCaseId).ToList();
+                            testcase.TestSteps.Sort((x, y) => x.StepNo < y.StepNo ? -1 : 1);
                         }
                     }
                 }
