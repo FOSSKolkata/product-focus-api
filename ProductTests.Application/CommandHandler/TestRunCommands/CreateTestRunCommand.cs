@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using MediatR;
 using ProductTests.Domain.Common;
+using ProductTests.Domain.Model.TestCaseVersionAggregate;
 using ProductTests.Domain.Model.TestPlanAggregate;
 using ProductTests.Domain.Model.TestPlanVersionAggregate;
 using ProductTests.Domain.Repositories;
@@ -21,11 +22,13 @@ namespace ProductTests.Application.CommandHandler.TestRunCommands
         {
             private readonly IUnitOfWork _unitOfWork;
             private readonly ITestPlanRepository _testPlanRepository;
-            private readonly ITestCaseRepository _testCaseRepository;
-            public CreateTestRunCommandHandler(ITestPlanRepository testPlanRepository, ITestCaseRepository testCaseRepository, IUnitOfWork unitOfWork)
+            private readonly ITestCaseVersionRepository _testCaseVersionRepository;
+            public CreateTestRunCommandHandler(ITestPlanRepository testPlanRepository,
+                ITestCaseVersionRepository testCaseVersionRepository,
+                IUnitOfWork unitOfWork)
             {
                 _testPlanRepository = testPlanRepository;
-                _testCaseRepository = testCaseRepository;
+                _testCaseVersionRepository = testCaseVersionRepository;
                 _unitOfWork = unitOfWork;
             }
             public async Task<Result> Handle(CreateTestRunCommand request, CancellationToken cancellationToken)
@@ -34,7 +37,15 @@ namespace ProductTests.Application.CommandHandler.TestRunCommands
                 {
                     TestPlan testPlan = await _testPlanRepository.GetById(request.TestPlanId);
                     TestPlanVersion testPlanVersion = TestPlanVersion.CreateInstance(testPlan);
-                    // Need to work here...
+                    foreach(TestSuite testSuite in testPlan.TestSuites)
+                    {
+                        testPlanVersion.AddTestSuiteVersion(testSuite);
+                        foreach(TestSuiteTestCaseMapping mapping in testSuite.TestSuiteTestCaseMappings)
+                        {
+                            _testCaseVersionRepository.Add(TestCaseVersion.CreateInstance(mapping.TestCase));
+                        }
+                    }
+                    await _unitOfWork.CompleteAsync();
                     return Result.Success();
                 }
                 catch(Exception ex)

@@ -1,4 +1,4 @@
-﻿using ProductDocumentations.Domain.Common;
+﻿using ProductTests.Domain.Common;
 using ProductTests.Domain.Model.TestCaseAggregate;
 using System;
 

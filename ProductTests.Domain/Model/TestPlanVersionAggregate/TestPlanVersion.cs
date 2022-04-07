@@ -9,7 +9,6 @@ namespace ProductTests.Domain.Model.TestPlanVersionAggregate
     public class TestPlanVersion : AggregateRoot<long>, ISoftDeletable
     {
         public virtual string Name { get; private set; }
-        public virtual long TestPlanId { get; private set; }
         public virtual TestPlan TestPlan { get; private set; }
         public virtual long ProductId { get; private set; }
         public virtual long? SprintId { get; private set; }
@@ -30,10 +29,13 @@ namespace ProductTests.Domain.Model.TestPlanVersionAggregate
         {
             RunningStatus = runningStatus;
         }
+        public void AddTestSuiteVersion(TestSuite testSuite)
+        {
+            _testSuitesVersion.Add(TestSuiteVersion.CreateInstance(testSuite, Id));
+        }
         private TestPlanVersion(TestPlan testPlan)
         {
             Name = testPlan.Name;
-            TestPlanId = testPlan.Id;
             TestPlan = testPlan;
             ProductId = testPlan.ProductId;
             SprintId = testPlan.SprintId;

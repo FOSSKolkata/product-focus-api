@@ -1,6 +1,8 @@
-﻿using MediatR;
+﻿using CSharpFunctionalExtensions;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ProductTests.Application.CommandHandler.TestRunCommands;
 using System.Threading.Tasks;
 
 namespace ProductFocusApi.Controllers._Subdomain.ProductTest
@@ -18,8 +20,9 @@ namespace ProductFocusApi.Controllers._Subdomain.ProductTest
         [HttpPost("testPlanId")]
         public async Task<IActionResult> CreateTestRun(long testPlanId)
         {
-            /*var command = new */
-            return Ok();
+            var command = new CreateTestRunCommand(testPlanId);
+            Result result = await _mediator.Send(command);
+            return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }
     }
 }
