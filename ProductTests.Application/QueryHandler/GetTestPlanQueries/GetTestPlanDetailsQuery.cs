@@ -50,7 +50,7 @@ namespace ProductTests.Application.QueryHandler.GetTestPlanQueries
                     tcase.Preconditions
                     FROM producttest.TestPlans tplan
                     INNER JOIN producttest.TestSuites tsuite ON tplan.Id = tsuite.TestPlanId
-                    INNER JOIN producttest.TestSuiteTestCaseMapping tstcm ON tstcm.TestSuiteId = tsuite.Id
+                    INNER JOIN producttest.TestSuiteTestCaseMappings tstcm ON tstcm.TestSuiteId = tsuite.Id
                     INNER JOIN producttest.TestCases tcase ON tcase.Id = tstcm.TestCaseId
                     WHERE tplan.Id = @Id AND tplan.ProductId = @ProductId AND tcase.IsDeleted = 'False';
 
@@ -59,7 +59,7 @@ namespace ProductTests.Application.QueryHandler.GetTestPlanQueries
                     tstep.StepNo, tstep.Action, tstep.ExpectedResult
                     FROM producttest.TestPlans tplan
                     INNER JOIN producttest.TestSuites tsuite ON tplan.Id = tsuite.TestPlanId
-                    INNER JOIN producttest.TestSuiteTestCaseMapping tstcm ON tstcm.TestSuiteId = tsuite.Id
+                    INNER JOIN producttest.TestSuiteTestCaseMappings tstcm ON tstcm.TestSuiteId = tsuite.Id
                     INNER JOIN producttest.TestCases tcase ON tcase.Id = tstcm.TestCaseId
                     INNER JOIN producttest.TestSteps tstep ON tstep.TestCaseId = tcase.Id
                     WHERE tplan.Id = @Id AND tplan.ProductId = @ProductId AND tstep.IsDeleted = 'False';";

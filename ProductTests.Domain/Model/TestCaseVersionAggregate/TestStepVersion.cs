@@ -10,7 +10,7 @@ namespace ProductTests.Domain.Model.TestCaseVersionAggregate
         public virtual long StepNo { get; private set; }
         public virtual string Action { get; private set; }
         public virtual string ExpectedResult { get; private set; }
-        public virtual TestStepResult TestStepResult { get; private set; }
+        public virtual TestStepResult ResultStatus { get; private set; }
         protected TestStepVersion()
         {
 
@@ -22,13 +22,13 @@ namespace ProductTests.Domain.Model.TestCaseVersionAggregate
             Action = testStep.Action;
             ExpectedResult = testStep.ExpectedResult;
         }
-        public void UpdateRunStatus(TestStepResult testStepResult)
+        public void UpdateRunStatus(TestStepResult resultStatus)
         {
-            TestStepResult = testStepResult;
+            ResultStatus = resultStatus;
         }
         public TestStepResult GetResultStatus()
         {
-            return TestStepResult;
+            return ResultStatus;
         }
         public static TestStepVersion CreateInstance(TestStep testStep, long testCaseVersionId)
         {

@@ -13,12 +13,13 @@ namespace ProductTests.Domain.Model.TestCaseVersionAggregate
         private readonly IList<TestStepVersion> _testStepsVersion = new List<TestStepVersion>();
         public virtual IReadOnlyList<TestStepVersion> TestStepsVersion => _testStepsVersion.ToList();
         public virtual bool IsIncluded { get; private set; }
+        public virtual TestCaseResult ResultStatus { get; private set; }
         public bool IsDeleted { get; set; }
         public DateTime DeletedOn { get; set; }
         public string DeletedBy { get; set; }
         protected TestCaseVersion()
         {
-
+             
         }
         private TestCaseVersion(TestCase testCase)
         {
@@ -37,17 +38,11 @@ namespace ProductTests.Domain.Model.TestCaseVersionAggregate
         {
             return new TestCaseVersion(testCase);
         }
-        public bool IsPassed
-        {
-            get
-            {
-                foreach (TestStepVersion testStep in TestStepsVersion)
-                {
-                    if (testStep.GetResultStatus() == TestStepResult.Failed)
-                        return false;
-                }
-                return true;
-            }
-        }
+    }
+    public enum TestCaseResult
+    {
+        Success = 1,
+        Failed = 2,
+        Pending = 3,
     }
 }

@@ -23,12 +23,15 @@ namespace ProductTests.Application.CommandHandler.TestRunCommands
             private readonly IUnitOfWork _unitOfWork;
             private readonly ITestPlanRepository _testPlanRepository;
             private readonly ITestCaseVersionRepository _testCaseVersionRepository;
+            private readonly ITestPlanVersionRepository _testPlanVersionRepository;
             public CreateTestRunCommandHandler(ITestPlanRepository testPlanRepository,
                 ITestCaseVersionRepository testCaseVersionRepository,
+                ITestPlanVersionRepository testPlanVersionRepository,
                 IUnitOfWork unitOfWork)
             {
                 _testPlanRepository = testPlanRepository;
                 _testCaseVersionRepository = testCaseVersionRepository;
+                _testPlanVersionRepository = testPlanVersionRepository;
                 _unitOfWork = unitOfWork;
             }
             public async Task<Result> Handle(CreateTestRunCommand request, CancellationToken cancellationToken)
@@ -45,7 +48,8 @@ namespace ProductTests.Application.CommandHandler.TestRunCommands
                             _testCaseVersionRepository.Add(TestCaseVersion.CreateInstance(mapping.TestCase));
                         }
                     }
-                    await _unitOfWork.CompleteAsync();
+                    _testPlanVersionRepository.Add(testPlanVersion);
+                    await _unitOfWork.CompleteAsync(cancellationToken);
                     return Result.Success();
                 }
                 catch(Exception ex)

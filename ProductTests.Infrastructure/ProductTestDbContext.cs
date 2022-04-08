@@ -3,7 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using ProductTests.Domain.Common;
 using ProductTests.Domain.Model.TestCaseAggregate;
+using ProductTests.Domain.Model.TestCaseVersionAggregate;
 using ProductTests.Domain.Model.TestPlanAggregate;
+using ProductTests.Domain.Model.TestPlanVersionAggregate;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,6 +23,18 @@ namespace ProductTests.Infrastructure
             modelBuilder.Entity<TestCase>()
                 .Property(o => o.Id).UseHiLo();
             modelBuilder.Entity<TestStep>()
+                .Property(o => o.Id).UseHiLo();
+            modelBuilder.Entity<TestSuiteTestCaseMapping>()
+                .Property(o => o.Id).UseHiLo();
+            modelBuilder.Entity<TestPlanVersion>()
+                .Property(o => o.Id).UseHiLo();
+            modelBuilder.Entity<TestSuiteVersion>()
+                .Property(o => o.Id).UseHiLo();
+            modelBuilder.Entity<TestCaseVersion>()
+                .Property(o => o.Id).UseHiLo();
+            modelBuilder.Entity<TestStepVersion>()
+                .Property(o => o.Id).UseHiLo();
+            modelBuilder.Entity<TestSuiteTestCaseMappingVersion>()
                 .Property(o => o.Id).UseHiLo();
             modelBuilder.HasDefaultSchema("producttest");
 
@@ -42,6 +56,12 @@ namespace ProductTests.Infrastructure
         public DbSet<TestSuite> TestSuites { get; set; }
         public DbSet<TestCase> TestCases { get; set; }
         public DbSet<TestStep> TestSteps { get; set; }
+        public DbSet<TestSuiteTestCaseMapping> TestSuiteTestCaseMappings { get; set; }
+        public DbSet<TestPlanVersion> TestPlansVersion { get; set; }
+        public DbSet<TestSuiteVersion> TestSuitesVersion { get; set; }
+        public DbSet<TestCaseVersion> TestCasesVersion { get; set; }
+        public DbSet<TestStepVersion> TestStepsVersion { get; set; }
+        public DbSet<TestSuiteTestCaseMappingVersion> TestSuiteTestCaseMappingsVersion { get; set; }
 
         private readonly IMediator _mediator;
         public async Task<int> SaveEntitiesAsync(CancellationToken cancellationToken = default)

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ProductFocusApi.Controllers._Subdomain.ProductTest
 {
-    [Route("api/[controller]")]
+    [Route("[Controller]/[Action]")]
     [ApiController]
     [Authorize]
     public class ProductTestRunController : ControllerBase
@@ -17,7 +17,7 @@ namespace ProductFocusApi.Controllers._Subdomain.ProductTest
         {
             _mediator = mediator;
         }
-        [HttpPost("testPlanId")]
+        [HttpPost("{testPlanId}")]
         public async Task<IActionResult> CreateTestRun(long testPlanId)
         {
             var command = new CreateTestRunCommand(testPlanId);

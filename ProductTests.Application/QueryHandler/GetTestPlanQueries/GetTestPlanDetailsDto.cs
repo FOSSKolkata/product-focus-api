@@ -12,6 +12,7 @@ namespace ProductTests.Application.QueryHandler.GetTestPlanQueries
     }
     public sealed class TestSuiteDetailsDto
     {
+        public long TestPlanId { get; set; }
         public long TestSuiteId { get; set; }
         public string TestSuiteTitle { get; set; }
         public List<TestCaseDetailsDto> TestCases { get; set; }
