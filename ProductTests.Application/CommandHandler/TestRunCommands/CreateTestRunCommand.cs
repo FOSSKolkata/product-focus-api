@@ -6,6 +6,7 @@ using ProductTests.Domain.Model.TestPlanAggregate;
 using ProductTests.Domain.Model.TestPlanVersionAggregate;
 using ProductTests.Domain.Repositories;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -40,13 +41,32 @@ namespace ProductTests.Application.CommandHandler.TestRunCommands
                 {
                     TestPlan testPlan = await _testPlanRepository.GetById(request.TestPlanId);
                     TestPlanVersion testPlanVersion = TestPlanVersion.CreateInstance(testPlan);
+                    Dictionary<long, TestCaseVersion> testCaseMap = new(); // NOTE: Store testCaseId and testCaseVersion
+                    List<KeyValuePair<TestSuiteVersion, TestCaseVersion>> list = new();
                     foreach(TestSuite testSuite in testPlan.TestSuites)
                     {
-                        testPlanVersion.AddTestSuiteVersion(testSuite);
-                        foreach(TestSuiteTestCaseMapping mapping in testSuite.TestSuiteTestCaseMappings)
+                        TestSuiteVersion testSuiteVersion = TestSuiteVersion.CreateInstance(testSuite, testPlan.Id);
+                        testPlanVersion.AddTestSuiteVersion(testSuiteVersion);
+                        foreach (TestSuiteTestCaseMapping mapping in testSuite.TestSuiteTestCaseMappings)
                         {
-                            _testCaseVersionRepository.Add(TestCaseVersion.CreateInstance(mapping.TestCase));
+                            if(!testCaseMap.ContainsKey(mapping.TestCase.Id))
+                            {
+                                TestCaseVersion testCaseVersion = TestCaseVersion.CreateInstance(mapping.TestCase);
+                                list.Add(new(testSuiteVersion, testCaseVersion));
+                                testCaseMap.Add(mapping.TestCase.Id, testCaseVersion);
+                                _testCaseVersionRepository.Add(testCaseVersion);
+                            }
+                            else
+                            {
+                                TestCaseVersion testCaseVersion = testCaseMap.GetValueOrDefault(mapping.TestCase.Id);
+                                list.Add(new(testSuiteVersion, testCaseVersion));
+                            }
                         }
+                    }
+                    foreach(KeyValuePair<TestSuiteVersion,TestCaseVersion> item in list)
+                    {
+                        // Key -> TestSuiteVersion, Value -> TestCaseVersion
+                        item.Key.AddTestSuiteTestCaseMappingVersion(item.Value);
                     }
                     _testPlanVersionRepository.Add(testPlanVersion);
                     await _unitOfWork.CompleteAsync(cancellationToken);

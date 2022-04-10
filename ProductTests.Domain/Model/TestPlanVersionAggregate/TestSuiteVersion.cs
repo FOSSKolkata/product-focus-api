@@ -1,4 +1,5 @@
 ﻿using ProductTests.Domain.Common;
+using ProductTests.Domain.Model.TestCaseVersionAggregate;
 using ProductTests.Domain.Model.TestPlanAggregate;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,12 +22,11 @@ namespace ProductTests.Domain.Model.TestPlanVersionAggregate
         {
             Name = testSuite.Name;
             TestPlanVersionId = testPlanVersionId;
-            foreach(TestSuiteTestCaseMapping mapping in testSuite.TestSuiteTestCaseMappings)
-            {
-                _testSuiteTestCaseMappings.Add(TestSuiteTestCaseMappingVersion.CreateInstance(this,mapping));
-            }
         }
-
+        public void AddTestSuiteTestCaseMappingVersion(TestCaseVersion testCaseVersion)
+        {
+            _testSuiteTestCaseMappings.Add(TestSuiteTestCaseMappingVersion.CreateInstance(this, testCaseVersion));
+        }
         public static TestSuiteVersion CreateInstance(TestSuite testSuite, long testPlanVersionId)
         {
             return new TestSuiteVersion(testSuite, testPlanVersionId);

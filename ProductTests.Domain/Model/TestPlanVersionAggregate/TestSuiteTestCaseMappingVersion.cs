@@ -12,14 +12,14 @@ namespace ProductTests.Domain.Model.TestPlanVersionAggregate
         {
 
         }
-        private TestSuiteTestCaseMappingVersion(TestSuiteTestCaseMapping mapping, TestSuiteVersion testSuiteVersion)
+        private TestSuiteTestCaseMappingVersion(TestCaseVersion testCaseVersion, TestSuiteVersion testSuiteVersion)
         {
             TestSuiteVersion = testSuiteVersion;
-            TestCaseVersion = TestCaseVersion.CreateInstance(mapping.TestCase);
+            TestCaseVersion = testCaseVersion;
         }
-        public static TestSuiteTestCaseMappingVersion CreateInstance(TestSuiteVersion testSuiteVersion, TestSuiteTestCaseMapping mapping)
+        public static TestSuiteTestCaseMappingVersion CreateInstance(TestSuiteVersion testSuiteVersion, TestCaseVersion testCaseVersion)
         {
-            return new TestSuiteTestCaseMappingVersion(mapping, testSuiteVersion);
+            return new TestSuiteTestCaseMappingVersion(testCaseVersion, testSuiteVersion);
         }
     }
 }

@@ -29,9 +29,9 @@ namespace ProductTests.Domain.Model.TestPlanVersionAggregate
         {
             RunningStatus = runningStatus;
         }
-        public void AddTestSuiteVersion(TestSuite testSuite)
+        public void AddTestSuiteVersion(TestSuiteVersion testSuiteVersion)
         {
-            _testSuitesVersion.Add(TestSuiteVersion.CreateInstance(testSuite, Id));
+            _testSuitesVersion.Add(testSuiteVersion);
         }
         private TestPlanVersion(TestPlan testPlan)
         {
@@ -42,10 +42,6 @@ namespace ProductTests.Domain.Model.TestPlanVersionAggregate
             TestType = testPlan.TestType;
             ProductDocumentationId = testPlan.ProductDocumentationId;
             WorkItemId = testPlan.WorkItemId;
-            foreach(TestSuite testSuite in testPlan.TestSuites)
-            {
-                _testSuitesVersion.Add(TestSuiteVersion.CreateInstance(testSuite, Id));
-            }
         }
         public static TestPlanVersion CreateInstance(TestPlan testPlan)
         {
