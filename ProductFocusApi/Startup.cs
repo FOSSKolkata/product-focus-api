@@ -23,6 +23,7 @@ using Azure.Storage.Blobs;
 using ProductFocus.Persistence.Services;
 using ProductFocus.Domain.Services;
 using ProductFocus.Domain.Common;
+using System.Collections.Generic;
 
 namespace ProductFocus.Api
 {
@@ -58,7 +59,7 @@ namespace ProductFocus.Api
                 options.AddPolicy("ReadScope",
                     policy => policy.Requirements.Add(new ScopesRequirement("demo.read")));
             });
-            
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Product_Focus_API", Version = "v1" });
@@ -69,7 +70,24 @@ namespace ProductFocus.Api
                     Name = "Authorization",
                     Type = SecuritySchemeType.ApiKey
                 });
-                c.OperationFilter<SecurityRequirementsOperationFilter>();
+                /*c.OperationFilter<SecurityRequirementsOperationFilter>();*/
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            Scheme = "oauth2",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header,
+                        },
+                        new List<string>()
+                    }
+                });
             });
 
             var builder = new SqlConnectionStringBuilder(

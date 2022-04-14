@@ -3,6 +3,8 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProductTests.Application.CommandHandler.TestRunCommands;
+using ProductTests.Application.QueryHandler.GetTestRunQueries;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ProductFocusApi.Controllers._Subdomain.ProductTest
@@ -27,10 +29,9 @@ namespace ProductFocusApi.Controllers._Subdomain.ProductTest
         [HttpGet("{productId}")]
         public async Task<IActionResult> GetTestRunsByProductId(long productId)
         {
-            /*var command = new GetTestRunsQuery(productId);
-            Result<IDontKnow> result = await _mediator.Send(command);
-            return result.IsSuccess ? Ok() : BadRequest(result.Error);*/
-            return Ok();
+            var command = new GetTestRunsQuery(productId);
+            Result<List<GetTestRunsDto>> result = await _mediator.Send(command);
+            return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
         }
     }
 }

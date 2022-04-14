@@ -30,25 +30,18 @@ namespace ProductTests.Application.QueryHandler.GetTestPlanQueries
             public async Task<List<GetTestPlansDto>> Handle(GetTestPlansQuery request, CancellationToken cancellationToken)
             {
                 List<GetTestPlansDto> testPlans = new();
-                string sql = @"SELECT Id, Name AS Title, SprintId, TestType FROM producttest.TestPlans WHERE productId = @ProductId AND IsDeleted = 'False';";
-                string suiteCountSql = @"
-                    SELECT tp.Id, ts.Id as SuiteId FROM producttest.TestPlans tp
-                    INNER JOIN producttest.TestSuites ts ON tp.Id = ts.TestPlanId WHERE tp.IsDeleted = 'False' AND ts.IsDeleted = 'False';";
+                string sql = @"SELECT tp.Id, tp.Name as Title, tp.sprintId, COUNT(*) as 'suiteCount', tp.TestType FROM producttest.TestPlans tp
+                    INNER JOIN producttest.TestSuites ts
+                    ON tp.Id = ts.TestPlanId
+                    WHERE tp.IsDeleted = 'False' AND ts.IsDeleted = 'False' AND tp.ProductId = @ProductId
+                    GROUP BY tp.Id, tp.Name, tp.SprintId, tp.TestType; ";
+
                 using(IDbConnection con = new SqlConnection(_queriesConnectionString))
                 {
                     testPlans = (await con.QueryAsync<GetTestPlansDto>(sql, new
                     {
                         request.ProductId
                     })).ToList();
-
-                    var allTestSuites = await con.QueryAsync<GetTestPlanWithSuiteIdDto>(suiteCountSql, new
-                    {
-
-                    });
-                    foreach(var testPlan in testPlans)
-                    {
-                       testPlan.SuiteCount = allTestSuites.Where(x => x.Id == testPlan.Id).Count();
-                    }
                 }
                 return testPlans;
             }

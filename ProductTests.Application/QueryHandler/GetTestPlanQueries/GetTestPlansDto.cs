@@ -10,10 +10,4 @@ namespace ProductTests.Application.QueryHandler.GetTestPlanQueries
         public long SuiteCount { get; set; }
         public TestTypeEnum TestType { get; set; }
     }
-
-    public sealed class GetTestPlanWithSuiteIdDto
-    {
-        public long Id { get; set; }
-        public long SuiteId { get; set; }
-    }
 }
