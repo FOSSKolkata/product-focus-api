@@ -115,7 +115,7 @@ namespace ProductFocus.Persistence
         public ProductFocusDbContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<ProductFocusDbContext>();
-            optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS; Database=product-focus; Trusted_Connection=True;");
+            optionsBuilder.UseSqlServer("Data Source=tcp:product-focus-server.database.windows.net,1433;Initial Catalog=product-focus;User Id=ProductFocusAdmin@product-focus-server;Password=Qwerty@123");
 
             return new ProductFocusDbContext(optionsBuilder.Options, new NoMediator());
         }

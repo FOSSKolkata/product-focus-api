@@ -60,7 +60,7 @@ namespace ProductDocumentations.Infrastructure
         public ProductDocumentationDbContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<ProductDocumentationDbContext>();
-            optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS; Database=product-focus; Trusted_Connection=True;");
+            optionsBuilder.UseSqlServer("Data Source=tcp:product-focus-server.database.windows.net,1433;Initial Catalog=product-focus;User Id=ProductFocusAdmin@product-focus-server;Password=Qwerty@123");
 
             return new ProductDocumentationDbContext(optionsBuilder.Options, new NoMediator());
         }

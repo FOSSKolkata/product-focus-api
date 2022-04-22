@@ -87,7 +87,7 @@ namespace ProductTests.Infrastructure
         public ProductTestDbContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<ProductTestDbContext>();
-            optionsBuilder.UseSqlServer("Server=.; Database=product-focus; Trusted_Connection=True;");
+            optionsBuilder.UseSqlServer("Data Source=tcp:product-focus-server.database.windows.net,1433;Initial Catalog=product-focus;User Id=ProductFocusAdmin@product-focus-server;Password=Qwerty@123");
 
             return new ProductTestDbContext(optionsBuilder.Options, new NoMediator());
         }

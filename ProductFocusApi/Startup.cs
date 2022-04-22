@@ -91,7 +91,7 @@ namespace ProductFocus.Api
             });
 
             var builder = new SqlConnectionStringBuilder(
-                Configuration.GetConnectionString("DefaultConnection"));
+                Configuration.GetConnectionString("DefaultConnectionAzure"));
             //builder.Password = Configuration["DevDbPassword"];
             //builder.UserID = Configuration["DevDbUser"];
             var connection = builder.ConnectionString;
@@ -121,7 +121,7 @@ namespace ProductFocus.Api
             services.AddTransient<ProductTests.Domain.Common.IUnitOfWork, ProductTests.Infrastructure.UnitOfWork>();
 
             var queryBuilder = new SqlConnectionStringBuilder(
-                Configuration.GetConnectionString("QueriesConnectionString"));
+                Configuration.GetConnectionString("QueriesConnectionStringAzure"));
             //builder.Password = Configuration["DevDbPassword"];
             //builder.UserID = Configuration["DevDbUser"];
             var queryConnection = builder.ConnectionString;
