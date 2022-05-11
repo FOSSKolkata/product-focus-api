@@ -54,7 +54,7 @@ namespace ProductFocusApi.CommandHandlers
                         Hi,
                         You are invited to join {existingInvitation.Organization.Name} on Product Focus by...
                         Click on following link to accept the invitation: 
-                        http://localhost:4200/invitation?iid={existingInvitation.Id}";
+                        https://productfocus.z13.web.core.windows.net/invitation?iid={existingInvitation.Id}";
 
                     _emailService.Send(emailBody, existingInvitation.Email);
 

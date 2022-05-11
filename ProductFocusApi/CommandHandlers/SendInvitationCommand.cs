@@ -78,7 +78,7 @@ namespace ProductFocus.AppServices
                     Hi,
                     You are invited to join {existingOrganization.Name} on Product Focus by...
                     Click on following link to accept the invitation: 
-                    http://localhost:4200/#/invitation?iid={newActiveInvitation.Id}";
+                    https://productfocus.z13.web.core.windows.net/#/invitation?iid={newActiveInvitation.Id}";
 
                     _emailService.Send(emailBody, request.Email);
 
