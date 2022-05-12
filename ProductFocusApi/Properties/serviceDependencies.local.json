@@ -6,14 +6,26 @@
       "type": "storage.azure",
       "connectionId": "ConnectionStrings:BlobConnectionString"
     },
-    "secrets1": {
-      "type": "secrets.user"
-    },
     "mssql1": {
       "secretStore": "LocalSecretsFile",
       "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/product-focus-server/databases/product-focus",
       "type": "mssql.azure",
       "connectionId": "product-focus-server.database.windows.net"
+    },
+    "secrets1": {
+      "type": "secrets.user"
+    },
+    "mssql2": {
+      "secretStore": "LocalSecretsFile",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/productfocus01/databases/productfocus-db",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:DefaultConnectionAzure"
+    },
+    "mssql3": {
+      "secretStore": "LocalSecretsFile",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/productfocus01/databases/productfocus-db",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:QueriesConnectionStringAzure"
     }
   }
 }

@@ -4,12 +4,6 @@
       "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.ApiManagement/service/ProductFocusApiManagementService/apis/ProductFocusApi",
       "type": "apis.azure"
     },
-    "mssql1": {
-      "secretStore": "AzureAppSettings",
-      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/product-focus-server/databases/product-focus",
-      "type": "mssql.azure",
-      "connectionId": "product-focus-server.database.windows.net"
-    },
     "storage1": {
       "secretStore": "AzureAppSettings",
       "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Storage/storageAccounts/productfocusstorage",
@@ -21,6 +15,24 @@
       "suggestion": "true",
       "type": "identityapp",
       "connectionId": ""
+    },
+    "mssql1": {
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/productfocus01/databases/productfocus-db",
+      "type": "mssql.azure",
+      "connectionId": "product-focus-server.database.windows.net"
+    },
+    "mssql2": {
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/productfocus01/databases/productfocus-db",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:DefaultConnectionAzure"
+    },
+    "mssql3": {
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/productfocus01/databases/productfocus-db",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:QueriesConnectionStringAzure"
     }
   }
 }

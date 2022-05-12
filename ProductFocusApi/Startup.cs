@@ -94,7 +94,7 @@ namespace ProductFocus.Api
                 Configuration.GetConnectionString("DefaultConnectionAzure"));
             //builder.Password = Configuration["DevDbPassword"];
             //builder.UserID = Configuration["DevDbUser"];
-            var connection = builder.ConnectionString;
+            var connection = Configuration["DefaultConnectionAzure"];
             services.AddDbContext<ProductFocusDbContext>(
                 x => x.UseLazyLoadingProxies()
                     .UseSqlServer(connection));
@@ -121,10 +121,10 @@ namespace ProductFocus.Api
             services.AddTransient<ProductTests.Domain.Common.IUnitOfWork, ProductTests.Infrastructure.UnitOfWork>();
 
             var queryBuilder = new SqlConnectionStringBuilder(
-                Configuration.GetConnectionString("QueriesConnectionStringAzure"));
+                Configuration.GetConnectionString("QueriesConnectionString"));
             //builder.Password = Configuration["DevDbPassword"];
             //builder.UserID = Configuration["DevDbUser"];
-            var queryConnection = builder.ConnectionString;
+            var queryConnection = Configuration["QueriesConnectionString"];
 
             var queriesConnectionString = new QueriesConnectionString(queryConnection);
             var blobConnection = Configuration.GetConnectionString("BlobConnectionString");

@@ -32,7 +32,7 @@ namespace ProductFocusApi.QueryHandlers
 
                 string sql = @"
                     SELECT id, name
-                    FROM [product-focus].[dbo].[TagCategories]
+                    FROM [dbo].[TagCategories]
                     WHERE ProductId = @ProductId";
 
                 using (IDbConnection con = new SqlConnection(_queriesConnectionString.Value))

@@ -60,7 +60,7 @@ namespace ProductDocumentations.Infrastructure
         public ProductDocumentationDbContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<ProductDocumentationDbContext>();
-            optionsBuilder.UseSqlServer("Server=tcp:productfocus01.database.windows.net,1433;Initial Catalog=productfocus-db;Persist Security Info=False;User ID=azureadmin;Password={P@ssw0rd};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+            optionsBuilder.UseSqlServer("Server=tcp:productfocus01.database.windows.net,1433;Initial Catalog=productfocus-db;Persist Security Info=False;User ID=azureadmin;Password=P@ssw0rd;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
 
             return new ProductDocumentationDbContext(optionsBuilder.Options, new NoMediator());
         }

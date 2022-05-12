@@ -32,7 +32,7 @@ namespace ProductFocus.AppServices
 
                 using(IDbConnection con = new SqlConnection(_queriesConnectionString.Value))
                 {
-                    organizationsList = (await con.QueryAsync<GetOrganizationDto>("select id, name from [product-focus].[dbo].[Organizations]")).ToList();
+                    organizationsList = (await con.QueryAsync<GetOrganizationDto>("select id, name from [dbo].[Organizations]")).ToList();
                 }
                 
                 //_emailService.send();

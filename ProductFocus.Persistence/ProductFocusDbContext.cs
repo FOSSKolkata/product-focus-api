@@ -115,7 +115,7 @@ namespace ProductFocus.Persistence
         public ProductFocusDbContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<ProductFocusDbContext>();
-            optionsBuilder.UseSqlServer("Server=tcp:productfocus01.database.windows.net,1433;Initial Catalog=productfocus-db;Persist Security Info=False;User ID=azureadmin;Password={P@ssw0rd};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+            optionsBuilder.UseSqlServer("Data Source=tcp:productfocus01.database.windows.net,1433;Initial Catalog=productfocus-db;Persist Security Info=False;User ID=azureadmin;Password=P@ssw0rd;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
 
             return new ProductFocusDbContext(optionsBuilder.Options, new NoMediator());
         }

@@ -33,7 +33,7 @@ namespace ProductFocus.AppServices
                 
                 string sql = @"
                     SELECT id, name 
-                    from [product-focus].[dbo].[Products]
+                    from [dbo].[Products]
                     WHERE organizationid = @OrgId";
                 
                 using (IDbConnection con = new SqlConnection(_queriesConnectionString.Value))
