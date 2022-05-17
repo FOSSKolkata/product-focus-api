@@ -75,5 +75,12 @@ namespace ProductFocusApi.Controllers
             List<FeatureOrderDto> featureOrder = await _mediator.Send(new GetFeatureOrderingByProductIdAndCategoryQuery(prodId, sprintId));
             return Ok(featureOrder);
         }
+
+        [HttpGet("{productId}")]
+        public async Task<IActionResult> GetFeatureListByProductId(long productId)
+        {
+            List<GetFeatureDto> features = await _mediator.Send(new GetFeatureListByProductIdQuery(productId));
+            return Ok(features);
+        }
     }
 }

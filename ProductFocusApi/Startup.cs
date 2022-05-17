@@ -91,10 +91,10 @@ namespace ProductFocus.Api
             });
 
             var builder = new SqlConnectionStringBuilder(
-                Configuration.GetConnectionString("DefaultConnectionAzure"));
+                Configuration.GetConnectionString("DefaultConnection"));
             //builder.Password = Configuration["DevDbPassword"];
             //builder.UserID = Configuration["DevDbUser"];
-            var connection = Configuration["DefaultConnectionAzure"];
+            var connection = Configuration["DefaultConnection"];
             services.AddDbContext<ProductFocusDbContext>(
                 x => x.UseLazyLoadingProxies()
                     .UseSqlServer(connection));
