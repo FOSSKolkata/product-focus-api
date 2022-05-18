@@ -67,5 +67,12 @@ namespace ProductDocumentation.Controllers
             Result result = await _mediator.Send(new DeleteProductDocumentationCommand(id, objectId));
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }
+        [HttpGet("{productId}")]
+        public async Task<IActionResult> GetFlatProductDocumentationsByProductId(long productId)
+        {
+            var command = new GetFlatProductDocumentationQuery(productId);
+            Result<List<GetFlatProductDocumentationDto>> result = await _mediator.Send(command);
+            return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
+        }
     }
 }

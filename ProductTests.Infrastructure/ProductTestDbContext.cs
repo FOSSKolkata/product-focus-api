@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
 using ProductTests.Domain.Common;
 using ProductTests.Domain.Model.TestCaseAggregate;
 using ProductTests.Domain.Model.TestCaseVersionAggregate;
@@ -79,40 +78,6 @@ namespace ProductTests.Infrastructure
             var result = await base.SaveChangesAsync(cancellationToken);
 
             return result;
-        }
-    }
-
-    public class ProductTestContextFactory : IDesignTimeDbContextFactory<ProductTestDbContext>
-    {
-        public ProductTestDbContext CreateDbContext(string[] args)
-        {
-            var optionsBuilder = new DbContextOptionsBuilder<ProductTestDbContext>();
-            optionsBuilder.UseSqlServer("Server=tcp:productfocus01.database.windows.net,1433;Initial Catalog=productfocus-db;Persist Security Info=False;User ID=azureadmin;Password=P@ssw0rd;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
-
-            return new ProductTestDbContext(optionsBuilder.Options, new NoMediator());
-        }
-
-        class NoMediator : IMediator
-        {
-            public Task Publish<TNotification>(TNotification notification, CancellationToken cancellationToken = default) where TNotification : INotification
-            {
-                return Task.CompletedTask;
-            }
-
-            public Task Publish(object notification, CancellationToken cancellationToken = default)
-            {
-                return Task.CompletedTask;
-            }
-
-            public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)
-            {
-                return Task.FromResult<TResponse>(default);
-            }
-
-            public Task<object> Send(object request, CancellationToken cancellationToken = default)
-            {
-                return Task.FromResult(default(object));
-            }
         }
     }
 }
