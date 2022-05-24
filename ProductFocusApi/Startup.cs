@@ -121,10 +121,10 @@ namespace ProductFocus.Api
             services.AddTransient<ProductTests.Domain.Common.IUnitOfWork, ProductTests.Infrastructure.UnitOfWork>();
 
             var queryBuilder = new SqlConnectionStringBuilder(
-                Configuration.GetConnectionString("QueriesConnectionString"));
+                Configuration.GetConnectionString("QueriesConnectionStringAzure"));
             //builder.Password = Configuration["DevDbPassword"];
             //builder.UserID = Configuration["DevDbUser"];
-            var queryConnection = Configuration["QueriesConnectionString"];
+            var queryConnection = Configuration["QueriesConnectionStringAzure"];
 
             var queriesConnectionString = new QueriesConnectionString(queryConnection);
             var blobConnection = Configuration.GetConnectionString("BlobConnectionString");
