@@ -40,7 +40,7 @@ namespace ProductTests.Application.QueryHandler.GetTestPlanQueries
                     tsuite.Name as TestSuiteTitle
                     FROM producttest.TestPlans tplan
                     INNER JOIN producttest.TestSuites tsuite ON tplan.Id = tsuite.TestPlanId
-                    WHERE tplan.Id = @Id AND tplan.ProductId = @ProductId AND tSuite.IsDeleted = 'False' ORDER BY tsuite.Id;
+                    WHERE tplan.Id = @Id AND tplan.ProductId = @ProductId AND tSuite.IsDeleted = 'False' ORDER BY tsuite.orderNo, tsuite.Id;
 
                     SELECT tsuite.Id as TestSuiteId,
                     tcase.Id as TestCaseId,

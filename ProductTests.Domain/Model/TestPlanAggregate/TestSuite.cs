@@ -11,7 +11,7 @@ namespace ProductTests.Domain.Model.TestPlanAggregate
         public virtual string Name { get; private set; }
         public virtual long TestPlanId { get; private set; }
         public virtual TestPlan TestPlan { get; private set; }
-
+        public virtual long OrderNo { get; private set; }
         private readonly IList<TestSuiteTestCaseMapping> _testSuiteTestCaseMappings = new List<TestSuiteTestCaseMapping>();
         public virtual IReadOnlyList<TestSuiteTestCaseMapping> TestSuiteTestCaseMappings => _testSuiteTestCaseMappings.ToList();
         public virtual bool IsDeleted { get; set; }
@@ -44,7 +44,10 @@ namespace ProductTests.Domain.Model.TestPlanAggregate
             DeletedOn = DateTime.Now;
             DeletedBy = userId;
         }
-
+        internal void UpdateOrder(long orderNo)
+        {
+            OrderNo = orderNo;
+        }
         internal static TestSuite CreateInstance(string name, long testPlanId)
         {
             return new(name, testPlanId);
