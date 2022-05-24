@@ -11,12 +11,16 @@ namespace ProductTests.Application.CommandHandler.TestCaseCommands
     }
     public sealed class UpdateTestStepDto
     {
-        public long Id { get; set; }
+        public long? Id { get; set; }
         public string Action { get; set; }
         public string ExpectedResult { get; set; }
         public TestStep ToTestStep(long id, long stepNo)
         {
             return TestStep.CreateInstance(id, stepNo, Action, ExpectedResult);
+        }
+        public TestStep ToTestStep(long stepNo)
+        {
+            return TestStep.CreateInstance(stepNo, Action, ExpectedResult);
         }
     }
 }
