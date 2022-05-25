@@ -24,6 +24,7 @@ namespace ProductTests.Application.QueryHandler.GetTestRunQueries
         public long Id { get; set; }
         public long TestSuiteId { get; set; }
         public string Title { get; set; }
+        public bool IsIncluded { get; set; }
         public TestCaseResult ResultStatus { get; set; }
         public List<GetTestRunStepDto> TestSteps { get; set; }
     }

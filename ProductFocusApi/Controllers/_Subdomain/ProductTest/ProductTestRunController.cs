@@ -24,7 +24,7 @@ namespace ProductFocusApi.Controllers._Subdomain.ProductTest
         {
             var command = new CreateTestRunCommand(testPlanId);
             Result result = await _mediator.Send(command);
-            return result.IsSuccess ? Ok() : BadRequest(result.Error);
+            return result.IsSuccess ? Ok(result) : BadRequest(result.Error);
         }
         [HttpGet("{productId}")]
         public async Task<IActionResult> GetTestRunsByProductId(long productId)

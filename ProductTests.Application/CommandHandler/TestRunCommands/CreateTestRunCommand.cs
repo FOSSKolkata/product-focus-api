@@ -12,14 +12,14 @@ using System.Threading.Tasks;
 
 namespace ProductTests.Application.CommandHandler.TestRunCommands
 {
-    public class CreateTestRunCommand : IRequest<Result>
+    public class CreateTestRunCommand : IRequest<Result<long>>
     {
         public long TestPlanId { get; private set; }
         public CreateTestRunCommand(long testPlanId)
         {
             TestPlanId = testPlanId;
         }
-        internal class CreateTestRunCommandHandler : IRequestHandler<CreateTestRunCommand, Result>
+        internal class CreateTestRunCommandHandler : IRequestHandler<CreateTestRunCommand, Result<long>>
         {
             private readonly IUnitOfWork _unitOfWork;
             private readonly ITestPlanRepository _testPlanRepository;
@@ -35,7 +35,7 @@ namespace ProductTests.Application.CommandHandler.TestRunCommands
                 _testPlanVersionRepository = testPlanVersionRepository;
                 _unitOfWork = unitOfWork;
             }
-            public async Task<Result> Handle(CreateTestRunCommand request, CancellationToken cancellationToken)
+            public async Task<Result<long>> Handle(CreateTestRunCommand request, CancellationToken cancellationToken)
             {
                 try
                 {
@@ -70,11 +70,11 @@ namespace ProductTests.Application.CommandHandler.TestRunCommands
                     }
                     _testPlanVersionRepository.Add(testPlanVersion);
                     await _unitOfWork.CompleteAsync(cancellationToken);
-                    return Result.Success();
+                    return Result.Success(testPlanVersion.Id);
                 }
                 catch(Exception ex)
                 {
-                    return Result.Failure(ex.Message);
+                    return Result.Failure<long>(ex.Message);
                 }
             }
         }

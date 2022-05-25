@@ -34,7 +34,7 @@ namespace ProductTests.Application.QueryHandler.GetTestRunQueries
                     SELECT tsuite.Id,  tsuite.TestPlanVersionId AS TestPlanId, tsuite.Name as Title FROM ProductTest.TestSuitesVersion tsuite
                     WHERE tsuite.TestPlanVersionId = @TestPlanId;
 
-                    SELECT tcase.Id, tsuite.Id AS TestSuiteId, tcase.Title, tcase.ResultStatus FROM ProductTest.TestSuiteTestCaseMappingsVersion tstcm
+                    SELECT tcase.Id, tsuite.Id AS TestSuiteId, tcase.Title, tcase.ResultStatus, tcase.IsIncluded FROM ProductTest.TestSuiteTestCaseMappingsVersion tstcm
                     INNER JOIN ProductTest.TestSuitesVersion tsuite ON tstcm.TestSuiteVersionId = tsuite.Id
                     INNER JOIN ProductTest.TestCasesVersion tcase ON tstcm.TestCaseVersionId = tcase.Id
                     WHERE tsuite.TestPlanVersionId =  @TestPlanId;
