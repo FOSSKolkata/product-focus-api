@@ -41,8 +41,8 @@ namespace ProductFocusApi.QueryHandlers
             {
                 GetBusinessRequirementsDto getBusinessRequirements = new();
                 var builder = new SqlBuilder();
-                var selector = builder.AddTemplate("SELECT br.id, br.title, br.receivedOn, br.productId, brt.TagId FROM BusinessRequirements br/**innerjoin**/ /**where**/ /**orderby**/");
-                builder.InnerJoin("BusinessRequirementTags brt ON br.Id = brt.BusinessRequirementId");
+                var selector = builder.AddTemplate("SELECT br.id, br.title, br.receivedOn, br.productId, brt.TagId FROM BusinessRequirements br/**leftjoin**/ /**where**/ /**orderby**/");
+                builder.LeftJoin("BusinessRequirementTags brt ON br.Id = brt.BusinessRequirementId");
                 builder.Where("br.ProductId = @ProductId AND br.IsDeleted = 'false'");
                 if (query.TagIds != null && query.TagIds.Count > 0)
                     builder.Where("brt.TagId IN @TagIds");
