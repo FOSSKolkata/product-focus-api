@@ -14,10 +14,10 @@ namespace ProductFocusApi.Controllers._Subdomain.ProductTest
     [ApiController]
     [Route("[Controller]/[Action]")]
     [Authorize]
-    public class ProductTestPlanController : ControllerBase
+    public class TestPlanController : ControllerBase
     {
         private readonly IMediator _mediator;
-        public ProductTestPlanController(IMediator mediator)
+        public TestPlanController(IMediator mediator)
         {
             _mediator = mediator;
         }

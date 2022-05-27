@@ -63,18 +63,21 @@ namespace ProductTests.Application.CommandHandler.TestRunCommands
                             }
                         }
                     }
+
                     foreach(KeyValuePair<TestSuiteVersion,TestCaseVersion> item in list)
                     {
                         // Key -> TestSuiteVersion, Value -> TestCaseVersion
                         item.Key.AddTestSuiteTestCaseMappingVersion(item.Value);
                     }
+
                     _testPlanVersionRepository.Add(testPlanVersion);
                     await _unitOfWork.CompleteAsync(cancellationToken);
+
                     return Result.Success(testPlanVersion.Id);
                 }
                 catch(Exception ex)
                 {
-                    return Result.Failure<long>(ex.Message);
+                    throw;
                 }
             }
         }

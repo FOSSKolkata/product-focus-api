@@ -2,7 +2,9 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ProductTests.Application.CommandHandler.TestCaseCommands;
+using ProductTests.Application.CommandHandler.TestPlanCommands;
+using ProductTests.Application.CommandHandler.TestSuiteCommands;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -12,36 +14,33 @@ namespace ProductFocusApi.Controllers._Subdomain.ProductTest
     [ApiController]
     [Route("[Controller]/[Action]")]
     [Authorize]
-    public class ProductTestCaseController : ControllerBase
+    public class TestSuiteController : ControllerBase
     {
         private readonly IMediator _mediator;
-        public ProductTestCaseController(IMediator mediator)
+        public TestSuiteController(IMediator mediator)
         {
             _mediator = mediator;
         }
-
         [HttpPost]
-        public async Task<IActionResult> AddTestCase([FromBody] AddTestCaseDto dto)
+        public async Task<IActionResult> AddTestSuite(AddTestSuiteDto dto)
         {
-            var command = new AddTestCaseCommand(dto.Title, dto.Preconditions,dto.TestPlanId, dto.TestSuiteId, dto.TestSteps);
+            var command = new AddTestSuiteCommand(dto.Title, dto.TestPlanId);
             Result result = await _mediator.Send(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> DeleteTestCase([FromBody] DeleteTestCaseDto dto)
+        [HttpDelete("{planId}/{suiteId}")]
+        public async Task<IActionResult> DeleteTestSuite(long planId, long suiteId)
         {
             string objectId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            var command = new DeleteTestCaseCommand(dto.Id, dto.TestPlanId, dto.TestSuiteId, objectId);
+            var command = new DeleteTestSuiteCommand(planId, suiteId, objectId);
             Result result = await _mediator.Send(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTestCase(long id, [FromBody] UpdateTestCaseDto dto)
+        [HttpPut("{testPlanId}")]
+        public async Task<IActionResult> UpdateTestSuiteOrdering(long testPlanId, List<UpdateTestSuiteOrderingDto> dto)
         {
-            string objectId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            var command = new UpdateTestCaseCommand(id, dto.Title, dto.Preconditions, dto.TestSteps, objectId);
+            var command = new UpdateTestSuiteOrderingCommand(testPlanId, dto);
             Result result = await _mediator.Send(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }

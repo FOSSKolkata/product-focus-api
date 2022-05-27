@@ -12,10 +12,10 @@ namespace ProductFocusApi.Controllers._Subdomain.ProductTest
     [Route("[Controller]/[Action]")]
     [ApiController]
     [Authorize]
-    public class ProductTestRunController : ControllerBase
+    public class TestRunController : ControllerBase
     {
         private readonly IMediator _mediator;
-        public ProductTestRunController(IMediator mediator)
+        public TestRunController(IMediator mediator)
         {
             _mediator = mediator;
         }
@@ -23,8 +23,8 @@ namespace ProductFocusApi.Controllers._Subdomain.ProductTest
         public async Task<IActionResult> CreateTestRun(long testPlanId)
         {
             var command = new CreateTestRunCommand(testPlanId);
-            Result result = await _mediator.Send(command);
-            return result.IsSuccess ? Ok(result) : BadRequest(result.Error);
+            Result<long> result = await _mediator.Send(command);
+            return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
         }
         [HttpGet("{productId}")]
         public async Task<IActionResult> GetTestRunsByProductId(long productId)
