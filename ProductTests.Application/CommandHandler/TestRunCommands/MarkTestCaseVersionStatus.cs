@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProductTests.Domain.Model.TestCaseVersionAggregate;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace ProductTests.Application.CommandHandler.TestRunCommands
 {
-    public sealed class MarkTestCaseVersionDto
+    public sealed class MarkTestCaseVersionStatus
     {
         public long Id { get; set; }
-        public bool IsSelected { get; set; }
+        public TestCaseResult ResultStatus { get; set; }
     }
 }

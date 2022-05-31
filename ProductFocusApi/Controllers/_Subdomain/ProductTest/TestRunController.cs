@@ -47,5 +47,21 @@ namespace ProductFocusApi.Controllers._Subdomain.ProductTest
             Result result = await _mediator.Send(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> MarkTestCaseVersionStatus(MarkTestCaseVersionStatus dto)
+        {
+            var command = new MarkTestCaseVersionStatusCommand(dto.Id, dto.ResultStatus);
+            Result result = await _mediator.Send(command);
+            return result.IsSuccess ? Ok() : BadRequest(result.Error);
+        }
+
+        [HttpPost("{testSuiteId}")]
+        public async Task<IActionResult> MarkTestStepVersionStatus(long testSuiteId, MarkTestStepVersionStatus dto)
+        {
+            var command = new MarkTestStepVersionStatusCommand(testSuiteId, dto.Id, dto.ResultStatus);
+            Result result = await _mediator.Send(command);
+            return result.IsSuccess ? Ok() : BadRequest(result.Error);
+        }
     }
 }

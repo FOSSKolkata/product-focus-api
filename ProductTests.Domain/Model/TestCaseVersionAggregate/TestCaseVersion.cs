@@ -38,6 +38,15 @@ namespace ProductTests.Domain.Model.TestCaseVersionAggregate
         {
             return new TestCaseVersion(testCase);
         }
+        public void UpdateResultStatus(TestCaseResult resultStatus)
+        {
+            ResultStatus = resultStatus;
+        }
+        public void UpdateTestStep(long id, TestStepResult resultStatus)
+        {
+            var testStep = TestStepsVersion.Where(x => x.Id == id).SingleOrDefault();
+            testStep.UpdateRunStatus(resultStatus);
+        }
     }
     public enum TestCaseResult
     {

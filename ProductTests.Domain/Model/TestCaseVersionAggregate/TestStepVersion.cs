@@ -22,7 +22,7 @@ namespace ProductTests.Domain.Model.TestCaseVersionAggregate
             Action = testStep.Action;
             ExpectedResult = testStep.ExpectedResult;
         }
-        public void UpdateRunStatus(TestStepResult resultStatus)
+        internal void UpdateRunStatus(TestStepResult resultStatus)
         {
             ResultStatus = resultStatus;
         }
