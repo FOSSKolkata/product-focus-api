@@ -75,7 +75,7 @@ namespace ProductTests.Application.CommandHandler.TestRunCommands
 
                     return Result.Success(testPlanVersion.Id);
                 }
-                catch(Exception ex)
+                catch(Exception)
                 {
                     throw;
                 }
