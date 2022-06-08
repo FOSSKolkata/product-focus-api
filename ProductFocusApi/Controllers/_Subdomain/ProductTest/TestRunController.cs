@@ -40,26 +40,26 @@ namespace ProductFocusApi.Controllers._Subdomain.ProductTest
             Result<GetTestRunDto> result = await _mediator.Send(command);
             return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
         }
-        [HttpPost]
-        public async Task<IActionResult> MarkTestCasesVersion(List<MarkTestCaseVersionDto> testCases)
+        [HttpPost("{testRunId}")]
+        public async Task<IActionResult> MarkTestCasesVersion(long testRunId, List<MarkTestCaseVersionDto> testCases)
         {
-            var command = new MarkTestCasesVersionCommand(testCases);
+            var command = new MarkTestCasesVersionCommand(testRunId, testCases);
             Result result = await _mediator.Send(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> MarkTestCaseVersionStatus(MarkTestCaseVersionStatus dto)
+        [HttpPost("{testRunId}")]
+        public async Task<IActionResult> MarkTestCaseVersionStatus(long testRunId, MarkTestCaseVersionStatus dto)
         {
-            var command = new MarkTestCaseVersionStatusCommand(dto.Id, dto.ResultStatus);
+            var command = new MarkTestCaseVersionStatusCommand(testRunId, dto.Id, dto.ResultStatus);
             Result result = await _mediator.Send(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }
 
-        [HttpPost("{testSuiteId}")]
-        public async Task<IActionResult> MarkTestStepVersionStatus(long testSuiteId, MarkTestStepVersionStatus dto)
+        [HttpPost("{testRunId}")]
+        public async Task<IActionResult> MarkTestStepVersionStatus(long testRunId, MarkTestStepVersionStatus dto)
         {
-            var command = new MarkTestStepVersionStatusCommand(testSuiteId, dto.Id, dto.ResultStatus);
+            var command = new MarkTestStepVersionStatusCommand(testRunId, dto.Id, dto.ResultStatus);
             Result result = await _mediator.Send(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }

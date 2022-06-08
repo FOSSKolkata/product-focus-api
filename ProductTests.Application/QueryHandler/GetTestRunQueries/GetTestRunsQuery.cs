@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using MediatR;
 using Microsoft.Extensions.Configuration;
+using ProductTests.Domain.Model.TestRunAggregate;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -69,8 +70,8 @@ namespace ProductTests.Application.QueryHandler.GetTestRunQueries
                         foreach(GetTestSuiteDto suite in totalSuite)
                         {
                             plan.TotalTestCases += testCases.Where(x => x.SuiteId == suite.Id).Count();
-                            plan.TotalPassedCases += testCases.Where(x => x.SuiteId == suite.Id && x.ResultStatus == Domain.Model.TestCaseVersionAggregate.TestCaseResult.Success).Count();
-                            plan.TotalFailedCases += testCases.Where(x => x.SuiteId == suite.Id && x.ResultStatus == Domain.Model.TestCaseVersionAggregate.TestCaseResult.Failed).Count();
+                            plan.TotalPassedCases += testCases.Where(x => x.SuiteId == suite.Id && x.ResultStatus == TestCaseResult.Success).Count();
+                            plan.TotalFailedCases += testCases.Where(x => x.SuiteId == suite.Id && x.ResultStatus == TestCaseResult.Failed).Count();
                         }
                     }
                 }

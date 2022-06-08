@@ -1,4 +1,4 @@
-﻿using ProductTests.Domain.Model.TestCaseVersionAggregate;
+﻿using ProductTests.Domain.Model.TestRunAggregate;
 
 namespace ProductTests.Application.CommandHandler.TestRunCommands
 {

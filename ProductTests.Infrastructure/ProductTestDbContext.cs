@@ -2,9 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using ProductTests.Domain.Common;
 using ProductTests.Domain.Model.TestCaseAggregate;
-using ProductTests.Domain.Model.TestCaseVersionAggregate;
 using ProductTests.Domain.Model.TestPlanAggregate;
-using ProductTests.Domain.Model.TestPlanVersionAggregate;
+using ProductTests.Domain.Model.TestRunAggregate;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -33,7 +32,7 @@ namespace ProductTests.Infrastructure
                 .Property(o => o.Id).UseHiLo();
             modelBuilder.Entity<TestStepVersion>()
                 .Property(o => o.Id).UseHiLo();
-            modelBuilder.Entity<TestSuiteTestCaseMappingVersion>()
+            modelBuilder.Entity<TestRun>()
                 .Property(o => o.Id).UseHiLo();
             modelBuilder.HasDefaultSchema("producttest");
 
@@ -60,7 +59,7 @@ namespace ProductTests.Infrastructure
         public DbSet<TestSuiteVersion> TestSuitesVersion { get; set; }
         public DbSet<TestCaseVersion> TestCasesVersion { get; set; }
         public DbSet<TestStepVersion> TestStepsVersion { get; set; }
-        public DbSet<TestSuiteTestCaseMappingVersion> TestSuiteTestCaseMappingsVersion { get; set; }
+        public DbSet<TestRun> TestRuns { get; set; }
 
         private readonly IMediator _mediator;
         public async Task<int> SaveEntitiesAsync(CancellationToken cancellationToken = default)

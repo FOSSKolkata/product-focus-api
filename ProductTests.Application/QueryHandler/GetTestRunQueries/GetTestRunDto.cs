@@ -1,5 +1,5 @@
-﻿using ProductTests.Domain.Model.TestCaseVersionAggregate;
-using ProductTests.Domain.Model.TestPlanAggregate;
+﻿using ProductTests.Domain.Model.TestPlanAggregate;
+using ProductTests.Domain.Model.TestRunAggregate;
 using System.Collections.Generic;
 
 namespace ProductTests.Application.QueryHandler.GetTestRunQueries
@@ -8,6 +8,7 @@ namespace ProductTests.Application.QueryHandler.GetTestRunQueries
     {
         // Test Plan details will be stored
         public long Id { get; set; }
+        public long PlanId { get; set; }
         public string Title { get; set; }
         public TestTypeEnum TestType { get; set; }
         public List<GetTestRunSuiteDto> TestSuites { get; set; }

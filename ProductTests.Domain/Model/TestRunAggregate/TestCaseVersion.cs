@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ProductTests.Domain.Model.TestCaseVersionAggregate
+namespace ProductTests.Domain.Model.TestRunAggregate
 {
-    public class TestCaseVersion : AggregateRoot<long>, ISoftDeletable
+    public class TestCaseVersion : Entity<long>
     {
         public virtual string Title { get; private set; }
         public virtual string Preconditions { get; private set; }
@@ -19,33 +19,33 @@ namespace ProductTests.Domain.Model.TestCaseVersionAggregate
         public string DeletedBy { get; set; }
         protected TestCaseVersion()
         {
-             
+
         }
         private TestCaseVersion(TestCase testCase)
         {
             Title = testCase.Title;
             Preconditions = testCase.Preconditions;
-            foreach(TestStep testStep in testCase.TestSteps)
+            foreach (TestStep testStep in testCase.TestSteps)
             {
                 _testStepsVersion.Add(TestStepVersion.CreateInstance(testStep, Id));
             }
         }
-        public void IncludeTestCast(bool isIncluded)
+        internal void IncludeTestCase(bool isIncluded)
         {
             IsIncluded = isIncluded;
         }
-        public static TestCaseVersion CreateInstance(TestCase testCase)
+        internal static TestCaseVersion CreateInstance(TestCase testCase)
         {
             return new TestCaseVersion(testCase);
         }
-        public void UpdateResultStatus(TestCaseResult resultStatus)
+        internal void UpdateResultStatus(TestCaseResult resultStatus)
         {
             ResultStatus = resultStatus;
         }
-        public void UpdateTestStep(long id, TestStepResult resultStatus)
+        internal void UpdateTestStep(long id, TestStepResult resultStatus)
         {
-            var testStep = TestStepsVersion.Where(x => x.Id == id).SingleOrDefault();
-            testStep.UpdateRunStatus(resultStatus);
+            TestStepsVersion.Where(x => x.Id == id).SingleOrDefault()?
+                .UpdateRunStatus(resultStatus);
         }
     }
     public enum TestCaseResult

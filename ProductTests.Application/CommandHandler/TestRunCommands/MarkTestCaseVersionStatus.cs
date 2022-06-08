@@ -1,4 +1,4 @@
-﻿using ProductTests.Domain.Model.TestCaseVersionAggregate;
+﻿using ProductTests.Domain.Model.TestRunAggregate;
 using System;
 using System.Collections.Generic;
 using System.Linq;

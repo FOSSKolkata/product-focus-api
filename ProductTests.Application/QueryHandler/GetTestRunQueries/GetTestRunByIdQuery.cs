@@ -12,10 +12,10 @@ namespace ProductTests.Application.QueryHandler.GetTestRunQueries
 {
     public class GetTestRunByIdQuery : IRequest<GetTestRunDto>
     {
-        public long TestPlanId { get; private set; }
-        public GetTestRunByIdQuery(long testPlanId)
+        public long TestRunId { get; private set; }
+        public GetTestRunByIdQuery(long testRunId)
         {
-            TestPlanId = testPlanId;
+            TestRunId = testRunId;
         }
         internal sealed class GetTestRunByIdQueryHandler : IRequestHandler<GetTestRunByIdQuery, GetTestRunDto>
         {
@@ -29,27 +29,31 @@ namespace ProductTests.Application.QueryHandler.GetTestRunQueries
             {
                 GetTestRunDto testRun;
 
-                string sql = @"SELECT tplan.Id, tplan.Name as Title, tplan.TestType FROM [producttest].[TestPlansVersion] tplan WHERE tplan.Id =  @TestPlanId;
+                string sql = @"SELECT trun.Id, tplan.Id AS PlanId, tplan.Name as Title, tplan.TestType FROM [producttest].[TestRuns] trun
+                        INNER JOIN [producttest].[TestPlansVersion] tplan ON trun.TestPlanVersionId = tplan.Id WHERE trun.Id = @TestRunId;
 
-                    SELECT tsuite.Id,  tsuite.TestPlanVersionId AS TestPlanId, tsuite.Name as Title FROM ProductTest.TestSuitesVersion tsuite
-                    WHERE tsuite.TestPlanVersionId = @TestPlanId;
+                        SELECT tsuite.Id, tsuite.TestPlanVersionId AS TestPlanId, tsuite.Name as Title FROM [producttest].[TestSuitesVersion] tsuite
+                        INNER JOIN [producttest].[TestRuns] trun ON trun.TestPlanVersionId = tsuite.TestPlanVersionId
+                        WHERE trun.Id = @TestRunId;
 
-                    SELECT tcase.Id, tsuite.Id AS TestSuiteId, tcase.Title, tcase.ResultStatus, tcase.IsIncluded FROM ProductTest.TestSuiteTestCaseMappingsVersion tstcm
-                    INNER JOIN ProductTest.TestSuitesVersion tsuite ON tstcm.TestSuiteVersionId = tsuite.Id
-                    INNER JOIN ProductTest.TestCasesVersion tcase ON tstcm.TestCaseVersionId = tcase.Id
-                    WHERE tsuite.TestPlanVersionId =  @TestPlanId;
+                        SELECT tcase.Id, tsuite.Id AS TestSuiteId, tcase.Title, tcase.ResultStatus, tcase.IsIncluded FROM [producttest].[TestRuns] trun
+                        INNER JOIN [producttest].[TestPlansVersion] tplan ON trun.TestPlanVersionId = tplan.Id
+                        INNER JOIN [producttest].[TestSuitesVersion] tsuite ON tplan.Id = tsuite.TestPlanVersionId
+                        INNER JOIN [producttest].[TestCasesVersion] tcase ON tcase.TestSuiteVersionId = tsuite.Id
+                        WHERE trun.Id = @TestRunId;
 
-                    SELECT tstep.Id, tcase.Id AS TestCaseId, tstep.StepNo, tstep.Action, tstep.ExpectedResult, tstep.ResultStatus FROM [ProductTest].[TestSuiteTestCaseMappingsVersion] tstcm
-                    INNER JOIN [ProductTest].[TestSuitesVersion] tsuite ON tstcm.TestSuiteVersionId = tsuite.Id
-                    INNER JOIN [ProductTest].[TestCasesVersion] tcase ON tstcm.TestCaseVersionId = tcase.Id
-                    INNER JOIN [ProductTest].[TestStepsVersion] tstep ON tcase.Id = tstep.TestCaseVersionId
-                    WHERE tsuite.TestPlanVersionId =  @TestPlanId;";
+                        SELECT tstep.Id, tcase.Id AS TestCaseId, tstep.StepNo, tstep.Action, tstep.ExpectedResult, tstep.ResultStatus FROM [producttest].[TestRuns] trun
+                        INNER JOIN [ProductTest].[TestPlansVersion] tplan ON tplan.Id = trun.TestPlanVersionId
+                        INNER JOIN [ProductTest].[TestSuitesVersion] tsuite ON tsuite.TestPlanVersionId = tplan.Id
+                        INNER JOIN [ProductTest].[TestCasesVersion] tcase ON tcase.TestSuiteVersionId = tsuite.Id
+                        INNER JOIN [ProductTest].[TestStepsVersion] tstep ON tcase.Id = tstep.TestCaseVersionId
+                        WHERE trun.Id = @TestRunId;";
 
                 using(IDbConnection con = new SqlConnection(_queriesConnectionString))
                 {
                     var result = await con.QueryMultipleAsync(sql, new
                     {
-                        request.TestPlanId
+                        request.TestRunId
                     });
 
                     testRun = (await result.ReadAsync<GetTestRunDto>()).SingleOrDefault();
@@ -57,7 +61,7 @@ namespace ProductTests.Application.QueryHandler.GetTestRunQueries
                     var testCases = await result.ReadAsync<GetTestRunCaseDto>();
                     var testSteps = await result.ReadAsync<GetTestRunStepDto>();
 
-                    testRun.TestSuites = testSuites.Where(x => x.TestPlanId == request.TestPlanId).ToList();
+                    testRun.TestSuites = testSuites.Where(x => x.TestPlanId == testRun.PlanId).ToList();
                     foreach(GetTestRunSuiteDto suite in testSuites)
                     {
                         suite.TestCases = testCases.Where(x => x.TestSuiteId == suite.Id).ToList();

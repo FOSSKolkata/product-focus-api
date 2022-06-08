@@ -1,7 +1,7 @@
 ﻿using ProductTests.Domain.Common;
 using ProductTests.Domain.Model.TestCaseAggregate;
 
-namespace ProductTests.Domain.Model.TestCaseVersionAggregate
+namespace ProductTests.Domain.Model.TestRunAggregate
 {
     public class TestStepVersion : Entity<long>
     {
@@ -30,7 +30,7 @@ namespace ProductTests.Domain.Model.TestCaseVersionAggregate
         {
             return ResultStatus;
         }
-        public static TestStepVersion CreateInstance(TestStep testStep, long testCaseVersionId)
+        internal static TestStepVersion CreateInstance(TestStep testStep, long testCaseVersionId)
         {
             return new TestStepVersion(testStep, testCaseVersionId);
         }

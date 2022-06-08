@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using MediatR;
 using ProductTests.Domain.Common;
-using ProductTests.Domain.Model.TestCaseVersionAggregate;
+using ProductTests.Domain.Model.TestRunAggregate;
 using ProductTests.Domain.Repositories;
 using System;
 using System.Collections.Generic;
@@ -12,28 +12,31 @@ namespace ProductTests.Application.CommandHandler.TestRunCommands
 {
     public sealed class MarkTestCasesVersionCommand : IRequest<Result>
     {
+        public long RunId { get; private set; }
         public List<MarkTestCaseVersionDto> UpdatedTestCases { get; private set; }
-        public MarkTestCasesVersionCommand(List<MarkTestCaseVersionDto> updatedTestCases)
+        public MarkTestCasesVersionCommand(long runId, List<MarkTestCaseVersionDto> updatedTestCases)
         {
+            RunId = runId;
             UpdatedTestCases = updatedTestCases;
         }
         internal class MarkTestCasesVersionCommandHandler : IRequestHandler<MarkTestCasesVersionCommand, Result>
         {
             private readonly IUnitOfWork _unitOfWork;
-            private readonly ITestCaseVersionRepository _testCaseVersionRepository;
-            public MarkTestCasesVersionCommandHandler(IUnitOfWork unitOfWork, ITestCaseVersionRepository testCaseVersionRepository)
+            private readonly ITestRunRepository _testRunRepository;
+            public MarkTestCasesVersionCommandHandler(IUnitOfWork unitOfWork, ITestRunRepository testRunRepository)
             {
                 _unitOfWork = unitOfWork;
-                _testCaseVersionRepository = testCaseVersionRepository;
+                _testRunRepository = testRunRepository;
             }
             public async Task<Result> Handle(MarkTestCasesVersionCommand request, CancellationToken cancellationToken)
             {
                 try
                 {
+                    TestRun testRun = await _testRunRepository.GetById(request.RunId);
+
                     foreach (var updatedTestCase in request.UpdatedTestCases)
                     {
-                        TestCaseVersion testCase = await _testCaseVersionRepository.GetById(updatedTestCase.Id);
-                        testCase.IncludeTestCast(updatedTestCase.IsSelected);
+                        testRun.IncludeTestCase(updatedTestCase.Id, updatedTestCase.IsSelected);
                     }
                     await _unitOfWork.CompleteAsync(cancellationToken);
                     return Result.Success();

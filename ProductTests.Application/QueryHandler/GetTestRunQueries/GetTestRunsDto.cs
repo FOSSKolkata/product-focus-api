@@ -1,5 +1,5 @@
-﻿using ProductTests.Domain.Model.TestCaseVersionAggregate;
-using ProductTests.Domain.Model.TestPlanAggregate;
+﻿using ProductTests.Domain.Model.TestPlanAggregate;
+using ProductTests.Domain.Model.TestRunAggregate;
 
 namespace ProductTests.Application.QueryHandler.GetTestRunQueries
 {
