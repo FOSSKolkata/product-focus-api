@@ -13,9 +13,11 @@ namespace ProductTests.Application.CommandHandler.TestRunCommands
     public class CreateTestRunCommand : IRequest<Result<long>>
     {
         public long TestPlanId { get; private set; }
-        public CreateTestRunCommand(long testPlanId)
+        public string UserId { get; private set; }
+        public CreateTestRunCommand(long testPlanId, string userId)
         {
             TestPlanId = testPlanId;
+            this.UserId = userId;
         }
         internal class CreateTestRunCommandHandler : IRequestHandler<CreateTestRunCommand, Result<long>>
         {
@@ -35,7 +37,7 @@ namespace ProductTests.Application.CommandHandler.TestRunCommands
                 try
                 {
                     TestPlan testPlan = await _testPlanRepository.GetById(request.TestPlanId);
-                    TestRun testRun = TestRun.CreateInstance(testPlan);
+                    TestRun testRun = TestRun.CreateInstance(testPlan, request.UserId);
                     _testRunRepository.Add(testRun);
                     await _unitOfWork.CompleteAsync(cancellationToken);
                     return Result.Success(testRun.Id);

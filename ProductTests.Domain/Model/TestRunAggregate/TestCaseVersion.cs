@@ -12,7 +12,7 @@ namespace ProductTests.Domain.Model.TestRunAggregate
         public virtual string Preconditions { get; private set; }
         private readonly IList<TestStepVersion> _testStepsVersion = new List<TestStepVersion>();
         public virtual IReadOnlyList<TestStepVersion> TestStepsVersion => _testStepsVersion.ToList();
-        public virtual bool IsIncluded { get; private set; }
+        public virtual bool IsIncluded { get; private set; } = true;
         public virtual TestCaseResult ResultStatus { get; private set; }
         public bool IsDeleted { get; set; }
         public DateTime DeletedOn { get; set; }

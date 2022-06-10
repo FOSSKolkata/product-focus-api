@@ -20,21 +20,23 @@ namespace ProductTests.Domain.Model.TestRunAggregate
         {
             RunningStatus = runningStatus;
         }
-        private TestRun(TestPlan testPlan)
+        private TestRun(TestPlan testPlan, string userId)
         {
             ProductId = testPlan.ProductId;
             SprintId = testPlan.SprintId;
             TestPlanId = testPlan.Id;
             TestPlanVersion = TestPlanVersion.CreateInstance(testPlan);
             TestPlanVersionId = TestPlanVersion.Id;
+            CreatedOn = DateTime.UtcNow;
+            CreatedBy = userId;
         }
         public void IncludeTestCase(long testCaseId, bool isSelected)
         {
             TestPlanVersion.IncludeTestCase(testCaseId, isSelected);
         }
-        public static TestRun CreateInstance(TestPlan testPlan)
+        public static TestRun CreateInstance(TestPlan testPlan, string userId)
         {
-            return new TestRun(testPlan);
+            return new TestRun(testPlan, userId);
         }
 
         public void UpdateResultStatus(long id, TestCaseResult resultStatus)
