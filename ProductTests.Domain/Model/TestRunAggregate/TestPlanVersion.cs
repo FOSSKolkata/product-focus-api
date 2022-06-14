@@ -56,6 +56,15 @@ namespace ProductTests.Domain.Model.TestRunAggregate
                 testSuite.UpdateResultStatus(id, resultStatus);
             }
         }
+        internal bool IsTestPlanExecutionCompleted()
+        {
+            bool isCompleted = true;
+            foreach(var testSuite in TestSuitesVersion)
+            {
+                isCompleted &= testSuite.IsTestSuiteExecutionCompleted();
+            }
+            return isCompleted;
+        }
 
         internal static TestPlanVersion CreateInstance(TestPlan testPlan)
         {

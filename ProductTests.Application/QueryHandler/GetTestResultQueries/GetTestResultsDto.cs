@@ -15,6 +15,7 @@ namespace ProductTests.Application.QueryHandler.GetTestResultQueries
         public TestTypeEnum TestType { get; set; }
         public long Passed { get; set; }
         public long Failed { get; set; }
+        public long TestCasesCount { get; set; }
     }
 
     public sealed class GetTestResultDetailsDto
@@ -23,5 +24,6 @@ namespace ProductTests.Application.QueryHandler.GetTestResultQueries
         public long TestPlanId { get; set; }
         public string TestSuiteId { get; set; }
         public TestCaseResult ResultStatus { get; set; }
+        public long TestCaseCount { get; set; }
     }
 }

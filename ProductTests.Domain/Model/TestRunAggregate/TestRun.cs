@@ -42,6 +42,7 @@ namespace ProductTests.Domain.Model.TestRunAggregate
         public void UpdateResultStatus(long id, TestCaseResult resultStatus)
         {
             TestPlanVersion.UpdateResultStatus(id, resultStatus);
+            RunningStatus = TestPlanVersion.IsTestPlanExecutionCompleted() ? Status.Completed : Status.Incompleted;
         }
 
         public void UpdateTestStep(long id, TestStepResult resultStatus)

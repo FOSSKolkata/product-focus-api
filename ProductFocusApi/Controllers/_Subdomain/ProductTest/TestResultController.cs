@@ -19,7 +19,7 @@ namespace ProductFocusApi.Controllers._Subdomain.ProductTest
         {
             _mediator = mediator;
         }
-        [HttpGet("{testPlanId}/query")]
+        [HttpGet("{testPlanId}")]
         public async Task<IActionResult> GetTestResultsByTestPlanId(long testPlanId, [FromQuery] string searchTitle, [FromQuery] List<TestTypeEnum> searchTestTypes)
         {
             var command = new GetTestResultsQuery(testPlanId, searchTitle, searchTestTypes);

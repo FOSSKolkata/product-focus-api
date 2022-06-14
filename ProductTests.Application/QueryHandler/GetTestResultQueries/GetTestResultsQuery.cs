@@ -50,7 +50,7 @@ namespace ProductTests.Application.QueryHandler.GetTestResultQueries
                 var builder1 = new SqlBuilder();
                 var selector1 = builder1.AddTemplate(@"SELECT trun.Id AS TestRunId, trun.SprintId, trun.RunningStatus,
                     CONCAT(tplan.Name,'_', DATENAME(MICROSECOND, trun.CreatedOn)) AS Title, tplan.TestType,
-                    trun.CreatedOn, tplan.Id AS TestPlanVersionId FROM [producttest].[TestRuns] trun /**innerjoin**/ /**where**/");
+                    trun.CreatedOn, tplan.Id AS TestPlanVersionId FROM [producttest].[TestRuns] trun /**innerjoin**/ /**where**/ /**orderby**/");
                 builder1.InnerJoin("[producttest].[TestPlansVersion] tplan ON trun.TestPlanVersionId = tplan.Id");
                 builder1.Where("trun.TestPlanId = @TestPlanId");
                 if(!string.IsNullOrEmpty(request.SearchTitle))
@@ -61,11 +61,12 @@ namespace ProductTests.Application.QueryHandler.GetTestResultQueries
                 {
                     builder1.Where("tplan.TestType in @SearchTestTypes");
                 }
+                builder1.OrderBy("trun.Id DESC");
                 var sql1 = selector1.RawSql;
 
                 var builder2 = new SqlBuilder();
                 var selector2 = builder2.AddTemplate(@"SELECT trun.id AS TestRunId, tplan.Id AS TestPlanId,
-                    tsuite.Id AS TestSuiteId, tcase.ResultStatus FROM [producttest].[TestRuns] trun /**innerjoin**/ /**where**/ /**groupby**/");
+                    tsuite.Id AS TestSuiteId, tcase.ResultStatus, COUNT(tcase.Id) AS TestCaseCount FROM [producttest].[TestRuns] trun /**innerjoin**/ /**where**/ /**groupby**/");
 
                 builder2.InnerJoin("[producttest].[TestPlansVersion] tplan ON tplan.Id = trun.TestPlanVersionId");
                 builder2.InnerJoin("[producttest].[TestSuitesVersion] tsuite ON tplan.Id = tsuite.TestPlanVersionId");
@@ -76,7 +77,7 @@ namespace ProductTests.Application.QueryHandler.GetTestResultQueries
                     builder2.Where($"CONCAT(tplan.Name,'_', DATENAME(MICROSECOND, trun.CreatedOn)) LIKE '%{request.SearchTitle}%'");
                 if (request.SearchTestTypes.Count > 0)
                     builder2.Where("tplan.TestType in @SearchTestTypes");
-                builder1.GroupBy("trun.id, tplan.Id, trun.CreatedOn, tsuite.Id, tcase.ResultStatus;");
+                builder2.GroupBy("trun.id, tplan.Id, trun.CreatedOn, tsuite.Id, tcase.ResultStatus;");
                 var sql2 = selector2.RawSql;
 
                 using(IDbConnection con = new SqlConnection(_queriesConnectionString))
@@ -99,6 +100,14 @@ namespace ProductTests.Application.QueryHandler.GetTestResultQueries
                     {
                         result.Passed = tempTestResultsDetails.Where(x => x.TestRunId == result.TestRunId && x.ResultStatus == TestCaseResult.Success).Count();
                         result.Failed = tempTestResultsDetails.Where(x => x.TestRunId == result.TestRunId && x.ResultStatus == TestCaseResult.Failed).Count();
+                        result.TestCasesCount = 0;
+                        foreach(var testCase in tempTestResultsDetails)
+                        {
+                            if(result.TestRunId == testCase.TestRunId)
+                            {
+                                result.TestCasesCount += testCase.TestCaseCount;
+                            }
+                        }
                     }
                     testResults = tempTestResults.ToList();
                 }

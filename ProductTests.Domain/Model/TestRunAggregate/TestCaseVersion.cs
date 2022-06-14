@@ -47,6 +47,11 @@ namespace ProductTests.Domain.Model.TestRunAggregate
             TestStepsVersion.Where(x => x.Id == id).SingleOrDefault()?
                 .UpdateRunStatus(resultStatus);
         }
+
+        internal bool IsTestCaseExecutionCompleted()
+        {
+            return ResultStatus == TestCaseResult.Success || ResultStatus == TestCaseResult.Failed;
+        }
     }
     public enum TestCaseResult
     {

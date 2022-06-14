@@ -50,5 +50,15 @@ namespace ProductTests.Domain.Model.TestRunAggregate
                 testCase.UpdateTestStep(id, resultStatus);
             }    
         }
+
+        internal bool IsTestSuiteExecutionCompleted()
+        {
+            bool isCompleted = true;
+            foreach(var testCase in TestCaseVersions)
+            {
+                isCompleted &= testCase.IsTestCaseExecutionCompleted();
+            }
+            return isCompleted;
+        }
     }
 }
