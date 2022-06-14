@@ -9,6 +9,9 @@ using System.Linq;
 using System.Security.Claims;
 using ProductFocus.Domain.Common;
 using MediatR;
+using ProductFocus.Domain.Model;
+using ProductFocusApi.QueryHandlers;
+using ProductFocusApi.Dtos;
 
 namespace ProductFocusApi.Controllers
 {
@@ -54,6 +57,13 @@ namespace ProductFocusApi.Controllers
             string objectId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
             GetKanbanViewListDto kanban = await _mediator.Send(new GetKanbanViewFilterQuery(id, objectId, SprintId, UserIds, groupCategoryEnum));
             return Ok(kanban);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetProductById(long id)
+        {
+            GetProductByIdDto product = await _mediator.Send(new GetProductByIdQuery(id)); 
+            return Ok(product);
         }
     }
 }
