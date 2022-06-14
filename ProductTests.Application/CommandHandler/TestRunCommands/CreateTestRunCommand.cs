@@ -1,80 +1,50 @@
 ﻿using CSharpFunctionalExtensions;
 using MediatR;
 using ProductTests.Domain.Common;
-using ProductTests.Domain.Model.TestCaseVersionAggregate;
 using ProductTests.Domain.Model.TestPlanAggregate;
-using ProductTests.Domain.Model.TestPlanVersionAggregate;
+using ProductTests.Domain.Model.TestRunAggregate;
 using ProductTests.Domain.Repositories;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace ProductTests.Application.CommandHandler.TestRunCommands
 {
-    public class CreateTestRunCommand : IRequest<Result>
+    public class CreateTestRunCommand : IRequest<Result<long>>
     {
         public long TestPlanId { get; private set; }
-        public CreateTestRunCommand(long testPlanId)
+        public string UserId { get; private set; }
+        public CreateTestRunCommand(long testPlanId, string userId)
         {
             TestPlanId = testPlanId;
+            this.UserId = userId;
         }
-        internal class CreateTestRunCommandHandler : IRequestHandler<CreateTestRunCommand, Result>
+        internal class CreateTestRunCommandHandler : IRequestHandler<CreateTestRunCommand, Result<long>>
         {
             private readonly IUnitOfWork _unitOfWork;
             private readonly ITestPlanRepository _testPlanRepository;
-            private readonly ITestCaseVersionRepository _testCaseVersionRepository;
-            private readonly ITestPlanVersionRepository _testPlanVersionRepository;
+            private readonly ITestRunRepository _testRunRepository;
             public CreateTestRunCommandHandler(ITestPlanRepository testPlanRepository,
-                ITestCaseVersionRepository testCaseVersionRepository,
-                ITestPlanVersionRepository testPlanVersionRepository,
+                ITestRunRepository testRunRepository,
                 IUnitOfWork unitOfWork)
             {
                 _testPlanRepository = testPlanRepository;
-                _testCaseVersionRepository = testCaseVersionRepository;
-                _testPlanVersionRepository = testPlanVersionRepository;
+                _testRunRepository = testRunRepository;
                 _unitOfWork = unitOfWork;
             }
-            public async Task<Result> Handle(CreateTestRunCommand request, CancellationToken cancellationToken)
+            public async Task<Result<long>> Handle(CreateTestRunCommand request, CancellationToken cancellationToken)
             {
                 try
                 {
                     TestPlan testPlan = await _testPlanRepository.GetById(request.TestPlanId);
-                    TestPlanVersion testPlanVersion = TestPlanVersion.CreateInstance(testPlan);
-                    Dictionary<long, TestCaseVersion> testCaseMap = new(); // NOTE: Store testCaseId and testCaseVersion
-                    List<KeyValuePair<TestSuiteVersion, TestCaseVersion>> list = new();
-                    foreach(TestSuite testSuite in testPlan.TestSuites)
-                    {
-                        TestSuiteVersion testSuiteVersion = TestSuiteVersion.CreateInstance(testSuite, testPlan.Id);
-                        testPlanVersion.AddTestSuiteVersion(testSuiteVersion);
-                        foreach (TestSuiteTestCaseMapping mapping in testSuite.TestSuiteTestCaseMappings)
-                        {
-                            if(!testCaseMap.ContainsKey(mapping.TestCase.Id))
-                            {
-                                TestCaseVersion testCaseVersion = TestCaseVersion.CreateInstance(mapping.TestCase);
-                                list.Add(new(testSuiteVersion, testCaseVersion));
-                                testCaseMap.Add(mapping.TestCase.Id, testCaseVersion);
-                                _testCaseVersionRepository.Add(testCaseVersion);
-                            }
-                            else
-                            {
-                                TestCaseVersion testCaseVersion = testCaseMap.GetValueOrDefault(mapping.TestCase.Id);
-                                list.Add(new(testSuiteVersion, testCaseVersion));
-                            }
-                        }
-                    }
-                    foreach(KeyValuePair<TestSuiteVersion,TestCaseVersion> item in list)
-                    {
-                        // Key -> TestSuiteVersion, Value -> TestCaseVersion
-                        item.Key.AddTestSuiteTestCaseMappingVersion(item.Value);
-                    }
-                    _testPlanVersionRepository.Add(testPlanVersion);
+                    TestRun testRun = TestRun.CreateInstance(testPlan, request.UserId);
+                    _testRunRepository.Add(testRun);
                     await _unitOfWork.CompleteAsync(cancellationToken);
-                    return Result.Success();
+                    return Result.Success(testRun.Id);
                 }
-                catch(Exception ex)
+                catch(Exception)
                 {
-                    return Result.Failure(ex.Message);
+                    throw;
                 }
             }
         }

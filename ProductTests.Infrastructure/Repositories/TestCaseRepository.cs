@@ -11,6 +11,7 @@ namespace ProductTests.Infrastructure.Repositories
         {
             _unitOfWork = unitOfWork;
         }
+
         public void Add(TestCase testCase)
         {
             _unitOfWork.Insert(testCase);

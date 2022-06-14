@@ -1,9 +1,11 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
+#nullable disable
+
 namespace ProductTests.Infrastructure.Migrations
 {
-    public partial class ProductTest : Migration
+    public partial class testrun : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -38,30 +40,6 @@ namespace ProductTests.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TestCasesVersion",
-                schema: "producttest",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Preconditions = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsIncluded = table.Column<bool>(type: "bit", nullable: false),
-                    ResultStatus = table.Column<int>(type: "int", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DeletedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedById = table.Column<long>(type: "bigint", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TestCasesVersion", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "TestPlans",
                 schema: "producttest",
                 columns: table => new
@@ -85,6 +63,22 @@ namespace ProductTests.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TestPlans", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TestPlansVersion",
+                schema: "producttest",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TestType = table.Column<int>(type: "int", nullable: false),
+                    ProductDocumentationId = table.Column<long>(type: "bigint", nullable: false),
+                    WorkItemId = table.Column<long>(type: "bigint", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TestPlansVersion", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -119,70 +113,6 @@ namespace ProductTests.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TestStepVersion",
-                schema: "producttest",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false),
-                    TestCaseVersionId = table.Column<long>(type: "bigint", nullable: false),
-                    StepNo = table.Column<long>(type: "bigint", nullable: false),
-                    Action = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ExpectedResult = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ResultStatus = table.Column<int>(type: "int", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedById = table.Column<long>(type: "bigint", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TestStepVersion", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TestStepVersion_TestCasesVersion_TestCaseVersionId",
-                        column: x => x.TestCaseVersionId,
-                        principalSchema: "producttest",
-                        principalTable: "TestCasesVersion",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TestPlansVersion",
-                schema: "producttest",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TestPlanId = table.Column<long>(type: "bigint", nullable: true),
-                    ProductId = table.Column<long>(type: "bigint", nullable: false),
-                    SprintId = table.Column<long>(type: "bigint", nullable: true),
-                    TestType = table.Column<int>(type: "int", nullable: false),
-                    ProductDocumentationId = table.Column<long>(type: "bigint", nullable: false),
-                    WorkItemId = table.Column<long>(type: "bigint", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DeletedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    RunningStatus = table.Column<int>(type: "int", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedById = table.Column<long>(type: "bigint", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TestPlansVersion", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TestPlansVersion_TestPlans_TestPlanId",
-                        column: x => x.TestPlanId,
-                        principalSchema: "producttest",
-                        principalTable: "TestPlans",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "TestSuites",
                 schema: "producttest",
                 columns: table => new
@@ -190,6 +120,7 @@ namespace ProductTests.Infrastructure.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TestPlanId = table.Column<long>(type: "bigint", nullable: false),
+                    OrderNo = table.Column<long>(type: "bigint", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DeletedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -207,6 +138,35 @@ namespace ProductTests.Infrastructure.Migrations
                         column: x => x.TestPlanId,
                         principalSchema: "producttest",
                         principalTable: "TestPlans",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TestRuns",
+                schema: "producttest",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false),
+                    ProductId = table.Column<long>(type: "bigint", nullable: false),
+                    SprintId = table.Column<long>(type: "bigint", nullable: true),
+                    TestPlanId = table.Column<long>(type: "bigint", nullable: false),
+                    RunningStatus = table.Column<int>(type: "int", nullable: false),
+                    TestPlanVersionId = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedById = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TestRuns", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TestRuns_TestPlansVersion_TestPlanVersionId",
+                        column: x => x.TestPlanVersionId,
+                        principalSchema: "producttest",
+                        principalTable: "TestPlansVersion",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -262,25 +222,29 @@ namespace ProductTests.Infrastructure.Migrations
                         column: x => x.TestCaseId,
                         principalSchema: "producttest",
                         principalTable: "TestCases",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_TestSuiteTestCaseMappings_TestSuites_TestSuiteId",
                         column: x => x.TestSuiteId,
                         principalSchema: "producttest",
                         principalTable: "TestSuites",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "TestSuiteTestCaseMappingsVersion",
+                name: "TestCasesVersion",
                 schema: "producttest",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Preconditions = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsIncluded = table.Column<bool>(type: "bit", nullable: false),
+                    ResultStatus = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DeletedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TestSuiteVersionId = table.Column<long>(type: "bigint", nullable: true),
-                    TestCaseVersionId = table.Column<long>(type: "bigint", nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedById = table.Column<long>(type: "bigint", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -289,28 +253,55 @@ namespace ProductTests.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TestSuiteTestCaseMappingsVersion", x => x.Id);
+                    table.PrimaryKey("PK_TestCasesVersion", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TestSuiteTestCaseMappingsVersion_TestCasesVersion_TestCaseVersionId",
+                        name: "FK_TestCasesVersion_TestSuitesVersion_TestSuiteVersionId",
+                        column: x => x.TestSuiteVersionId,
+                        principalSchema: "producttest",
+                        principalTable: "TestSuitesVersion",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TestStepsVersion",
+                schema: "producttest",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false),
+                    TestCaseVersionId = table.Column<long>(type: "bigint", nullable: false),
+                    StepNo = table.Column<long>(type: "bigint", nullable: false),
+                    Action = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ExpectedResult = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ResultStatus = table.Column<int>(type: "int", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedById = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TestStepsVersion", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TestStepsVersion_TestCasesVersion_TestCaseVersionId",
                         column: x => x.TestCaseVersionId,
                         principalSchema: "producttest",
                         principalTable: "TestCasesVersion",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_TestSuiteTestCaseMappingsVersion_TestSuitesVersion_TestSuiteVersionId",
-                        column: x => x.TestSuiteVersionId,
-                        principalSchema: "producttest",
-                        principalTable: "TestSuitesVersion",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_TestPlansVersion_TestPlanId",
+                name: "IX_TestCasesVersion_TestSuiteVersionId",
                 schema: "producttest",
-                table: "TestPlansVersion",
-                column: "TestPlanId");
+                table: "TestCasesVersion",
+                column: "TestSuiteVersionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TestRuns_TestPlanVersionId",
+                schema: "producttest",
+                table: "TestRuns",
+                column: "TestPlanVersionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TestSteps_TestCaseId",
@@ -319,9 +310,9 @@ namespace ProductTests.Infrastructure.Migrations
                 column: "TestCaseId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TestStepVersion_TestCaseVersionId",
+                name: "IX_TestStepsVersion_TestCaseVersionId",
                 schema: "producttest",
-                table: "TestStepVersion",
+                table: "TestStepsVersion",
                 column: "TestCaseVersionId");
 
             migrationBuilder.CreateIndex(
@@ -347,28 +338,20 @@ namespace ProductTests.Infrastructure.Migrations
                 schema: "producttest",
                 table: "TestSuiteTestCaseMappings",
                 column: "TestSuiteId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TestSuiteTestCaseMappingsVersion_TestCaseVersionId",
-                schema: "producttest",
-                table: "TestSuiteTestCaseMappingsVersion",
-                column: "TestCaseVersionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TestSuiteTestCaseMappingsVersion_TestSuiteVersionId",
-                schema: "producttest",
-                table: "TestSuiteTestCaseMappingsVersion",
-                column: "TestSuiteVersionId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "TestRuns",
+                schema: "producttest");
+
+            migrationBuilder.DropTable(
                 name: "TestSteps",
                 schema: "producttest");
 
             migrationBuilder.DropTable(
-                name: "TestStepVersion",
+                name: "TestStepsVersion",
                 schema: "producttest");
 
             migrationBuilder.DropTable(
@@ -376,7 +359,7 @@ namespace ProductTests.Infrastructure.Migrations
                 schema: "producttest");
 
             migrationBuilder.DropTable(
-                name: "TestSuiteTestCaseMappingsVersion",
+                name: "TestCasesVersion",
                 schema: "producttest");
 
             migrationBuilder.DropTable(
@@ -388,19 +371,15 @@ namespace ProductTests.Infrastructure.Migrations
                 schema: "producttest");
 
             migrationBuilder.DropTable(
-                name: "TestCasesVersion",
-                schema: "producttest");
-
-            migrationBuilder.DropTable(
                 name: "TestSuitesVersion",
                 schema: "producttest");
 
             migrationBuilder.DropTable(
-                name: "TestPlansVersion",
+                name: "TestPlans",
                 schema: "producttest");
 
             migrationBuilder.DropTable(
-                name: "TestPlans",
+                name: "TestPlansVersion",
                 schema: "producttest");
 
             migrationBuilder.DropSequence(

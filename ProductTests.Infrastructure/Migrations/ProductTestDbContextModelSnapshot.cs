@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProductTests.Infrastructure;
 
+#nullable disable
+
 namespace ProductTests.Infrastructure.Migrations
 {
     [DbContext(typeof(ProductTestDbContext))]
@@ -16,9 +18,10 @@ namespace ProductTests.Infrastructure.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("producttest")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.5")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "6.0.4")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
             modelBuilder.HasSequence("EntityFrameworkHiLoSequence")
                 .IncrementsBy(10);
@@ -27,9 +30,9 @@ namespace ProductTests.Infrastructure.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:HiLoSequenceName", "EntityFrameworkHiLoSequence")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseHiLo(b.Property<long>("Id"), "EntityFrameworkHiLoSequence");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -63,16 +66,16 @@ namespace ProductTests.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TestCases");
+                    b.ToTable("TestCases", "producttest");
                 });
 
             modelBuilder.Entity("ProductTests.Domain.Model.TestCaseAggregate.TestStep", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:HiLoSequenceName", "EntityFrameworkHiLoSequence")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseHiLo(b.Property<long>("Id"), "EntityFrameworkHiLoSequence");
 
                     b.Property<string>("Action")
                         .HasColumnType("nvarchar(max)");
@@ -114,110 +117,16 @@ namespace ProductTests.Infrastructure.Migrations
 
                     b.HasIndex("TestCaseId");
 
-                    b.ToTable("TestSteps");
-                });
-
-            modelBuilder.Entity("ProductTests.Domain.Model.TestCaseVersionAggregate.TestCaseVersion", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:HiLoSequenceName", "EntityFrameworkHiLoSequence")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("CreatedById")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DeletedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsIncluded")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("LastModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Preconditions")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ResultStatus")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TestCasesVersion");
-                });
-
-            modelBuilder.Entity("ProductTests.Domain.Model.TestCaseVersionAggregate.TestStepVersion", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:HiLoSequenceName", "EntityFrameworkHiLoSequence")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
-
-                    b.Property<string>("Action")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("CreatedById")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ExpectedResult")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("LastModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ResultStatus")
-                        .HasColumnType("int");
-
-                    b.Property<long>("StepNo")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("TestCaseVersionId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TestCaseVersionId");
-
-                    b.ToTable("TestStepsVersion");
+                    b.ToTable("TestSteps", "producttest");
                 });
 
             modelBuilder.Entity("ProductTests.Domain.Model.TestPlanAggregate.TestPlan", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:HiLoSequenceName", "EntityFrameworkHiLoSequence")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseHiLo(b.Property<long>("Id"), "EntityFrameworkHiLoSequence");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -263,16 +172,16 @@ namespace ProductTests.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TestPlans");
+                    b.ToTable("TestPlans", "producttest");
                 });
 
             modelBuilder.Entity("ProductTests.Domain.Model.TestPlanAggregate.TestSuite", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:HiLoSequenceName", "EntityFrameworkHiLoSequence")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseHiLo(b.Property<long>("Id"), "EntityFrameworkHiLoSequence");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -301,6 +210,9 @@ namespace ProductTests.Infrastructure.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<long>("OrderNo")
+                        .HasColumnType("bigint");
+
                     b.Property<long>("TestPlanId")
                         .HasColumnType("bigint");
 
@@ -308,16 +220,16 @@ namespace ProductTests.Infrastructure.Migrations
 
                     b.HasIndex("TestPlanId");
 
-                    b.ToTable("TestSuites");
+                    b.ToTable("TestSuites", "producttest");
                 });
 
             modelBuilder.Entity("ProductTests.Domain.Model.TestPlanAggregate.TestSuiteTestCaseMapping", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:HiLoSequenceName", "EntityFrameworkHiLoSequence")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseHiLo(b.Property<long>("Id"), "EntityFrameworkHiLoSequence");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -355,16 +267,16 @@ namespace ProductTests.Infrastructure.Migrations
 
                     b.HasIndex("TestSuiteId");
 
-                    b.ToTable("TestSuiteTestCaseMappings");
+                    b.ToTable("TestSuiteTestCaseMappings", "producttest");
                 });
 
-            modelBuilder.Entity("ProductTests.Domain.Model.TestPlanVersionAggregate.TestPlanVersion", b =>
+            modelBuilder.Entity("ProductTests.Domain.Model.TestRunAggregate.TestCaseVersion", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:HiLoSequenceName", "EntityFrameworkHiLoSequence")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseHiLo(b.Property<long>("Id"), "EntityFrameworkHiLoSequence");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -384,28 +296,46 @@ namespace ProductTests.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsIncluded")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("LastModifiedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Preconditions")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ResultStatus")
+                        .HasColumnType("int");
+
+                    b.Property<long?>("TestSuiteVersionId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TestSuiteVersionId");
+
+                    b.ToTable("TestCasesVersion", "producttest");
+                });
+
+            modelBuilder.Entity("ProductTests.Domain.Model.TestRunAggregate.TestPlanVersion", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseHiLo(b.Property<long>("Id"), "EntityFrameworkHiLoSequence");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("ProductDocumentationId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("ProductId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("RunningStatus")
-                        .HasColumnType("int");
-
-                    b.Property<long?>("SprintId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("TestPlanId")
                         .HasColumnType("bigint");
 
                     b.Property<int>("TestType")
@@ -416,18 +346,16 @@ namespace ProductTests.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TestPlanId");
-
-                    b.ToTable("TestPlansVersion");
+                    b.ToTable("TestPlansVersion", "producttest");
                 });
 
-            modelBuilder.Entity("ProductTests.Domain.Model.TestPlanVersionAggregate.TestSuiteTestCaseMappingVersion", b =>
+            modelBuilder.Entity("ProductTests.Domain.Model.TestRunAggregate.TestRun", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:HiLoSequenceName", "EntityFrameworkHiLoSequence")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseHiLo(b.Property<long>("Id"), "EntityFrameworkHiLoSequence");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -444,28 +372,80 @@ namespace ProductTests.Infrastructure.Migrations
                     b.Property<DateTime>("LastModifiedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("TestCaseVersionId")
+                    b.Property<long>("ProductId")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("TestSuiteVersionId")
+                    b.Property<int>("RunningStatus")
+                        .HasColumnType("int");
+
+                    b.Property<long?>("SprintId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("TestPlanId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("TestPlanVersionId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TestPlanVersionId");
+
+                    b.ToTable("TestRuns", "producttest");
+                });
+
+            modelBuilder.Entity("ProductTests.Domain.Model.TestRunAggregate.TestStepVersion", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseHiLo(b.Property<long>("Id"), "EntityFrameworkHiLoSequence");
+
+                    b.Property<string>("Action")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("CreatedById")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ExpectedResult")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("LastModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ResultStatus")
+                        .HasColumnType("int");
+
+                    b.Property<long>("StepNo")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("TestCaseVersionId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
                     b.HasIndex("TestCaseVersionId");
 
-                    b.HasIndex("TestSuiteVersionId");
-
-                    b.ToTable("TestSuiteTestCaseMappingsVersion");
+                    b.ToTable("TestStepsVersion", "producttest");
                 });
 
-            modelBuilder.Entity("ProductTests.Domain.Model.TestPlanVersionAggregate.TestSuiteVersion", b =>
+            modelBuilder.Entity("ProductTests.Domain.Model.TestRunAggregate.TestSuiteVersion", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:HiLoSequenceName", "EntityFrameworkHiLoSequence")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.SequenceHiLo);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseHiLo(b.Property<long>("Id"), "EntityFrameworkHiLoSequence");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -492,7 +472,7 @@ namespace ProductTests.Infrastructure.Migrations
 
                     b.HasIndex("TestPlanVersionId");
 
-                    b.ToTable("TestSuitesVersion");
+                    b.ToTable("TestSuitesVersion", "producttest");
                 });
 
             modelBuilder.Entity("ProductTests.Domain.Model.TestCaseAggregate.TestStep", b =>
@@ -504,17 +484,6 @@ namespace ProductTests.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("TestCase");
-                });
-
-            modelBuilder.Entity("ProductTests.Domain.Model.TestCaseVersionAggregate.TestStepVersion", b =>
-                {
-                    b.HasOne("ProductTests.Domain.Model.TestCaseVersionAggregate.TestCaseVersion", "TestCaseVersion")
-                        .WithMany("TestStepsVersion")
-                        .HasForeignKey("TestCaseVersionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("TestCaseVersion");
                 });
 
             modelBuilder.Entity("ProductTests.Domain.Model.TestPlanAggregate.TestSuite", b =>
@@ -543,33 +512,38 @@ namespace ProductTests.Infrastructure.Migrations
                     b.Navigation("TestSuite");
                 });
 
-            modelBuilder.Entity("ProductTests.Domain.Model.TestPlanVersionAggregate.TestPlanVersion", b =>
+            modelBuilder.Entity("ProductTests.Domain.Model.TestRunAggregate.TestCaseVersion", b =>
                 {
-                    b.HasOne("ProductTests.Domain.Model.TestPlanAggregate.TestPlan", "TestPlan")
-                        .WithMany()
-                        .HasForeignKey("TestPlanId");
-
-                    b.Navigation("TestPlan");
+                    b.HasOne("ProductTests.Domain.Model.TestRunAggregate.TestSuiteVersion", null)
+                        .WithMany("TestCaseVersions")
+                        .HasForeignKey("TestSuiteVersionId");
                 });
 
-            modelBuilder.Entity("ProductTests.Domain.Model.TestPlanVersionAggregate.TestSuiteTestCaseMappingVersion", b =>
+            modelBuilder.Entity("ProductTests.Domain.Model.TestRunAggregate.TestRun", b =>
                 {
-                    b.HasOne("ProductTests.Domain.Model.TestCaseVersionAggregate.TestCaseVersion", "TestCaseVersion")
+                    b.HasOne("ProductTests.Domain.Model.TestRunAggregate.TestPlanVersion", "TestPlanVersion")
                         .WithMany()
-                        .HasForeignKey("TestCaseVersionId");
+                        .HasForeignKey("TestPlanVersionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("ProductTests.Domain.Model.TestPlanVersionAggregate.TestSuiteVersion", "TestSuiteVersion")
-                        .WithMany("TestSuiteTestCaseMappings")
-                        .HasForeignKey("TestSuiteVersionId");
+                    b.Navigation("TestPlanVersion");
+                });
+
+            modelBuilder.Entity("ProductTests.Domain.Model.TestRunAggregate.TestStepVersion", b =>
+                {
+                    b.HasOne("ProductTests.Domain.Model.TestRunAggregate.TestCaseVersion", "TestCaseVersion")
+                        .WithMany("TestStepsVersion")
+                        .HasForeignKey("TestCaseVersionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("TestCaseVersion");
-
-                    b.Navigation("TestSuiteVersion");
                 });
 
-            modelBuilder.Entity("ProductTests.Domain.Model.TestPlanVersionAggregate.TestSuiteVersion", b =>
+            modelBuilder.Entity("ProductTests.Domain.Model.TestRunAggregate.TestSuiteVersion", b =>
                 {
-                    b.HasOne("ProductTests.Domain.Model.TestPlanVersionAggregate.TestPlanVersion", "TestPlanVersion")
+                    b.HasOne("ProductTests.Domain.Model.TestRunAggregate.TestPlanVersion", "TestPlanVersion")
                         .WithMany("TestSuitesVersion")
                         .HasForeignKey("TestPlanVersionId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -583,11 +557,6 @@ namespace ProductTests.Infrastructure.Migrations
                     b.Navigation("TestSteps");
                 });
 
-            modelBuilder.Entity("ProductTests.Domain.Model.TestCaseVersionAggregate.TestCaseVersion", b =>
-                {
-                    b.Navigation("TestStepsVersion");
-                });
-
             modelBuilder.Entity("ProductTests.Domain.Model.TestPlanAggregate.TestPlan", b =>
                 {
                     b.Navigation("TestSuites");
@@ -598,14 +567,19 @@ namespace ProductTests.Infrastructure.Migrations
                     b.Navigation("TestSuiteTestCaseMappings");
                 });
 
-            modelBuilder.Entity("ProductTests.Domain.Model.TestPlanVersionAggregate.TestPlanVersion", b =>
+            modelBuilder.Entity("ProductTests.Domain.Model.TestRunAggregate.TestCaseVersion", b =>
+                {
+                    b.Navigation("TestStepsVersion");
+                });
+
+            modelBuilder.Entity("ProductTests.Domain.Model.TestRunAggregate.TestPlanVersion", b =>
                 {
                     b.Navigation("TestSuitesVersion");
                 });
 
-            modelBuilder.Entity("ProductTests.Domain.Model.TestPlanVersionAggregate.TestSuiteVersion", b =>
+            modelBuilder.Entity("ProductTests.Domain.Model.TestRunAggregate.TestSuiteVersion", b =>
                 {
-                    b.Navigation("TestSuiteTestCaseMappings");
+                    b.Navigation("TestCaseVersions");
                 });
 #pragma warning restore 612, 618
         }

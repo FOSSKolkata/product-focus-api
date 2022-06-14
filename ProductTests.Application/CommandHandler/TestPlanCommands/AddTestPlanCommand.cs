@@ -14,11 +14,11 @@ namespace ProductTests.Application.CommandHandler.TestPlanCommands
         public long ProductId { get; private set; }
         public long? SprintId { get; private set; }
         public TestTypeEnum TestType { get; private set; }
-        public long ProductDocumentationId { get; private set; }
+        public long? ProductDocumentationId { get; private set; }
         public long? WorkItemId { get; private set; }
         public string Title { get; private set; }
 
-        public AddTestPlanCommand(long productId, long? sprintId, string title, TestTypeEnum testType, long productDocumentation, long? workItemId)
+        public AddTestPlanCommand(long productId, long? sprintId, string title, TestTypeEnum testType, long? productDocumentation, long? workItemId)
         {
             ProductId = productId;
             SprintId = sprintId;
@@ -41,7 +41,7 @@ namespace ProductTests.Application.CommandHandler.TestPlanCommands
                 try
                 {
                     TestPlan testPlan = TestPlan.CreateInstance(request.Title, request.ProductId, request.SprintId, request.TestType,
-                        request.ProductDocumentationId, request.WorkItemId);
+                        request.ProductDocumentationId??0, request.WorkItemId);
                     _testPlanRepository.Add(testPlan);
                     await _unitOfWork.CompleteAsync(cancellationToken);
                     return Result.Success(testPlan);

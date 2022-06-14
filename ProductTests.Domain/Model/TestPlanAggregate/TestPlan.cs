@@ -43,7 +43,19 @@ namespace ProductTests.Domain.Model.TestPlanAggregate
             ProductDocumentationId = productDocumentationId;
             WorkItemId = workItemId;
         }
-
+        public void UpdateSuiteOrders(List<long> idsInOrder)
+        {
+            for (int i = 0; i < idsInOrder.Count; i++)
+            {
+                foreach (var testSuite in TestSuites)
+                {
+                    if(testSuite.Id == idsInOrder[i])
+                    {
+                        testSuite.UpdateOrder(i + 1);
+                    }
+                }
+            }
+        }
         public void ChangeSprint(long? sprintId)
         {
             SprintId = sprintId;

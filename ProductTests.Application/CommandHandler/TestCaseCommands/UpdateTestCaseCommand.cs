@@ -45,10 +45,10 @@ namespace ProductTests.Application.CommandHandler.TestCaseCommands
                     for (int i = 0; i < request.TestSteps.Count; i++)
                     {
                         UpdateTestStepDto testStep = request.TestSteps[i];
-                        if (testStep.Id != 0)
-                            testSteps.Add(testStep.ToTestStep(testStep.Id, i + 1));
+                        if (testStep.Id.HasValue)
+                            testSteps.Add(testStep.ToTestStep(testStep.Id.Value, i + 1));
                         else
-                            testSteps.Add(testStep.ToTestStep(0, i + 1));
+                            testSteps.Add(testStep.ToTestStep(i + 1));
                     }
                     testCase.UpdateTestSteps(testSteps, request.UserId);
                     await _unitOfWork.CompleteAsync(cancellationToken);

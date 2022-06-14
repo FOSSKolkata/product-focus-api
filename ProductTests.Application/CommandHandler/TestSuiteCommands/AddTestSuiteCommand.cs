@@ -32,6 +32,13 @@ namespace ProductTests.Application.CommandHandler.TestPlanCommands
                 try
                 {
                     TestPlan testPlan = await _testPlanRepository.GetById(request.TestPlanId);
+                    foreach(var testSuite in testPlan.TestSuites)
+                    {
+                        if(testSuite.Name == request.Name)
+                        {
+                            return Result.Failure($"The title {request.Name} is already exist!");
+                        }
+                    }
                     testPlan.AddTestSuite(request.Name, request.TestPlanId);
                     await _unitOfWork.CompleteAsync(cancellationToken);
                     return Result.Success();
