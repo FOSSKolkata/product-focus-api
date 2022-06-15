@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using MediatR;
 using Microsoft.Extensions.Configuration;
+using ProductFocus.ConnectionString;
 using ProductFocusApi.Dtos;
 using System;
 using System.Data;
@@ -20,17 +21,17 @@ namespace ProductFocusApi.QueryHandlers
         }
         internal sealed class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, GetProductByIdDto>
         {
-            private readonly string _queriesConnectionString;
-            public GetProductByIdQueryHandler(IConfiguration configuration)
+            private readonly QueriesConnectionString _queriesConnectionString;
+            public GetProductByIdQueryHandler(QueriesConnectionString queriesConnectionString)
             {
-                _queriesConnectionString = configuration["ConnectionStrings:QueriesConnectionString"] ?? throw new NullReferenceException("Connection String is missing from config file");
+                _queriesConnectionString = queriesConnectionString;
             }
 
             public async Task<GetProductByIdDto> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
             {
                 GetProductByIdDto result;
                 string sql = "SELECT id, name FROM [dbo].[Products] WHERE id = @Id";
-                using(IDbConnection con = new SqlConnection(_queriesConnectionString))
+                using(IDbConnection con = new SqlConnection(_queriesConnectionString.Value))
                 {
                     result = (await con.QueryAsync<GetProductByIdDto>(sql, new
                     {
