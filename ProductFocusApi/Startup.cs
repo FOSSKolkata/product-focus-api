@@ -24,6 +24,10 @@ using ProductFocus.Persistence.Services;
 using ProductFocus.Domain.Services;
 using ProductFocus.Domain.Common;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Releases.Application.Controllers;
+using ProductFocusApi.StartUp;
+using Releases.Application.StartUp;
 
 namespace ProductFocus.Api
 {
@@ -107,6 +111,10 @@ namespace ProductFocus.Api
                 x => x.UseLazyLoadingProxies()
                     .UseSqlServer(connection));
 
+            services.AddDbContext<Releases.Infrastructure.ReleaseDbContext>(
+                            x => x.UseLazyLoadingProxies()
+                                .UseSqlServer(connection));
+
             ////services.AddDbContext<ProductFocusDbContext>(
             //    x => x.UseLazyLoadingProxies()
             //        .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
@@ -115,6 +123,7 @@ namespace ProductFocus.Api
             services.AddSingleton<Messages>();
             services.AddTransient<UnitOfWork>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddReleases(Configuration);
             services.AddTransient<ProductDocumentations.Infrastructure.UnitOfWork>();
             services.AddTransient<ProductDocumentations.Domain.Common.IUnitOfWork, ProductDocumentations.Infrastructure.UnitOfWork>();
             services.AddTransient<ProductTests.Infrastructure.UnitOfWork>();
@@ -135,6 +144,8 @@ namespace ProductFocus.Api
             services.AddTransient<IBlobStorageService, BlobStorageService>();
             services.AddSingleton(queriesConnectionString);
             services.AddTransient<IEmailService, EmailService>();
+            services.AddCommandBuses(Configuration);
+            services.AddEventBus(Configuration);
         }
 
         // Register your own things directly with Autofac

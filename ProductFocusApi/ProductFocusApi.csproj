@@ -45,12 +45,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CommandBusRabbitMQ\CommandBusRabbitMQ.csproj" />
+    <ProjectReference Include="..\CommandBusServiceBus\CommandBusServiceBus.csproj" />
+    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\EventBusRabbitMQ\EventBusRabbitMQ.csproj" />
+    <ProjectReference Include="..\EventBusServiceBus\EventBusServiceBus.csproj" />
     <ProjectReference Include="..\ProductDocumentations.Application\ProductDocumentations.Application.csproj" />
 	  <ProjectReference Include="..\ProductDocumentations.Infrastructure\ProductDocumentations.Infrastructure.csproj" />
     <ProjectReference Include="..\ProductFocus.Domain\ProductFocus.Domain.csproj" />
     <ProjectReference Include="..\ProductFocus.Persistence\ProductFocus.Persistence.csproj" />
     <ProjectReference Include="..\ProductTests.Application\ProductTests.Application.csproj" />
     <ProjectReference Include="..\ProductTests.Infrastructure\ProductTests.Infrastructure.csproj" />
+    <ProjectReference Include="..\ReleaseLayers\Releases.Application\Releases.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>

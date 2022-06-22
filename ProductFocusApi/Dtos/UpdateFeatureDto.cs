@@ -27,6 +27,7 @@ namespace ProductFocus.Dtos
         public long? ModuleId { get; set; }
         public List<long> IncludeOwnerList { get; set; }
         public List<long> ExcludeOwnerList { get; set; }
+        public long? ReleaseId { get; set; }
     }
 
     public enum UpdateColumnIdentifier
@@ -48,6 +49,7 @@ namespace ProductFocus.Dtos
         Remarks = 15,
         FunctionalTestability = 16,
         UpdateModule = 17,
-        IncludeAndExcludeOwners = 18
+        IncludeAndExcludeOwners = 18,
+        Release = 19
     }
 }

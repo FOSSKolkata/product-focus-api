@@ -34,23 +34,31 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CommandBus", "CommandBus", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EventBus", "EventBus", "{01A5CE74-DB0C-4F25-AF12-1D78B2B5A755}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandBus", "CommandBus\CommandBus.csproj", "{2DD63859-3F07-4780-B6A0-8AA312B9036F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandBus", "CommandBus\CommandBus.csproj", "{2DD63859-3F07-4780-B6A0-8AA312B9036F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandBusRabbitMQ", "CommandBusRabbitMQ\CommandBusRabbitMQ.csproj", "{FE8D7E67-67DA-4DD8-AA63-5D6DE2FA6F5A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandBusRabbitMQ", "CommandBusRabbitMQ\CommandBusRabbitMQ.csproj", "{FE8D7E67-67DA-4DD8-AA63-5D6DE2FA6F5A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandBusServiceBus", "CommandBusServiceBus\CommandBusServiceBus.csproj", "{000FC1D9-202F-4697-AFAD-0820E23C9D74}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandBusServiceBus", "CommandBusServiceBus\CommandBusServiceBus.csproj", "{000FC1D9-202F-4697-AFAD-0820E23C9D74}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationCommandLogEF", "IntegrationCommandLogEF\IntegrationCommandLogEF.csproj", "{6435ED66-87CA-4EEA-9DC0-C83739E72250}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationCommandLogEF", "IntegrationCommandLogEF\IntegrationCommandLogEF.csproj", "{6435ED66-87CA-4EEA-9DC0-C83739E72250}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventBus", "EventBus\EventBus.csproj", "{5A625209-C600-4F0C-AC0B-660C5ED6D2A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBus", "EventBus\EventBus.csproj", "{5A625209-C600-4F0C-AC0B-660C5ED6D2A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventBusRabbitMQ", "EventBusRabbitMQ\EventBusRabbitMQ.csproj", "{C9D0462B-D489-41AA-8772-E5B47A724D21}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBusRabbitMQ", "EventBusRabbitMQ\EventBusRabbitMQ.csproj", "{C9D0462B-D489-41AA-8772-E5B47A724D21}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventBusServiceBus", "EventBusServiceBus\EventBusServiceBus.csproj", "{66F623D8-5951-4264-A198-3D5EFE9BA400}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBusServiceBus", "EventBusServiceBus\EventBusServiceBus.csproj", "{66F623D8-5951-4264-A198-3D5EFE9BA400}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationEventLogEF", "IntegrationEventLogEF\IntegrationEventLogEF.csproj", "{8451F7D2-77C2-405B-A39C-595958961FB3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationEventLogEF", "IntegrationEventLogEF\IntegrationEventLogEF.csproj", "{8451F7D2-77C2-405B-A39C-595958961FB3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{2D46CA08-9D7E-4A56-A4C0-FA5803FDFF2C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{2D46CA08-9D7E-4A56-A4C0-FA5803FDFF2C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Releases", "Releases", "{0103173B-1A56-46AA-A1AD-6650889ABE1C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Releases.Application", "ReleaseLayers\Releases.Application\Releases.Application.csproj", "{E29E3D33-56E7-4473-9924-61216DF672B4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Releases.Domain", "ReleaseLayers\Releases.Domain\Releases.Domain.csproj", "{A948106F-9161-45EA-B31A-58DE3DF90444}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Releases.Infrastructure", "ReleaseLayers\Releases.Infrastructure\Releases.Infrastructure.csproj", "{B2658D52-50D8-4977-80DE-EFE54E6E6746}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -130,6 +138,18 @@ Global
 		{2D46CA08-9D7E-4A56-A4C0-FA5803FDFF2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2D46CA08-9D7E-4A56-A4C0-FA5803FDFF2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2D46CA08-9D7E-4A56-A4C0-FA5803FDFF2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E29E3D33-56E7-4473-9924-61216DF672B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E29E3D33-56E7-4473-9924-61216DF672B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E29E3D33-56E7-4473-9924-61216DF672B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E29E3D33-56E7-4473-9924-61216DF672B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A948106F-9161-45EA-B31A-58DE3DF90444}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A948106F-9161-45EA-B31A-58DE3DF90444}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A948106F-9161-45EA-B31A-58DE3DF90444}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A948106F-9161-45EA-B31A-58DE3DF90444}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2658D52-50D8-4977-80DE-EFE54E6E6746}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2658D52-50D8-4977-80DE-EFE54E6E6746}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2658D52-50D8-4977-80DE-EFE54E6E6746}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2658D52-50D8-4977-80DE-EFE54E6E6746}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -152,6 +172,9 @@ Global
 		{66F623D8-5951-4264-A198-3D5EFE9BA400} = {01A5CE74-DB0C-4F25-AF12-1D78B2B5A755}
 		{8451F7D2-77C2-405B-A39C-595958961FB3} = {01A5CE74-DB0C-4F25-AF12-1D78B2B5A755}
 		{2D46CA08-9D7E-4A56-A4C0-FA5803FDFF2C} = {C828DBB6-8FF6-4FBA-8E86-45CAA776B909}
+		{E29E3D33-56E7-4473-9924-61216DF672B4} = {0103173B-1A56-46AA-A1AD-6650889ABE1C}
+		{A948106F-9161-45EA-B31A-58DE3DF90444} = {0103173B-1A56-46AA-A1AD-6650889ABE1C}
+		{B2658D52-50D8-4977-80DE-EFE54E6E6746} = {0103173B-1A56-46AA-A1AD-6650889ABE1C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AB9011D1-6710-44D3-9FD2-BD56D5E40DFD}

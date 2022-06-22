@@ -1,0 +1,4 @@
+﻿namespace Releases.Domain.Common
+{
+
+}

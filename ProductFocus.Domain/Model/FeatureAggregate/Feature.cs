@@ -29,6 +29,8 @@ namespace ProductFocus.Domain.Model
 
         private readonly IList<ScrumDay> _scrumDays = new List<ScrumDay>();
         public virtual IReadOnlyList<ScrumDay> ScrumDays => _scrumDays.ToList();
+        public virtual long? ReleaseId { get; private set; }
+        public virtual Release Release { get; private set; }
 
         public virtual string Owner { get; private set; }        
         public virtual DateTime? PlannedStartDate { get; private set; }
@@ -88,6 +90,12 @@ namespace ProductFocus.Domain.Model
         {
             Description = description;
             AddDomainEvent(new WorkItemDescriptionChangedDomainEvent(this, userId, ProductId, previousDescription, description));
+        }
+
+        public virtual void UpdateRelease(Release release)
+        {
+            Release = release;
+            ReleaseId = release?.Id;
         }
 
         public virtual void UpdateRemarks(string remarks)

@@ -45,7 +45,7 @@ namespace ProductFocusApi.Controllers
             Result result = await _mediator.Send(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }
-
+        
         [HttpPost]
         public async Task<IActionResult> UpsertScrumWorkCompletionPercentage(UpsertScrumWorkCompletionPercentageCommand command)
         {

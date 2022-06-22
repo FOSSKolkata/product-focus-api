@@ -30,28 +30,29 @@ namespace ProductFocus.AppServices
             private readonly IUnitOfWork _unitOfWork;
             private readonly IFeatureOrderingRepository _featureOrderingRepository;
             private readonly IModuleRepository _moduleRepository;
+            private readonly IReleaseRepository _releaseRepository;
 
             public UpdateFeatureCommandHandler(
                 IFeatureRepository featureRepository,
                 ISprintRepository sprintRepository, IUserRepository userRepository, 
                 IUnitOfWork unitOfWork,
                 IFeatureOrderingRepository featureOrderRepository,
-                IModuleRepository moduleRepository)
-            {                
+                IModuleRepository moduleRepository, IReleaseRepository releaseRepository)
+            {
                 _featureRepository = featureRepository;
                 _sprintRepository = sprintRepository;
                 _userRepository = userRepository;
                 _unitOfWork = unitOfWork;
                 _featureOrderingRepository = featureOrderRepository;
                 _moduleRepository = moduleRepository;
+                _releaseRepository = releaseRepository;
             }
             public async Task<Result> Handle(UpdateFeatureCommand request, CancellationToken cancellationToken)
             {
                 Feature feature = await _featureRepository.GetById(request.UpdateFeatureDto.Id);
                 
                 if (feature == null)
-                    return Result.Failure($"No feature found with Feature Id '{request.UpdateFeatureDto.Id}'");                
-                                
+                    return Result.Failure($"No feature found with Feature Id '{request.UpdateFeatureDto.Id}'");
 
                 try
                 {
@@ -151,8 +152,17 @@ namespace ProductFocus.AppServices
                         Module module = request.UpdateFeatureDto.ModuleId != null ? await _moduleRepository.GetById(request.UpdateFeatureDto.ModuleId??0) : null;
                         feature.UpdateModule(module);
                     }
+                    
+                    if(request.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.Release)
+                    {
+                        Release release = null;
+                        if (request.UpdateFeatureDto.ReleaseId.HasValue)
+                        {
+                            release = await _releaseRepository.GetById(request.UpdateFeatureDto.ReleaseId.Value);
+                        }
+                        feature.UpdateRelease(release);
+                    }
                     await _unitOfWork.CompleteAsync(cancellationToken);
-
 
                     return Result.Success();
                 }
@@ -160,7 +170,7 @@ namespace ProductFocus.AppServices
                 catch (Exception ex)
                 {
                     return Result.Failure(ex.Message);
-                }             
+                }            
                 
             }
 

@@ -56,6 +56,8 @@ namespace ProductFocus.Persistence
              .Property(o => o.Id).UseHiLo();
             modelbuilder.Entity<BusinessRequirementAttachment>()
              .Property(o => o.Id).UseHiLo();
+            modelbuilder.Entity<Release>()
+             .Property(o => o.Id).UseHiLo();
         }
         public ProductFocusDbContext(DbContextOptions<ProductFocusDbContext> options) : base(options)
         {
@@ -84,6 +86,7 @@ namespace ProductFocus.Persistence
         public DbSet<BusinessRequirement> BusinessRequirements { get; set; }
         public DbSet<BusinessRequirementTag> BusinessRequirementTags { get; set; }
         public DbSet<BusinessRequirementAttachment> BusinessRequirementAttachments { get; set; }
+        public DbSet<Release> Releases { get; set; }
 
         private readonly IMediator _mediator;
 

@@ -18,12 +18,13 @@ namespace ProductFocus.Dtos
         public DateTime PlannedEndDate { get; set; }
         public DateTime ActualStartDate { get; set; }
         public DateTime ActualEndDate { get; set; }
-        public IList<OrganizationMember> Members { get; set; }
-        public IList<Assignee> Assignees { get; set; }
-        public SprintDetails Sprint { get; set; }
+        public IList<OrganizationMemberDto> Members { get; set; }
+        public IList<AssigneeDto> Assignees { get; set; }
+        public SprintDetailsDto Sprint { get; set; }
+        public ReleaseDto Release { get; set; }
     }
 
-    public sealed class Assignee
+    public sealed class AssigneeDto
     {
         public long Id { get; set; }
         public string Name { get; set; }
@@ -31,7 +32,7 @@ namespace ProductFocus.Dtos
         public string ObjectId { get; set; }
     }
 
-    public sealed class OrganizationMember
+    public sealed class OrganizationMemberDto
     {
         public string Name { get; set; }
         public string Email { get; set; }
@@ -39,12 +40,19 @@ namespace ProductFocus.Dtos
         public long Id { get; set; }
     }
 
-    public sealed class SprintDetails
+    public sealed class SprintDetailsDto
     {
         public long Id { get; set; }
         public string Name { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+    }
+
+    public sealed class ReleaseDto
+    {
+        public long Id { get; set; }
+        public string Name { get; set; }
+        public DateTime ReleaseDate { get; set; }
     }
 
 }
