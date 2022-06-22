@@ -9,7 +9,7 @@ namespace Releases.Application.Controllers
 {
     [ApiController]
     [Route("[Controller]/[Action]")]
-    [Authorize]
+    //[Authorize]
     public class ReleaseController : ControllerBase
     {
         private readonly IMediator _mediator;
