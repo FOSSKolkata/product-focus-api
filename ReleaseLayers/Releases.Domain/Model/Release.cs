@@ -22,5 +22,13 @@ namespace Releases.Domain.Model
         {
             return new(productId, name, releaseDate);
         }
+        public void UpdateName(string name)
+        {
+            Name = name;
+        }
+        public void UpdateReleaseDate(DateTime releaseDate)
+        {
+            ReleaseDate = releaseDate;
+        }
     }
 }
