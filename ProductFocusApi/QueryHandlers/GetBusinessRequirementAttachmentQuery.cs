@@ -21,7 +21,7 @@ namespace ProductFocusApi.QueryHandlers
         {
             BusinessRequirementId = businessReqirementId;
         }
-        public sealed class GetBusinessRequirementAttachmentQueryHandler : IRequestHandler<GetBusinessRequirementAttachmentQuery, List<GetBusinessRequirementAttachmentDto>>
+        internal class GetBusinessRequirementAttachmentQueryHandler : IRequestHandler<GetBusinessRequirementAttachmentQuery, List<GetBusinessRequirementAttachmentDto>>
         {
             private readonly QueriesConnectionString _queriesConnectionString;
             private readonly IBlobStorageService _blobStorageService;

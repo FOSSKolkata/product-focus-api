@@ -33,7 +33,10 @@ namespace ProductFocusApi.QueryHandlers
                 string sql = @"SELECT f.id, f.title, f.workItemType, f.description, f.workCompletionPercentage FROM [dbo].[Features] f
                     INNER JOIN [dbo].[UserToFeatureAssignments] fu ON f.Id = fu.FeatureId
                     INNER JOIN [dbo].[Users] u ON u.Id = fu.UserId
-                    WHERE f.productId = @ProductId AND u.ObjectId = @UserObjectId;";
+                    WHERE f.productId = @ProductId AND u.ObjectId = @UserObjectId
+                    AND sprintid = (SELECT TOP(1) id FROM SPRINT WHERE productId = @ProductId
+                    AND startDate <= GETDATE() AND GETDATE() <= endDate
+                    ORDER BY endDate DESC);";
 
                 using (IDbConnection con = new SqlConnection(_queriesConnectionString.Value))
                 {

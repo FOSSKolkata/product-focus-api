@@ -36,8 +36,12 @@ namespace ProductFocusApi.QueryHandlers
                 GetCurrentProgressWorkItemDto dto;
                 User user = _userRepository.GetByIdpUserId(request.UserId);
 
-                string sql = @"SELECT id, workItemId FROM [dbo].[CurrentProgressWorkItems]
-                    WHERE isDeleted = 'false' AND productId = @ProductId AND userId = @UserId;";
+                string sql = @"SELECT cpwi.id, cpwi.workItemId FROM [dbo].[CurrentProgressWorkItems] cpwi
+                    INNER JOIN [dbo].[Features] f ON cpwi.WorkItemId = f.Id
+                    WHERE cpwi.isDeleted = 'false' AND cpwi.productId = @ProductId AND cpwi.userId = @UserId
+                    AND f.SprintId = (SELECT TOP(1) id FROM SPRINT WHERE productId = 4
+                    AND startDate <= GETDATE() AND GETDATE() <= endDate
+                    ORDER BY endDate DESC);";
 
                 using(IDbConnection con = new SqlConnection(_queriesConnectionString.Value))
                 {
