@@ -45,7 +45,12 @@ namespace ProductFocusApi.CommandHandlers
                     if (request.PreviouslyProgressWorkItem.HasValue)
                     {
                         CurrentProgressWorkItem previouslyProgressWorkItem = await _currentProgressWorkItemRepository.GetById(request.PreviouslyProgressWorkItem.Value);
-                        previouslyProgressWorkItem.Deleted(user.Name);
+                        previouslyProgressWorkItem.Delete(user.Name);
+                    }
+                    var previousItems = await _currentProgressWorkItemRepository.GetAllUserItemByProductId(request.ProductId, user.Id);
+                    foreach (var item in previousItems)
+                    {
+                        item.Delete(user.Name);
                     }
                     currentProgressWorkItem = CurrentProgressWorkItem.CreateInstance(
                         request.ProductId, request.WorkItemId, user.Id);

@@ -11,5 +11,6 @@ namespace ProductFocus.Domain.Repositories
     {
         void Add(CurrentProgressWorkItem currentProgressWorkItem);
         Task<CurrentProgressWorkItem> GetById(long id);
+        Task<List<CurrentProgressWorkItem>> GetAllUserItemByProductId(long productId, long userId);
     }
 }

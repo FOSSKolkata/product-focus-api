@@ -32,7 +32,7 @@ namespace ProductFocus.Domain.Model
             return new(productId, workItemId, userId);
         }
 
-        public void Deleted(string deletedBy)
+        public void Delete(string deletedBy)
         {
             DeletedBy = deletedBy;
             DeletedOn = DateTime.Now;

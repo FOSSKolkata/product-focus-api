@@ -26,5 +26,12 @@ namespace ProductFocus.Persistence.Repositories
         {
             return _unitOfWork.GetAsync<CurrentProgressWorkItem>(id);
         }
+
+        public Task<List<CurrentProgressWorkItem>> GetAllUserItemByProductId(long productId, long userId)
+        {
+            return _unitOfWork.Query<CurrentProgressWorkItem>()
+                .Where(a => a.ProductId == productId && a.UserId == userId && a.IsDeleted == false)
+                .ToListAsync();
+        }
     }
 }

@@ -10,6 +10,7 @@ using System.Linq;
 using ProductFocus.Domain.Common;
 using ProductFocusApi.QueryHandlers;
 using MediatR;
+using ProductFocusApi.Dtos;
 
 namespace ProductFocusApi.Controllers
 {
@@ -49,6 +50,15 @@ namespace ProductFocusApi.Controllers
             var command = new AddOrganizationCommand(dto.OrganizationName, objectId);
             Result result = await _mediator.Send(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
+        }
+
+        [HttpGet("{organizationName}")]
+        public async Task<IActionResult> GetOrganizationByName(string organizationName)
+        {
+            string objectId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            var command = new GetOrganizationByNameQuery(organizationName, objectId);
+            GetOrganizationByNameDto organization = await _mediator.Send(command);
+            return Ok(organization);
         }
 
         [HttpPost("{id}")]
