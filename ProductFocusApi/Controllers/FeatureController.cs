@@ -12,12 +12,14 @@ using ProductFocusApi.Dtos;
 using ProductFocusApi.QueryHandlers;
 using ProductFocus.Domain.Common;
 using MediatR;
+using System;
+using ProductFocus.Domain.Model;
 
 namespace ProductFocusApi.Controllers
 {
     [ApiController]
     [Route("[Controller]/[Action]")]
-    [Authorize]
+    //[Authorize]
     public class FeatureController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -81,6 +83,32 @@ namespace ProductFocusApi.Controllers
         {
             List<GetFeatureDto> features = await _mediator.Send(new GetFeatureListByProductIdQuery(productId));
             return Ok(features);
+        }
+        [HttpPost("{productId}/{workItemId}/query")]
+        public async Task<IActionResult> MarkWorkItemAsCurrentlyProgress(long productId, long workItemId, [FromQuery] long? previouslyProgressWorkItemId)
+        {
+            string objectId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            var command = new AddCurrentProgressWorkItemCommand(productId, workItemId, objectId, previouslyProgressWorkItemId);
+            Result<GetCurrentProgressWorkItemDto> result = await _mediator.Send(command);
+            return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
+        }
+
+        [HttpGet("{productId}")]
+        public async Task<IActionResult> GetCurrentProgressWorkItemId(long productId)
+        {
+            string objectId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            var query = new GetCurrentProgressWorkItemIdQuery(productId, objectId);
+            Result<GetCurrentProgressWorkItemDto> result = await _mediator.Send(query);
+            return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
+        }
+
+        [HttpGet("{productId}")]
+        public async Task<IActionResult> GetMyWorkItemsByProductId(long productId)
+        {
+            string objectId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            var query = new GetMyWorkItemsByProductIdQuery(productId, objectId);
+            Result<List<GetWorkItemDto>> result = await _mediator.Send(query);
+            return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
         }
     }
 }

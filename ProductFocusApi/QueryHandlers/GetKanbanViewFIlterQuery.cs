@@ -218,17 +218,21 @@ namespace ProductFocus.AppServices
                 }
                 if(query.GroupCategoryEnum == GroupCategoryEnum.Module)
                 {
-                    GetKanbanViewListDto kanban = new();
-                    kanban.GroupType = "Module";
-                    kanban.KanbanList = kanbanViewList;
+                    GetKanbanViewListDto kanban = new()
+                    {
+                        GroupType = "Module",
+                        KanbanList = kanbanViewList
+                    };
                     return kanban;
                 }
 
                 if(query.GroupCategoryEnum == GroupCategoryEnum.Users)
                 {
-                    GetKanbanViewListDto kanban = new();
-                    kanban.GroupType = "Users";
-                    kanban.KanbanList = userGroupKanban;
+                    GetKanbanViewListDto kanban = new()
+                    {
+                        GroupType = "Users",
+                        KanbanList = userGroupKanban
+                    };
                     return kanban;
                 }
                 throw new ArgumentException("Invalid agrument is passed.");
