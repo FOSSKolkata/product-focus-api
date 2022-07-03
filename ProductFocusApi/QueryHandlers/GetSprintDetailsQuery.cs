@@ -32,10 +32,10 @@ namespace ProductFocus.AppServices
                 List<GetSprintDto> sprintList = new();
                 
                 string sql = @"
-                    select Id, Name, StartDate, EndDate 
-                    from Sprint
-                    where ProductId = @PrdId
-                    order by StartDate desc";
+                    SELECT Id, Name, StartDate, EndDate 
+                    FROM Sprint
+                    WHERE ProductId = @PrdId AND isdeleted = 'false'
+                    ORDER BY StartDate DESC";
                 
                 using (IDbConnection con = new SqlConnection(_queriesConnectionString.Value))
                 {

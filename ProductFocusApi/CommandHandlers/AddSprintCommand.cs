@@ -6,6 +6,7 @@ using System;
 using System.Threading.Tasks;
 using MediatR;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace ProductFocusApi.CommandHandlers
 {
@@ -41,10 +42,17 @@ namespace ProductFocusApi.CommandHandlers
 
             public async Task<Result> Handle(AddSprintCommand request, CancellationToken cancellationToken)
             {
-                Sprint sprintWithSameName = _sprintRepository.GetByName(request.Name);
+                List<Sprint> sprints = await _sprintRepository.GetByProductId(request.ProductId);
+                foreach(var sprint in sprints)
+                {
+                    if (sprint.Name == request.Name)
+                        return Result.Failure($"Sprint '{request.Name}' already exists");
 
-                if (sprintWithSameName != null)
-                    return Result.Failure($"Sprint '{request.Name}' already exists");
+                    if(sprint.EndDate <= request.StartDate || sprint.StartDate >= request.EndDate)
+                        continue;
+
+                    return Result.Failure($"sprint exist in the range '{sprint.StartDate}' and '{sprint.EndDate}' ");
+                }
 
                 Product product = await _productRepository.GetById(request.ProductId);
 
@@ -52,7 +60,7 @@ namespace ProductFocusApi.CommandHandlers
                     return Result.Failure("Invalid product id");
 
                 var sprintResult = Sprint.CreateInstance(product, request.Name, request.StartDate, request.EndDate);
-                
+
                 if (sprintResult.IsFailure)
                     return Result.Failure(sprintResult.Error);
 
