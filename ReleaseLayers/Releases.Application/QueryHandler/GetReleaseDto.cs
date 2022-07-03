@@ -17,6 +17,7 @@ namespace Releases.Application.QueryHandler
         public long BugCount { get; set; }
         public long EpicCount { get; set; }
         public long PbiCount { get; set; }
+        public ReleaseStatus Status { get; set; }
     }
     public class GetReleaseWorkItemCountDto
     {

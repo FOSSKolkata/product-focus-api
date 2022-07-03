@@ -11,11 +11,13 @@ namespace Releases.Application.CommandHandler.ReleaseCommands
         public long ProductId { get; private set; }
         public string Name { get; private set; }
         public DateTime? ReleaseDate { get; private set; }
-        public AddReleaseCommand(long productId, string name, DateTime releaseDate)
+        public ReleaseStatus ReleaseStatus { get; private set; }
+        public AddReleaseCommand(long productId, string name, DateTime releaseDate, ReleaseStatus releaseStatus)
         {
             ProductId = productId;
             Name = name;
             ReleaseDate = releaseDate;
+            ReleaseStatus = releaseStatus;
         }
         internal sealed class AddReleaseCommandHandler : IRequestHandler<AddReleaseCommand, Result>
         {
@@ -31,7 +33,7 @@ namespace Releases.Application.CommandHandler.ReleaseCommands
             {
                 try
                 {
-                    Release release = Release.CreateInstance(request.ProductId, request.Name, request.ReleaseDate);
+                    Release release = Release.CreateInstance(request.ProductId, request.Name, request.ReleaseDate, request.ReleaseStatus);
                     _releaseRepository.Add(release);
                     await _unitOfWork.CompleteAsync(cancellationToken);
                 } catch(Exception)

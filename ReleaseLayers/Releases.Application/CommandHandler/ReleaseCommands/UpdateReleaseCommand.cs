@@ -15,11 +15,13 @@ namespace Releases.Application.CommandHandler.ReleaseCommands
         public long Id { get; private set; }
         public string Name { get; private set; }
         public DateTime ReleaseDate { get; private set; }
-        public UpdateReleaseCommand(long id, string name, DateTime releaseDate)
+        public ReleaseStatus ReleaseStatus { get; private set; }
+        public UpdateReleaseCommand(long id, string name, DateTime releaseDate, ReleaseStatus releaseStatus)
         {
             Id = id;
             Name = name;
             ReleaseDate = releaseDate;
+            ReleaseStatus = releaseStatus;
         }
         internal class UpdateReleaseCommandHandler : IRequestHandler<UpdateReleaseCommand, Release>
         {
@@ -39,6 +41,7 @@ namespace Releases.Application.CommandHandler.ReleaseCommands
                     release = await _releaseRepository.GetById(request.Id);
                     release.UpdateName(request.Name);
                     release.UpdateReleaseDate(request.ReleaseDate);
+                    release.UpdateStatus(request.ReleaseStatus);
                     await _unitOfWork.CompleteAsync(cancellationToken);
                 }catch(Exception)
                 {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Releases.Domain.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,5 +11,6 @@ namespace Releases.Application.CommandHandler.ReleaseCommands
     {
         public string Name { get; set; } = string.Empty;
         public DateTime ReleaseDate { get; set; }
+        public ReleaseStatus Status { get; set; }
     }
 }

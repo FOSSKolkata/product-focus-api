@@ -21,7 +21,7 @@ namespace Releases.Application.Controllers
         [HttpPost("{productId}")]
         public async Task<IActionResult> CreateRelease(long productId, AddReleaseDto dto)
         {
-            var command = new AddReleaseCommand(productId, dto.Name, dto.ReleaseDate);
+            var command = new AddReleaseCommand(productId, dto.Name, dto.ReleaseDate, dto.Status);
             Result result = await _mediator.Send(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }
@@ -36,7 +36,7 @@ namespace Releases.Application.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateRelease([FromBody] UpdateReleaseDto dto)
         {
-            var command = new UpdateReleaseCommand(dto.Id, dto.Name, dto.ReleaseDate);
+            var command = new UpdateReleaseCommand(dto.Id, dto.Name, dto.ReleaseDate, dto.Status);
             Result<Release> result = await _mediator.Send(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
         }

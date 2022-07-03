@@ -31,7 +31,7 @@ namespace Releases.Application.QueryHandler
                     request.ProductId
                 })).ToList();
                 return releases;*/
-                string sql = @"SELECT id, Name, ReleaseDate, CreatedOn FROM [release].[Releases]
+                string sql = @"SELECT id, Name, ReleaseDate, CreatedOn, Status FROM [release].[Releases]
                     WHERE productId = @ProductId;
                     SELECT id, releaseId, WorkItemType, WorkItemCount FROM
                     [release].[ReleaseWorkItemCounts] WHERE
