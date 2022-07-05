@@ -72,10 +72,10 @@ namespace ProductFocus.AppServices
 
                     if (request.UpdateFeatureDto.FieldName == UpdateColumnIdentifier.Sprint)
                     {
-                        Sprint currentSprint = _sprintRepository.GetByName(request.UpdateFeatureDto.SprintName);
+                        Sprint currentSprint = await _sprintRepository.GetById(request.UpdateFeatureDto.SprintId);
 
                         if (currentSprint == null)
-                            return Result.Failure($"Sprint with name '{request.UpdateFeatureDto.SprintName}' doesn't exist");
+                            return Result.Failure($"Sprint with doesn't exist");
                         feature.UpdateSprint(currentSprint, updatedByUser.Id, feature.Sprint);
 
                         List<FeatureOrdering> featureOrderings = await _featureOrderingRepository.GetByIdAndSprint(feature.Id, feature.Sprint.Id);
