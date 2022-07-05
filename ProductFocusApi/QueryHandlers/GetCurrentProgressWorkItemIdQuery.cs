@@ -39,7 +39,7 @@ namespace ProductFocusApi.QueryHandlers
                 string sql = @"SELECT cpwi.id, cpwi.workItemId FROM [dbo].[CurrentProgressWorkItems] cpwi
                     INNER JOIN [dbo].[Features] f ON cpwi.WorkItemId = f.Id
                     WHERE cpwi.isDeleted = 'false' AND cpwi.productId = @ProductId AND cpwi.userId = @UserId
-                    AND f.SprintId = (SELECT TOP(1) id FROM SPRINT WHERE productId = 4
+                    AND f.SprintId = (SELECT TOP(1) id FROM SPRINT WHERE productId = @ProductId
                     AND startDate <= GETDATE() AND GETDATE() <= endDate
                     ORDER BY endDate DESC);";
 
