@@ -15,13 +15,11 @@ namespace ProductFocusApi.CommandHandlers
         public long ProductId { get; private set; }
         public string UserObjectId { get; private set; }
         public long WorkItemId { get; private set; }
-        public long? PreviouslyProgressWorkItem { get; private set; }
-        public AddCurrentProgressWorkItemCommand(long productId, long workItemId, string userObjectId, long? previouslyProgressWorkItem)
+        public AddCurrentProgressWorkItemCommand(long productId, long workItemId, string userObjectId)
         {
             ProductId = productId;
             UserObjectId = userObjectId;
             WorkItemId = workItemId;
-            PreviouslyProgressWorkItem = previouslyProgressWorkItem;
         }
         internal class AddCurrentProgressWorkItemCommandHander : IRequestHandler<AddCurrentProgressWorkItemCommand, Result<GetCurrentProgressWorkItemDto>>
         {
@@ -42,16 +40,13 @@ namespace ProductFocusApi.CommandHandlers
                 try
                 {
                     User user = _userRepository.GetByIdpUserId(request.UserObjectId);
-                    if (request.PreviouslyProgressWorkItem.HasValue)
-                    {
-                        CurrentProgressWorkItem previouslyProgressWorkItem = await _currentProgressWorkItemRepository.GetById(request.PreviouslyProgressWorkItem.Value);
-                        previouslyProgressWorkItem.Delete(user.Name);
-                    }
                     var previousItems = await _currentProgressWorkItemRepository.GetAllUserItemByProductId(request.ProductId, user.Id);
+
                     foreach (var item in previousItems)
                     {
                         item.Delete(user.Name);
                     }
+
                     currentProgressWorkItem = CurrentProgressWorkItem.CreateInstance(
                         request.ProductId, request.WorkItemId, user.Id);
                     _currentProgressWorkItemRepository.Add(currentProgressWorkItem);

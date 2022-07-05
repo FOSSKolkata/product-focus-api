@@ -84,11 +84,11 @@ namespace ProductFocusApi.Controllers
             List<GetFeatureDto> features = await _mediator.Send(new GetFeatureListByProductIdQuery(productId));
             return Ok(features);
         }
-        [HttpPost("{productId}/{workItemId}/query")]
-        public async Task<IActionResult> MarkWorkItemAsCurrentlyProgress(long productId, long workItemId, [FromQuery] long? previouslyProgressWorkItemId)
+        [HttpPost("{productId}/{workItemId}")]
+        public async Task<IActionResult> MarkWorkItemAsCurrentlyProgress(long productId, long workItemId)
         {
             string objectId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            var command = new AddCurrentProgressWorkItemCommand(productId, workItemId, objectId, previouslyProgressWorkItemId);
+            var command = new AddCurrentProgressWorkItemCommand(productId, workItemId, objectId);
             Result<GetCurrentProgressWorkItemDto> result = await _mediator.Send(command);
             return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
         }
