@@ -48,7 +48,7 @@ namespace ProductFocusApi.CommandHandlers
                     if (sprint.Name == request.Name)
                         return Result.Failure($"Sprint '{request.Name}' already exists");
 
-                    if(sprint.EndDate <= request.StartDate || sprint.StartDate >= request.EndDate)
+                    if(sprint.EndDate < request.StartDate || sprint.StartDate > request.EndDate)
                         continue;
 
                     return Result.Failure($"sprint exist in the range '{sprint.StartDate}' and '{sprint.EndDate}' ");
