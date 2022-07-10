@@ -4,9 +4,6 @@ using ProductDocumentations.Domain.Common;
 using ProductDocumentations.Domain.Model;
 using ProductDocumentations.Domain.Repositories;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 

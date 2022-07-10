@@ -227,6 +227,6 @@ namespace ProductFocus.Domain.Model
         Feature = 1,
         Bug = 2,
         Epic = 3,
-        PBI = 4
+        Pbi = 4
     }
 }

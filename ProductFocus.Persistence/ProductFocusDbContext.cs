@@ -5,7 +5,6 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProductFocus.Domain.Common;
 using ProductFocus.Domain.Model;
-using ProductFocus.Domain.Model.BusinessAggregate;
 using ProductFocus.Domain.Model.FeatureAggregate;
 
 namespace ProductFocus.Persistence
@@ -48,14 +47,6 @@ namespace ProductFocus.Persistence
              .Property(o => o.Id).UseHiLo();
             modelbuilder.Entity<TagCategory>()
              .Property(o => o.Id).UseHiLo();
-            modelbuilder.Entity<BusinessRequirement>()
-             .Property(o => o.Id).UseHiLo();
-            modelbuilder.Entity<BusinessRequirement>()
-             .Property(o => o.Id).UseHiLo();
-            modelbuilder.Entity<BusinessRequirementTag>()
-             .Property(o => o.Id).UseHiLo();
-            modelbuilder.Entity<BusinessRequirementAttachment>()
-             .Property(o => o.Id).UseHiLo();
             modelbuilder.Entity<Release>()
              .Property(o => o.Id).UseHiLo();
             modelbuilder.Entity<CurrentProgressWorkItem>()
@@ -85,9 +76,6 @@ namespace ProductFocus.Persistence
         public DbSet<FeatureOrdering> FeatureOrders { get; set; }
         public DbSet<TagCategory> TagCategories { get; set; }
         public DbSet<Tag> Tags { get; set; }
-        public DbSet<BusinessRequirement> BusinessRequirements { get; set; }
-        public DbSet<BusinessRequirementTag> BusinessRequirementTags { get; set; }
-        public DbSet<BusinessRequirementAttachment> BusinessRequirementAttachments { get; set; }
         public DbSet<Release> Releases { get; set; }
         public DbSet<CurrentProgressWorkItem> CurrentProgressWorkItems { get; set; }
 

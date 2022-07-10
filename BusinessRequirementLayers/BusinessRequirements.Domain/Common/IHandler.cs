@@ -1,0 +1,4 @@
+﻿namespace BusinessRequirements.Domain.Common
+{
+
+}

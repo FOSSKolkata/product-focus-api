@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ProductDocumentations.Domain\ProductDocumentations.Domain.csproj" />
+    <ProjectReference Include="..\ProductDocumentations.Infrastructure\ProductDocumentations.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

@@ -38,6 +38,9 @@ namespace ProductFocusApi.AutofacModules
             builder.RegisterAssemblyTypes(typeof(Releases.Application.CommandHandler.ReleaseCommands.AddReleaseCommand)
                 .GetTypeInfo().Assembly).AsClosedTypesOf(typeof(IRequestHandler<,>));
 
+            builder.RegisterAssemblyTypes(typeof(BusinessRequirements.CommandHandlers.AddBusinessRequirementCommand)
+                .GetTypeInfo().Assembly).AsClosedTypesOf(typeof(IRequestHandler<,>));
+
         }
     }
 }

@@ -45,6 +45,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BusinessRequirementLayers\BusinessRequirements.Application\BusinessRequirements.Application.csproj" />
     <ProjectReference Include="..\CommandBusRabbitMQ\CommandBusRabbitMQ.csproj" />
     <ProjectReference Include="..\CommandBusServiceBus\CommandBusServiceBus.csproj" />
     <ProjectReference Include="..\Common\Common.csproj" />

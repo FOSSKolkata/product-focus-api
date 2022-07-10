@@ -64,7 +64,7 @@ namespace ProductFocus.Persistence.Migrations
 
                     b.HasIndex("BusinessRequirementId");
 
-                    b.ToTable("BusinessRequirementAttachments");
+                    b.ToTable("BusinessRequirementAttachments", (string)null);
                 });
 
             modelBuilder.Entity("ProductFocus.Domain.Model.BusinessAggregate.BusinessRequirementTag", b =>
@@ -100,7 +100,7 @@ namespace ProductFocus.Persistence.Migrations
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("BusinessRequirementTags");
+                    b.ToTable("BusinessRequirementTags", (string)null);
                 });
 
             modelBuilder.Entity("ProductFocus.Domain.Model.BusinessRequirement", b =>
@@ -157,7 +157,7 @@ namespace ProductFocus.Persistence.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("BusinessRequirements");
+                    b.ToTable("BusinessRequirements", (string)null);
                 });
 
             modelBuilder.Entity("ProductFocus.Domain.Model.CurrentProgressWorkItem", b =>
@@ -203,7 +203,7 @@ namespace ProductFocus.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CurrentProgressWorkItems");
+                    b.ToTable("CurrentProgressWorkItems", (string)null);
                 });
 
             modelBuilder.Entity("ProductFocus.Domain.Model.Feature", b =>
@@ -306,7 +306,7 @@ namespace ProductFocus.Persistence.Migrations
 
                     b.HasIndex("SprintId");
 
-                    b.ToTable("Features");
+                    b.ToTable("Features", (string)null);
                 });
 
             modelBuilder.Entity("ProductFocus.Domain.Model.FeatureAggregate.ScrumDay", b =>
@@ -348,7 +348,7 @@ namespace ProductFocus.Persistence.Migrations
 
                     b.HasIndex("FeatureId");
 
-                    b.ToTable("ScrumDay");
+                    b.ToTable("ScrumDay", (string)null);
                 });
 
             modelBuilder.Entity("ProductFocus.Domain.Model.FeatureComment", b =>
@@ -384,7 +384,7 @@ namespace ProductFocus.Persistence.Migrations
 
                     b.HasIndex("FeatureId");
 
-                    b.ToTable("FeatureComments");
+                    b.ToTable("FeatureComments", (string)null);
                 });
 
             modelBuilder.Entity("ProductFocus.Domain.Model.FeatureOrdering", b =>
@@ -421,7 +421,7 @@ namespace ProductFocus.Persistence.Migrations
 
                     b.HasIndex("FeatureId");
 
-                    b.ToTable("FeatureOrderings");
+                    b.ToTable("FeatureOrderings", (string)null);
                 });
 
             modelBuilder.Entity("ProductFocus.Domain.Model.Invitation", b =>
@@ -469,7 +469,7 @@ namespace ProductFocus.Persistence.Migrations
 
                     b.HasIndex("OrganizationId");
 
-                    b.ToTable("Invitations");
+                    b.ToTable("Invitations", (string)null);
                 });
 
             modelBuilder.Entity("ProductFocus.Domain.Model.Member", b =>
@@ -510,7 +510,7 @@ namespace ProductFocus.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Members");
+                    b.ToTable("Members", (string)null);
                 });
 
             modelBuilder.Entity("ProductFocus.Domain.Model.Module", b =>
@@ -546,7 +546,7 @@ namespace ProductFocus.Persistence.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Modules");
+                    b.ToTable("Modules", (string)null);
                 });
 
             modelBuilder.Entity("ProductFocus.Domain.Model.Organization", b =>
@@ -577,7 +577,7 @@ namespace ProductFocus.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Organizations");
+                    b.ToTable("Organizations", (string)null);
                 });
 
             modelBuilder.Entity("ProductFocus.Domain.Model.Permission", b =>
@@ -608,7 +608,7 @@ namespace ProductFocus.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Permissions");
+                    b.ToTable("Permissions", (string)null);
                 });
 
             modelBuilder.Entity("ProductFocus.Domain.Model.Product", b =>
@@ -644,7 +644,7 @@ namespace ProductFocus.Persistence.Migrations
 
                     b.HasIndex("OrganizationId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("ProductFocus.Domain.Model.Release", b =>
@@ -681,7 +681,7 @@ namespace ProductFocus.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Releases");
+                    b.ToTable("Releases", (string)null);
                 });
 
             modelBuilder.Entity("ProductFocus.Domain.Model.Role", b =>
@@ -717,7 +717,7 @@ namespace ProductFocus.Persistence.Migrations
 
                     b.HasIndex("MemberId");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("ProductFocus.Domain.Model.RolePermission", b =>
@@ -755,7 +755,7 @@ namespace ProductFocus.Persistence.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("RolePermissions");
+                    b.ToTable("RolePermissions", (string)null);
                 });
 
             modelBuilder.Entity("ProductFocus.Domain.Model.Sprint", b =>
@@ -806,7 +806,7 @@ namespace ProductFocus.Persistence.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Sprint");
+                    b.ToTable("Sprint", (string)null);
                 });
 
             modelBuilder.Entity("ProductFocus.Domain.Model.Tag", b =>
@@ -854,7 +854,7 @@ namespace ProductFocus.Persistence.Migrations
 
                     b.HasIndex("TagCategoryId");
 
-                    b.ToTable("Tags");
+                    b.ToTable("Tags", (string)null);
                 });
 
             modelBuilder.Entity("ProductFocus.Domain.Model.TagCategory", b =>
@@ -890,7 +890,7 @@ namespace ProductFocus.Persistence.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("TagCategories");
+                    b.ToTable("TagCategories", (string)null);
                 });
 
             modelBuilder.Entity("ProductFocus.Domain.Model.Task", b =>
@@ -932,7 +932,7 @@ namespace ProductFocus.Persistence.Migrations
 
                     b.HasIndex("FeatureId");
 
-                    b.ToTable("Tasks");
+                    b.ToTable("Tasks", (string)null);
                 });
 
             modelBuilder.Entity("ProductFocus.Domain.Model.User", b =>
@@ -969,7 +969,7 @@ namespace ProductFocus.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("ProductFocus.Domain.Model.UserToFeatureAssignment", b =>
@@ -1007,7 +1007,7 @@ namespace ProductFocus.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserToFeatureAssignments");
+                    b.ToTable("UserToFeatureAssignments", (string)null);
                 });
 
             modelBuilder.Entity("ProductFocus.Domain.Model.WorkItemDomainEventLog", b =>
@@ -1051,7 +1051,7 @@ namespace ProductFocus.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WorkItemDomainEventLogs");
+                    b.ToTable("WorkItemDomainEventLogs", (string)null);
                 });
 
             modelBuilder.Entity("ProductFocus.Domain.Model.BusinessAggregate.BusinessRequirementAttachment", b =>

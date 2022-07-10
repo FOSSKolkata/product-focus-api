@@ -25,6 +25,11 @@ namespace Releases.Application.StartUp
                 .PartManager
                 .ApplicationParts.Add(new AssemblyPart(typeof(ReleaseController).Assembly));
 
+            var connection = configuration["DefaultConnection"];
+            services.AddDbContext<ReleaseDbContext>(
+                            x => x.UseLazyLoadingProxies()
+                                .UseSqlServer(connection));
+
             return services;
         }
     }

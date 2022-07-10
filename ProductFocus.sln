@@ -54,11 +54,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Releases", "Releases", "{0103173B-1A56-46AA-A1AD-6650889ABE1C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Releases.Application", "ReleaseLayers\Releases.Application\Releases.Application.csproj", "{E29E3D33-56E7-4473-9924-61216DF672B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Releases.Application", "ReleaseLayers\Releases.Application\Releases.Application.csproj", "{E29E3D33-56E7-4473-9924-61216DF672B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Releases.Domain", "ReleaseLayers\Releases.Domain\Releases.Domain.csproj", "{A948106F-9161-45EA-B31A-58DE3DF90444}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Releases.Domain", "ReleaseLayers\Releases.Domain\Releases.Domain.csproj", "{A948106F-9161-45EA-B31A-58DE3DF90444}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Releases.Infrastructure", "ReleaseLayers\Releases.Infrastructure\Releases.Infrastructure.csproj", "{B2658D52-50D8-4977-80DE-EFE54E6E6746}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Releases.Infrastructure", "ReleaseLayers\Releases.Infrastructure\Releases.Infrastructure.csproj", "{B2658D52-50D8-4977-80DE-EFE54E6E6746}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BusinessRequirements", "BusinessRequirements", "{14331B05-D84B-445C-82E6-088FDAFAC610}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessRequirements.Application", "BusinessRequirementLayers\BusinessRequirements.Application\BusinessRequirements.Application.csproj", "{FB8CD2DF-2CE7-49C3-BA52-0F0C7065C0F3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessRequirements.Domain", "BusinessRequirementLayers\BusinessRequirements.Domain\BusinessRequirements.Domain.csproj", "{F895C9F0-14FC-46CD-BB6E-EA45230A8A3E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessRequirements.Infrastructure", "BusinessRequirementLayers\BusinessRequirements.Infrastructure\BusinessRequirements.Infrastructure.csproj", "{3E5BA280-8259-4D80-8AA6-DED67E74EE65}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -150,6 +158,18 @@ Global
 		{B2658D52-50D8-4977-80DE-EFE54E6E6746}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2658D52-50D8-4977-80DE-EFE54E6E6746}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B2658D52-50D8-4977-80DE-EFE54E6E6746}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB8CD2DF-2CE7-49C3-BA52-0F0C7065C0F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB8CD2DF-2CE7-49C3-BA52-0F0C7065C0F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB8CD2DF-2CE7-49C3-BA52-0F0C7065C0F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB8CD2DF-2CE7-49C3-BA52-0F0C7065C0F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F895C9F0-14FC-46CD-BB6E-EA45230A8A3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F895C9F0-14FC-46CD-BB6E-EA45230A8A3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F895C9F0-14FC-46CD-BB6E-EA45230A8A3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F895C9F0-14FC-46CD-BB6E-EA45230A8A3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E5BA280-8259-4D80-8AA6-DED67E74EE65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E5BA280-8259-4D80-8AA6-DED67E74EE65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E5BA280-8259-4D80-8AA6-DED67E74EE65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E5BA280-8259-4D80-8AA6-DED67E74EE65}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -175,6 +195,9 @@ Global
 		{E29E3D33-56E7-4473-9924-61216DF672B4} = {0103173B-1A56-46AA-A1AD-6650889ABE1C}
 		{A948106F-9161-45EA-B31A-58DE3DF90444} = {0103173B-1A56-46AA-A1AD-6650889ABE1C}
 		{B2658D52-50D8-4977-80DE-EFE54E6E6746} = {0103173B-1A56-46AA-A1AD-6650889ABE1C}
+		{FB8CD2DF-2CE7-49C3-BA52-0F0C7065C0F3} = {14331B05-D84B-445C-82E6-088FDAFAC610}
+		{F895C9F0-14FC-46CD-BB6E-EA45230A8A3E} = {14331B05-D84B-445C-82E6-088FDAFAC610}
+		{3E5BA280-8259-4D80-8AA6-DED67E74EE65} = {14331B05-D84B-445C-82E6-088FDAFAC610}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AB9011D1-6710-44D3-9FD2-BD56D5E40DFD}

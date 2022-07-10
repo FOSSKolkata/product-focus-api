@@ -110,5 +110,13 @@ namespace ProductFocusApi.Controllers
             Result<List<GetWorkItemDto>> result = await _mediator.Send(query);
             return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AddBusinessRequirementToFeature([FromBody] AddBusinessRequirementWorkItemLinkDto dto)
+        {
+            var command = new AddBusinessRequirementWorkItemLinkCommand(dto.WorkItemId, dto.BusinessRequirementId);
+            Result result = await _mediator.Send(command);
+            return result.IsSuccess ? Ok() : BadRequest(result.Error);
+        }
     }
 }

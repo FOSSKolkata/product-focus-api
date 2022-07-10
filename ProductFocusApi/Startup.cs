@@ -18,16 +18,13 @@ using ProductFocusApi.Validations;
 using Autofac;
 using ProductFocusApi.AutofacModules;
 using Microsoft.Data.SqlClient;
-using ProductFocusApi.ConnectionString;
-using Azure.Storage.Blobs;
-using ProductFocus.Persistence.Services;
-using ProductFocus.Domain.Services;
 using ProductFocus.Domain.Common;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using Releases.Application.Controllers;
 using ProductFocusApi.StartUp;
 using Releases.Application.StartUp;
+using BusinessRequirements.Application.StartUp;
+using ProductDocumentations.Application.StartUp;
+using ProductTests.Application.StartUp;
 
 namespace ProductFocus.Api
 {
@@ -93,55 +90,31 @@ namespace ProductFocus.Api
                     }
                 });
             });
-
-            var builder = new SqlConnectionStringBuilder(
-                Configuration.GetConnectionString("DefaultConnection"));
-            //builder.Password = Configuration["DevDbPassword"];
-            //builder.UserID = Configuration["DevDbUser"];
             var connection = Configuration["DefaultConnection"];
+
             services.AddDbContext<ProductFocusDbContext>(
                 x => x.UseLazyLoadingProxies()
                     .UseSqlServer(connection));
 
-            services.AddDbContext<ProductDocumentations.Infrastructure.ProductDocumentationDbContext>(
-                x => x.UseLazyLoadingProxies()
-                    .UseSqlServer(connection));
-
-            services.AddDbContext<ProductTests.Infrastructure.ProductTestDbContext>(
-                x => x.UseLazyLoadingProxies()
-                    .UseSqlServer(connection));
-
-            services.AddDbContext<Releases.Infrastructure.ReleaseDbContext>(
-                            x => x.UseLazyLoadingProxies()
-                                .UseSqlServer(connection));
-
-            ////services.AddDbContext<ProductFocusDbContext>(
-            //    x => x.UseLazyLoadingProxies()
-            //        .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
-            services.AddHandlers();
-            services.AddSingleton<Messages>();
             services.AddTransient<UnitOfWork>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+
+            var builder = new SqlConnectionStringBuilder(
+                Configuration.GetConnectionString("DefaultConnection"));
+            
+            services.AddHandlers();
+            services.AddSingleton<Messages>();
+
             services.AddReleases(Configuration);
-            services.AddTransient<ProductDocumentations.Infrastructure.UnitOfWork>();
-            services.AddTransient<ProductDocumentations.Domain.Common.IUnitOfWork, ProductDocumentations.Infrastructure.UnitOfWork>();
-            services.AddTransient<ProductTests.Infrastructure.UnitOfWork>();
-            services.AddTransient<ProductTests.Domain.Common.IUnitOfWork, ProductTests.Infrastructure.UnitOfWork>();
+            services.AddBusinessRequirement(Configuration);
+            services.AddProductDocumentation(Configuration);
+            services.AddTestManagement(Configuration);
 
             var queryBuilder = new SqlConnectionStringBuilder(
                 Configuration.GetConnectionString("QueriesConnectionString"));
-            //builder.Password = Configuration["DevDbPassword"];
-            //builder.UserID = Configuration["DevDbUser"];
             var queryConnection = Configuration["QueriesConnectionString"];
 
             var queriesConnectionString = new QueriesConnectionString(queryConnection);
-            var blobConnection = Configuration.GetConnectionString("BlobConnectionString");
-            var businessRequirementAttachmentContainerName = Configuration.GetConnectionString("BusinessRequirementAttachmentContainerName");
-            services.AddSingleton(new BusinessRequirementContainerName(businessRequirementAttachmentContainerName));
-            services.AddSingleton(new BlobConnectionString(blobConnection));
-            services.AddSingleton(new BlobServiceClient(blobConnection));
-            services.AddTransient<IBlobStorageService, BlobStorageService>();
             services.AddSingleton(queriesConnectionString);
             services.AddTransient<IEmailService, EmailService>();
             services.AddCommandBuses(Configuration);
