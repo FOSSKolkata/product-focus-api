@@ -6,8 +6,6 @@ using EventBus.Events;
 
 namespace IntegrationEventLogEF.Services
 {
-
-
     public abstract class IntegrationEventLogService : IIntegrationEventLogService, IDisposable
     {
         protected abstract IntegrationEventLogContext IntegrationEventLogContext { get; }
@@ -65,44 +63,6 @@ namespace IntegrationEventLogEF.Services
             return UpdateEventStatus(eventId, EventStateEnum.PublishedFailed);
         }
 
-        public async Task<IntegrationEventLogEntry> RetrieveEventLogAsync(Guid eventId)
-        {
-
-            var result = await IntegrationEventLogContext.IntegrationEventLogs
-                .Where(e => e.EventId == eventId && e.State == EventStateEnum.ProcessingInProgress).SingleOrDefaultAsync();
-
-            if (result != null)
-            {
-                return result.DeserializeJsonContent(_eventTypes.Find(t => t.Name == result.EventTypeShortName));
-            }
-
-            return null;
-        }
-
-        public Task SaveAndMarkIncomingEventAsInProgressAsync(IntegrationEvent @event)
-        {
-            var eventLogEntry = new IntegrationEventLogEntry(@event, Guid.Empty);
-            eventLogEntry.State = EventStateEnum.ProcessingInProgress;
-            IntegrationEventLogContext.IntegrationEventLogs.Add(eventLogEntry);
-
-            return IntegrationEventLogContext.SaveChangesAsync();
-        }
-
-        public Task MarkIncomingEventAsProcessedAsync(Guid eventId)
-        {
-            return UpdateEventStatus(eventId, EventStateEnum.Processed);
-        }
-
-        public Task MarkIncomingEventAsFailedAsync(Guid eventId, Exception exception)
-        {
-            var eventLogEntry = IntegrationEventLogContext.IntegrationEventLogs.Single(ie => ie.EventId == eventId);
-            eventLogEntry.State = EventStateEnum.ProcessingFailed;
-            eventLogEntry.SetDiagnosticDetails(exception);
-
-            IntegrationEventLogContext.IntegrationEventLogs.Update(eventLogEntry);
-
-            return IntegrationEventLogContext.SaveChangesAsync();
-        }
         private Task UpdateEventStatus(Guid eventId, EventStateEnum status)
         {
             var eventLogEntry = IntegrationEventLogContext.IntegrationEventLogs.Single(ie => ie.EventId == eventId);

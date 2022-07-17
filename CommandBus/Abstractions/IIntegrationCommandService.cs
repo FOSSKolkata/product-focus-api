@@ -2,7 +2,7 @@
 
 namespace CommandBus.Abstractions
 {
-    public interface IIntegrationCommandService
+    public interface IIncomingIntegrationCommandService
     {
         Task PublishThroughCommandBusAsync(IntegrationCommand command);
     }

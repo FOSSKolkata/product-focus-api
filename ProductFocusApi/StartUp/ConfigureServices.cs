@@ -1,58 +1,129 @@
 ﻿using CommandBus;
-using CommandBus.Abstractions;
-using CommandBusRabbitMQ;
-using CommandBusServiceBus;
-using EventBus;
 using EventBus.Abstractions;
-using EventBusRabbitMQ;
-using EventBusServiceBus;
 using IntegrationCommon.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ProductFocus.ConnectionString;
+using ProductFocus.Domain.Common;
+using ProductFocus.Persistence;
+using ProductFocus.Persistence.DbContexts;
+using ProductFocus.Services;
+using ProductFocusApi.IntegrationCommands.Services;
+using ProductFocusApi.IntegrationCommands.Services.Own;
+using ProductFocusApi.IntegrationEvents.Services;
 using System;
+using System.Collections.Generic;
+using System.Data.Common;
+using System.Data.SqlClient;
+using System.Linq;
+using ProductFocusEventBusOwningService = ProductFocusApi.IntegrationEvents.Services.ProductFocusEventBusOwningService;
 
 namespace ProductFocusApi.StartUp
 {
     public static class ConfigureServices
     {
-        public static IServiceCollection AddCommandBuses(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddProductFocus(this IServiceCollection services, IConfiguration configuration)
         {
+
+            var connection = configuration["DefaultConnection"];
+
+            services.AddDbContext<ProductFocusDbContext>(
+                x => x.UseLazyLoadingProxies()
+                    .UseSqlServer(connection));
+
+            services.AddTransient<UnitOfWork>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
+
+            var queryBuilder = new SqlConnectionStringBuilder(
+                configuration.GetConnectionString("QueriesConnectionString"));
+            var queryConnection = configuration["QueriesConnectionString"];
+
+            var queriesConnectionString = new QueriesConnectionString(queryConnection);
+            services.AddSingleton(queriesConnectionString);
+            services.AddTransient<IEmailService, EmailService>();
+
+            services.AddCustomDbContext(configuration)
+                .AddCustomIntegrations(configuration);
+
             services.AddTransient(typeof(AtomicIntegrationLogService<,,>));
 
-            if (configuration.GetValue<bool>("AzureServiceBusEnabled"))
-            {
-                services.AddSingleton(typeof(IPublishOnlyCommandBus<,>), typeof(PublishOnlyCommandBusServiceBus<,>));
-                services.AddSingleton(typeof(ICommandBus<>), typeof(CommandBusServiceBus<>));
-            }
-            else
-            {
-                services.AddSingleton(typeof(IPublishOnlyCommandBus<,>), typeof(PublishOnlyCommandBusRabbitMQ<,>));
-                services.AddSingleton(typeof(ICommandBus<>), typeof(CommandBusRabbitMQ<>));
-            }
-
-            services.AddSingleton(typeof(ICommandBusSubscriptionsManager<>), typeof(InMemoryCommandBusSubscriptionsManager<>));
-
-
             return services;
         }
 
-        public static IServiceCollection AddEventBus(this IServiceCollection services, IConfiguration configuration)
+        private static IServiceCollection AddCustomDbContext(this IServiceCollection services, IConfiguration configuration)
         {
-            Console.WriteLine("Service bus initialize");
-            Console.WriteLine("Azure Service Bus - {0}", configuration.GetValue<bool>("AzureServiceBusEnabled"));
-
-            services.AddSingleton(typeof(IEventBusSubscriptionsManager<>), typeof(InMemoryEventBusSubscriptionsManager<>));
-
-            if (configuration.GetValue<bool>("AzureServiceBusEnabled"))
+            var connection = configuration["QueriesConnectionString"];
+            services.AddDbContext<ProductFocusContext>(options =>
             {
-                services.AddSingleton(typeof(IEventBus<>), typeof(EventBusServiceBus<>));
-            }
-            else
+                options
+                .UseLazyLoadingProxies()
+                .UseSqlServer(connection,sqlServerOptionsAction: sqlOptions =>
+                        {
+                            sqlOptions.MigrationsHistoryTable("__EFMigrationsHistory", "dbo");
+                            sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
+                        });
+            });
+
+            services.AddDbContext<ProductFocusIntegrationEventLogContext>(options =>
             {
-                services.AddSingleton(typeof(IEventBus<>), typeof(EventBusRabbitMQ<>));
-            }
+                options.UseSqlServer(connection,
+                    sqlServerOptionsAction: sqlOptions =>
+                    {
+                        sqlOptions.MigrationsHistoryTable("__EFEventLogMigrationsHistory", "dbo");
+                        sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
+                    });
+            },
+             ServiceLifetime.Scoped  //Showing explicitly that the DbContext is shared across the HTTP request scope (graph of objects started in the HTTP request)
+           );
+            services.AddDbContext<ProductFocusIntegrationCommandLogContext>(options =>
+            {
+                options.UseSqlServer(connection,
+                    sqlServerOptionsAction: sqlOptions =>
+                    {
+                        sqlOptions.MigrationsHistoryTable("__EFCommandLogMigrationsHistory", "dbo");
+                        sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
+                    });
+            },
+            ServiceLifetime.Scoped  //Showing explicitly that the DbContext is shared across the HTTP request scope (graph of objects started in the HTTP request)
+            );
 
             return services;
         }
+        private static IServiceCollection AddCustomIntegrations(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddTransient<IProductFocusIncomingIntegrationCommandLogService, ProductFocusIncomingIntegrationCommandLogService>();
+
+            services.AddTransient<Func<DbConnection, IProductFocusIntegrationCommandLogService>>(
+                sp => (DbConnection c) => new ProductFocusIntegrationCommandLogService(c, configuration));
+
+            services.AddSingleton<ProductFocusCommandBusOwningService>();
+            services.AddSingleton<CommandBusConfiguration<ProductFocusCommandBusOwningService>>(sp =>
+            {
+                List<CommandBusConfiguration<ProductFocusCommandBusOwningService>> commandBusConfigurations = configuration.GetSection("CommandBusConfigurations").Get<List<CommandBusConfiguration<ProductFocusCommandBusOwningService>>>();
+                var owningService = services.BuildServiceProvider().GetService<ProductFocusCommandBusOwningService>();
+                var commandBusConfiguration = commandBusConfigurations.Where(x => x.OwningService == owningService.Name).Single();
+                return commandBusConfiguration;
+
+            });
+
+
+            services.AddSingleton<EventBusConfiguration<ProductFocusEventBusOwningService>>(sp =>
+            {
+                List<EventBusConfiguration<ProductFocusEventBusOwningService>> eventBusConfigurations = configuration.GetSection("EventBusConfigurations").Get<List<EventBusConfiguration<ProductFocusEventBusOwningService>>>();
+                var owningService = new ProductFocusEventBusOwningService();
+                return eventBusConfigurations.Where(x => x.OwningService == owningService.Name).Single();
+            });
+
+            services.AddTransient<IProductFocusIntegrationEventService, ProductFocusIntegrationEventService>();
+            services.AddTransient<IProductFocusIncomingIntegrationEventLogService, ProductFocusIncomingIntegrationEventLogService>();
+            services.AddTransient<IProductFocusIntegrationEventLogService, ProductFocusIntegrationEventLogService>();
+            services.AddTransient<Func<DbConnection, IProductFocusIntegrationEventLogService>>(
+             sp => (DbConnection c) => new ProductFocusIntegrationEventLogService(c, configuration));
+
+
+            return services;
+        }
+        
     }
 }

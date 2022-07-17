@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="6.3.0" />
+    <PackageReference Include="AutoMapper" Version="11.0.0" />
     <PackageReference Include="CSharpFunctionalExtensions" Version="2.29.0" />
     <PackageReference Include="Dapper" Version="2.0.123" />
     <PackageReference Include="MediatR" Version="9.0.0" />
@@ -17,6 +19,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\EventBus\EventBus.csproj" />
+    <ProjectReference Include="..\..\IntegrationEventLogEF\IntegrationEventLogEF.csproj" />
     <ProjectReference Include="..\Releases.Domain\Releases.Domain.csproj" />
     <ProjectReference Include="..\Releases.Infrastructure\Releases.Infrastructure.csproj" />
   </ItemGroup>

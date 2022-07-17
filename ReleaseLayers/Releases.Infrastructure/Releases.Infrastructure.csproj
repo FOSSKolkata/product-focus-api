@@ -13,6 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\IntegrationCommandLogEF\IntegrationCommandLogEF.csproj" />
+    <ProjectReference Include="..\..\IntegrationEventLogEF\IntegrationEventLogEF.csproj" />
     <ProjectReference Include="..\Releases.Domain\Releases.Domain.csproj" />
   </ItemGroup>
 

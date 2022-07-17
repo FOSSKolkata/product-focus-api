@@ -1,4 +1,4 @@
-﻿using BuildingBlocks.IntegrationCommon.Utilities;
+﻿using IntegrationCommon.Utilities;
 using CommandBus.Commands;
 using EventBus.Events;
 using IntegrationCommandLogEF.Services;

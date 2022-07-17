@@ -5,10 +5,10 @@ using IntegrationEventLogEF.Services;
 namespace IntegrationEventLogEF
 {
     public abstract class BaseIntegrationEventHandler<TIntegrationEvent> : IIntegrationEventHandler<TIntegrationEvent>
-        where TIntegrationEvent : IntegrationEvent
+            where TIntegrationEvent : IntegrationEvent
     {
-        IIntegrationEventLogService _integrationEventLogService;
-        public BaseIntegrationEventHandler(IIntegrationEventLogService integrationEventLogService)
+        IIncomingIntegrationEventLogService _integrationEventLogService;
+        public BaseIntegrationEventHandler(IIncomingIntegrationEventLogService integrationEventLogService)
         {
             _integrationEventLogService = integrationEventLogService;
         }
@@ -18,15 +18,15 @@ namespace IntegrationEventLogEF
 
         public async Task<bool> Preprocess(TIntegrationEvent @event)
         {
-            IntegrationEventLogEntry integrationEventLog = await _integrationEventLogService.RetrieveEventLogAsync(@event.Id);
+            IncomingIntegrationEventLogEntry integrationEventLog = await _integrationEventLogService.RetrieveEventLogAsync(@event.Id);
 
             if (integrationEventLog == null)
             {
-                await _integrationEventLogService.SaveAndMarkIncomingEventAsInProgressAsync(@event);
+                await _integrationEventLogService.SaveAndMarkEventAsInProgressAsync(@event);
             }
             else
             {
-                if (integrationEventLog.State == EventStateEnum.ProcessingInProgress)
+                if (integrationEventLog.State == IncomingEventStateEnum.ProcessingInProgress)
                     return false;
             }
 
@@ -35,12 +35,12 @@ namespace IntegrationEventLogEF
 
         public async Task PostprocessOnSuccess(TIntegrationEvent @event)
         {
-            await _integrationEventLogService.MarkIncomingEventAsProcessedAsync(@event.Id);
+            await _integrationEventLogService.MarkEventAsProcessedAsync(@event.Id);
         }
 
         public async Task PostprocessOnFailure(TIntegrationEvent @event, Exception ex)
         {
-            await _integrationEventLogService.MarkIncomingEventAsFailedAsync(@event.Id, ex);
+            await _integrationEventLogService.MarkEventAsFailedAsync(@event.Id, ex);
         }
     }
 }

@@ -86,7 +86,7 @@ namespace BusinessRequirements.CommandHandlers
 
                         _businessRequirementTagRepository.Add(businessRequirementTag);
                     }
-                    request.Id = businessRequirement.Id;
+
                     await _unitOfWork.CompleteAsync(cancellationToken);
                     return Result.Success();
                 }

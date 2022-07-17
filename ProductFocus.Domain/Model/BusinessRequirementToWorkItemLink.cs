@@ -9,7 +9,7 @@ namespace ProductFocus.Domain.Model
 
         protected BusinessRequirementToWorkItemLink()
         {
-
+                
         }
 
         private BusinessRequirementToWorkItemLink(long workItemId, long businessRequirementId)

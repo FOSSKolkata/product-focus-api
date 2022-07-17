@@ -57,6 +57,10 @@ namespace IntegrationCommandLogEF.Services
 
             return _integrationCommandLogContext.SaveChangesAsync();
         }
+        public Task SaveCommandAsync(List<IntegrationCommand> commands, IDbContextTransaction transaction)
+        {
+            throw new NotImplementedException();
+        }
 
         public Task MarkCommandAsPublishedAsync(Guid commandId)
         {

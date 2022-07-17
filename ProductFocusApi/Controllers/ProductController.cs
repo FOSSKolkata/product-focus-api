@@ -27,22 +27,6 @@ namespace ProductFocusApi.Controllers
             _mediator = mediator;
         }
 
-
-        [HttpPost("{id}")]
-        public async Task<IActionResult> AddModule(long id, [FromBody] AddModuleDto dto)
-        {
-            var command = new AddModuleCommand(id, dto.Name);
-            Result result = await _mediator.Send(command);
-            return result.IsSuccess ? Ok() : BadRequest(result.Error);
-        }
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetModulesByProductId(long id)
-        {
-            List<GetModuleDto> moduleList = await _mediator.Send(new GetModuleListQuery(id));
-            return Ok(moduleList);
-        }
-
         [HttpGet("{id}")]
         public async Task<IActionResult> GetKanbanViewByProductId(long id)
         {
@@ -64,6 +48,20 @@ namespace ProductFocusApi.Controllers
         {
             GetProductByIdDto product = await _mediator.Send(new GetProductByIdQuery(id)); 
             return Ok(product);
+        }
+        [HttpPost("{id}")]
+        public async Task<IActionResult> AddProduct(long id, [FromBody] AddProductDto dto)
+        {
+            var command = new AddProductCommand(id, dto.Name);
+            Result result = await _mediator.Send(command);
+            return result.IsSuccess ? Ok() : BadRequest(result.Error);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetProductsById(long id)
+        {
+            List<GetProductDto> organizationList = await _mediator.Send(new GetProductListQuery(id));
+            return Ok(organizationList);
         }
     }
 }

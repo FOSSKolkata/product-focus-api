@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 using CommandBus.Commands;
+using CommandBus.Extensions;
 
 namespace IntegrationCommandLogEF.Services
 {
@@ -15,7 +16,7 @@ namespace IntegrationCommandLogEF.Services
         {
 
             _commandTypes = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(x => x.GetTypes())
+                .SelectMany(x => x.GetLoadableTypes())
                 .Where(t => t.Name.EndsWith(nameof(IntegrationCommand)))
                 .ToList();
         }
@@ -44,6 +45,20 @@ namespace IntegrationCommandLogEF.Services
 
             IntegrationCommandLogContext.Database.UseTransaction(transaction.GetDbTransaction());
             IntegrationCommandLogContext.IntegrationCommandLogs.Add(commandLogEntry);
+
+            return IntegrationCommandLogContext.SaveChangesAsync();
+        }
+
+        public Task SaveCommandAsync(List<IntegrationCommand> commands, IDbContextTransaction transaction)
+        {
+            if (transaction == null) throw new ArgumentNullException(nameof(transaction));
+            IntegrationCommandLogContext.Database.UseTransaction(transaction.GetDbTransaction());
+
+            foreach (var command in commands)
+            {
+                var commandLogEntry = new IntegrationCommandLogEntry(command, transaction.TransactionId);
+                IntegrationCommandLogContext.IntegrationCommandLogs.Add(commandLogEntry);
+            }
 
             return IntegrationCommandLogContext.SaveChangesAsync();
         }

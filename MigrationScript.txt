@@ -1,0 +1,8 @@
+# Initial migration for ProductFocusContext, ProductFocusIntegrationEventLogContext, and ProductFocusIntegrationCommandLogContext
+EntityFrameworkCore\Add-Migration pflogcontext -Context ProductFocusIntegrationEventLogContext -Project ProductFocus.Persistence  -StartupProject ProductFocusApi
+EntityFrameworkCore\Add-Migration pfcontext -Context ProductFocusContext -Project ProductFocus.Persistence  -StartupProject ProductFocusApi
+EntityFrameworkCore\Add-Migration pfcommandcontext -Context ProductFocusIntegrationCommandLogContext -Project ProductFocus.Persistence  -StartupProject ProductFocusApi
+
+# Initial migration update for ProductFocusContext, ProductFocusIntegrationEventLogContext, and ProductFocusIntegrationCommandLogContext
+EntityFrameworkCore\Update-Database pfcontext -Context ProductFocusContext -Project ProductFocus.Persistence  -StartupProject ProductFocusApi
+EntityFrameworkCore\Update-Database pfcommandcontext -Context ProductFocusIntegrationCommandLogContext -Project ProductFocus.Persistence  -StartupProject ProductFocusApi

@@ -7,17 +7,11 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 using ProductFocus.Api.AuthorizationPolicies;
-using ProductFocus.Persistence;
-using Microsoft.EntityFrameworkCore;
 using ProductFocus.DI.Utils;
-using ProductFocus.ConnectionString;
-using ProductFocus.Services;
 using Swashbuckle.AspNetCore.Filters;
 using FluentValidation.AspNetCore;
 using ProductFocusApi.Validations;
 using Autofac;
-using ProductFocusApi.AutofacModules;
-using Microsoft.Data.SqlClient;
 using ProductFocus.Domain.Common;
 using System.Collections.Generic;
 using ProductFocusApi.StartUp;
@@ -25,6 +19,18 @@ using Releases.Application.StartUp;
 using BusinessRequirements.Application.StartUp;
 using ProductDocumentations.Application.StartUp;
 using ProductTests.Application.StartUp;
+using IntegrationCommon.Services;
+using CommandBus.Abstractions;
+using CommandBusServiceBus;
+using CommandBusRabbitMQ;
+using CommandBus;
+using EventBus;
+using System;
+using EventBus.Abstractions;
+using EventBusServiceBus;
+using EventBusRabbitMQ;
+using FluentValidation;
+using ProductFocusApi.CommandHandlers;
 
 namespace ProductFocus.Api
 {
@@ -40,6 +46,12 @@ namespace ProductFocus.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddProductFocus(Configuration);
+            services.AddReleases(Configuration);
+            services.AddBusinessRequirement(Configuration);
+            services.AddProductDocumentation(Configuration);
+
             services.AddAutoMapper(typeof(Startup));
             services.AddControllersWithViews();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -90,47 +102,32 @@ namespace ProductFocus.Api
                     }
                 });
             });
-            var connection = Configuration["DefaultConnection"];
-
-            services.AddDbContext<ProductFocusDbContext>(
-                x => x.UseLazyLoadingProxies()
-                    .UseSqlServer(connection));
-
-            services.AddTransient<UnitOfWork>();
-            services.AddTransient<IUnitOfWork, UnitOfWork>();
-
-            var builder = new SqlConnectionStringBuilder(
-                Configuration.GetConnectionString("DefaultConnection"));
             
             services.AddHandlers();
             services.AddSingleton<Messages>();
 
-            services.AddReleases(Configuration);
-            services.AddBusinessRequirement(Configuration);
-            services.AddProductDocumentation(Configuration);
-            services.AddTestManagement(Configuration);
 
-            var queryBuilder = new SqlConnectionStringBuilder(
-                Configuration.GetConnectionString("QueriesConnectionString"));
-            var queryConnection = Configuration["QueriesConnectionString"];
-
-            var queriesConnectionString = new QueriesConnectionString(queryConnection);
-            services.AddSingleton(queriesConnectionString);
-            services.AddTransient<IEmailService, EmailService>();
-            services.AddCommandBuses(Configuration);
-            services.AddEventBus(Configuration);
+            services.AddCommandBuses(Configuration)
+                .AddEventBus(Configuration);
+            //services.AddScoped<IValidator<AddSprintCommand>, AddSprintCommandValidator>());
         }
 
         // Register your own things directly with Autofac
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            builder.RegisterModule(new ApplicationModule());
-            builder.RegisterModule(new MediatorModule());
+            /*builder.RegisterModule(new ApplicationModule());
+            builder.RegisterModule(new MediatorModule());*/
+            builder.AddProductFocus(Configuration);
+            builder.AddReleases(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.AddProductFocus();
+            app.AddReleases();
+            app.AddBusinessRequirements();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -153,6 +150,49 @@ namespace ProductFocus.Api
             {
                 endpoints.MapControllers();
             });
+        }
+    }
+
+    public static class ConfigureMicroservices
+    {
+        public static IServiceCollection AddCommandBuses(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddTransient(typeof(AtomicIntegrationLogService<,,>));
+
+            if (configuration.GetValue<bool>("AzureServiceBusEnabled"))
+            {
+                services.AddSingleton(typeof(IPublishOnlyCommandBus<,>), typeof(PublishOnlyCommandBusServiceBus<,>));
+                services.AddSingleton(typeof(ICommandBus<>), typeof(CommandBusServiceBus<>));
+            }
+            else
+            {
+                services.AddSingleton(typeof(IPublishOnlyCommandBus<,>), typeof(PublishOnlyCommandBusRabbitMQ<,>));
+                services.AddSingleton(typeof(ICommandBus<>), typeof(CommandBusRabbitMQ<>));
+            }
+
+            services.AddSingleton(typeof(ICommandBusSubscriptionsManager<>), typeof(InMemoryCommandBusSubscriptionsManager<>));
+
+
+            return services;
+        }
+
+        public static IServiceCollection AddEventBus(this IServiceCollection services, IConfiguration configuration)
+        {
+            Console.WriteLine("Service bus initialize");
+            Console.WriteLine("Azure Service Bus - {0}", configuration.GetValue<bool>("AzureServiceBusEnabled"));
+
+            services.AddSingleton(typeof(IEventBusSubscriptionsManager<>), typeof(InMemoryEventBusSubscriptionsManager<>));
+
+            if (configuration.GetValue<bool>("AzureServiceBusEnabled"))
+            {
+                services.AddSingleton(typeof(IEventBus<>), typeof(EventBusServiceBus<>));
+            }
+            else
+            {
+                services.AddSingleton(typeof(IEventBus<>), typeof(EventBusRabbitMQ<>));
+            }
+
+            return services;
         }
     }
 }

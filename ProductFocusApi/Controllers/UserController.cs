@@ -9,7 +9,7 @@ using System.Linq;
 using System.Security.Claims;
 using ProductFocus.Domain.Common;
 using MediatR;
-
+// IdentityAndAccessManagement
 namespace ProductFocusApi.Controllers
 {
     [ApiController]

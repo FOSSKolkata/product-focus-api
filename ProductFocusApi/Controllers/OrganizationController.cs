@@ -11,7 +11,7 @@ using ProductFocus.Domain.Common;
 using ProductFocusApi.QueryHandlers;
 using MediatR;
 using ProductFocusApi.Dtos;
-
+//TenentManagement
 namespace ProductFocusApi.Controllers
 {
     [ApiController]
@@ -59,21 +59,6 @@ namespace ProductFocusApi.Controllers
             var command = new GetOrganizationByNameQuery(organizationName, objectId);
             GetOrganizationByNameDto organization = await _mediator.Send(command);
             return Ok(organization);
-        }
-
-        [HttpPost("{id}")]
-        public async Task<IActionResult> AddProduct(long id, [FromBody] AddProductDto dto)
-        {
-            var command = new AddProductCommand(id, dto.Name);
-            Result result = await _mediator.Send(command);
-            return result.IsSuccess ? Ok() : BadRequest(result.Error);
-        }
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetProductsById(long id)
-        {
-            List<GetProductDto> organizationList = await _mediator.Send(new GetProductListQuery(id));
-            return Ok(organizationList);
         }
     }
 }

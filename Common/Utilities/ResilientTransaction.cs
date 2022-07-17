@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace BuildingBlocks.IntegrationCommon.Utilities
+namespace IntegrationCommon.Utilities
 {
     public class ResilientTransaction
     {

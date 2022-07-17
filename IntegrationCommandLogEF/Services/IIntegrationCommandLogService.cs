@@ -7,6 +7,7 @@ namespace IntegrationCommandLogEF.Services
     {
         Task<IEnumerable<IntegrationCommandLogEntry>> RetrieveCommandLogsPendingToPublishAsync(Guid transactionId);
         Task SaveCommandAsync(IntegrationCommand command, IDbContextTransaction transaction);
+        Task SaveCommandAsync(List<IntegrationCommand> commands, IDbContextTransaction transaction);
         Task MarkCommandAsPublishedAsync(Guid commandId);
         Task MarkCommandAsInProgressAsync(Guid commandId);
         Task MarkCommandAsFailedAsync(Guid commandId);

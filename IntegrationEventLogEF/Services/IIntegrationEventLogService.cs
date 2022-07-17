@@ -10,9 +10,5 @@ namespace IntegrationEventLogEF.Services
         Task MarkEventAsPublishedAsync(Guid eventId);
         Task MarkEventAsInProgressAsync(Guid eventId);
         Task MarkEventAsFailedAsync(Guid eventId);
-        Task<IntegrationEventLogEntry> RetrieveEventLogAsync(Guid eventId);
-        Task SaveAndMarkIncomingEventAsInProgressAsync(IntegrationEvent @event);
-        Task MarkIncomingEventAsProcessedAsync(Guid eventId);
-        Task MarkIncomingEventAsFailedAsync(Guid eventId, Exception exception);
     }
 }

@@ -12,15 +12,16 @@ namespace BusinessRequirements.Domain.Model
 
         }
 
-        private Product(string name, Organization organization)
+        private Product(long id, string name, Organization organization)
         {
+            Id = id;
             Name = name;
             Organization = organization;
         }
 
-        public static Product CreateInstance(string name, Organization organization)
+        public static Product CreateInstance(long id, Organization organization, string name)
         {
-            return new(name, organization);
+            return new(id, name, organization);
         }
     }
 }

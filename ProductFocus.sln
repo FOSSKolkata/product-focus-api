@@ -62,11 +62,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Releases.Infrastructure", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BusinessRequirements", "BusinessRequirements", "{14331B05-D84B-445C-82E6-088FDAFAC610}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessRequirements.Application", "BusinessRequirementLayers\BusinessRequirements.Application\BusinessRequirements.Application.csproj", "{FB8CD2DF-2CE7-49C3-BA52-0F0C7065C0F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessRequirements.Application", "BusinessRequirementLayers\BusinessRequirements.Application\BusinessRequirements.Application.csproj", "{FB8CD2DF-2CE7-49C3-BA52-0F0C7065C0F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessRequirements.Domain", "BusinessRequirementLayers\BusinessRequirements.Domain\BusinessRequirements.Domain.csproj", "{F895C9F0-14FC-46CD-BB6E-EA45230A8A3E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessRequirements.Domain", "BusinessRequirementLayers\BusinessRequirements.Domain\BusinessRequirements.Domain.csproj", "{F895C9F0-14FC-46CD-BB6E-EA45230A8A3E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessRequirements.Infrastructure", "BusinessRequirementLayers\BusinessRequirements.Infrastructure\BusinessRequirements.Infrastructure.csproj", "{3E5BA280-8259-4D80-8AA6-DED67E74EE65}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessRequirements.Infrastructure", "BusinessRequirementLayers\BusinessRequirements.Infrastructure\BusinessRequirements.Infrastructure.csproj", "{3E5BA280-8259-4D80-8AA6-DED67E74EE65}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Script", "_Script", "{627E215E-535D-4EDE-A7C0-EAB57E527C9A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Db", "Db", "{787269FD-4AEC-492D-B1C7-C5E4560D8ED3}"
+	ProjectSection(SolutionItems) = preProject
+		MigrationScript.txt = MigrationScript.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -198,6 +205,7 @@ Global
 		{FB8CD2DF-2CE7-49C3-BA52-0F0C7065C0F3} = {14331B05-D84B-445C-82E6-088FDAFAC610}
 		{F895C9F0-14FC-46CD-BB6E-EA45230A8A3E} = {14331B05-D84B-445C-82E6-088FDAFAC610}
 		{3E5BA280-8259-4D80-8AA6-DED67E74EE65} = {14331B05-D84B-445C-82E6-088FDAFAC610}
+		{787269FD-4AEC-492D-B1C7-C5E4560D8ED3} = {627E215E-535D-4EDE-A7C0-EAB57E527C9A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AB9011D1-6710-44D3-9FD2-BD56D5E40DFD}

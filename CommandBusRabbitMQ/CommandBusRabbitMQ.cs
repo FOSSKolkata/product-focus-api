@@ -302,7 +302,7 @@ namespace CommandBusRabbitMQ
                                 await Task.Yield();
                                 await (Task)concreteType.GetMethod("Handle").Invoke(handler, new object[] { integrationCommand });
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
 
                             }

@@ -11,7 +11,7 @@ namespace IntegrationCommandLogEF
         {
             CommandId = command.Id;
             CreationTime = command.CreationDate;
-            CommandTypeName = command.GetType().FullName;
+            CommandTypeName = command.GetType().FullName;                     
             Content = JsonSerializer.Serialize(command, command.GetType(), new JsonSerializerOptions
             {
                 WriteIndented = true
@@ -33,7 +33,7 @@ namespace IntegrationCommandLogEF
         public string TransactionId { get; private set; }
 
         public IntegrationCommandLogEntry DeserializeJsonContent(Type type)
-        {
+        {            
             IntegrationCommand = JsonSerializer.Deserialize(Content, type, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true }) as IntegrationCommand;
             return this;
         }

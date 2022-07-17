@@ -8,6 +8,7 @@ using System.Linq;
 using System.Security.Claims;
 using ProductFocus.Domain.Common;
 using MediatR;
+using System.Collections.Generic;
 
 namespace ProductFocusApi.Controllers
 {
@@ -23,15 +24,19 @@ namespace ProductFocusApi.Controllers
             _mediator = mediator;
         }
 
-
         [HttpPost("{id}")]
-        public async Task<IActionResult> AddFeature(long id, [FromBody] AddFeatureDto dto)
+        public async Task<IActionResult> AddModule(long id, [FromBody] AddModuleDto dto)
         {
-            string objectId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
-
-            var command = new AddFeatureCommand(id, dto.Title, dto.WorkItemType, dto.SprintId, objectId);
+            var command = new AddModuleCommand(id, dto.Name);
             Result result = await _mediator.Send(command);
             return result.IsSuccess ? Ok() : BadRequest(result.Error);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetModulesByProductId(long id)
+        {
+            List<GetModuleDto> moduleList = await _mediator.Send(new GetModuleListQuery(id));
+            return Ok(moduleList);
         }
     }
 }

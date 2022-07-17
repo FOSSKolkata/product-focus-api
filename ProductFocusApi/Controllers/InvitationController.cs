@@ -11,7 +11,7 @@ using ProductFocusApi.Dtos;
 using ProductFocusApi.CommandHandlers;
 using ProductFocus.Domain.Common;
 using MediatR;
-
+//TenentManagement
 namespace ProductFocusApi.Controllers
 {
     [ApiController]

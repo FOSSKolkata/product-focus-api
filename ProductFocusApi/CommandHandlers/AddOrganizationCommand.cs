@@ -6,6 +6,11 @@ using System;
 using System.Threading.Tasks;
 using MediatR;
 using System.Threading;
+using ProductFocusApi.IntegrationEvents.Events;
+using ProductFocusApi.IntegrationEvents.Services;
+using ProductFocus.Persistence.DbContexts;
+using ProductFocusApi.IntegrationCommands.Services;
+using IntegrationCommon.Services;
 
 namespace ProductFocus.AppServices
 {
@@ -24,14 +29,19 @@ namespace ProductFocus.AppServices
             private readonly IOrganizationRepository _organizationRepository;
             private readonly IUserRepository _userRepository;
             private readonly IUnitOfWork _unitOfWork;
-
+            private readonly IAtomicIntegrationLogService _atomicIntegrationLogService;
+            private readonly IProductFocusIntegrationEventService _productFocusIntegrationEventService;
             public AddOrganizationCommandHandler(
                 IOrganizationRepository organizationRepository, IUserRepository userRepository,
-                IUnitOfWork unitOfWork)
+                IUnitOfWork unitOfWork,
+                AtomicIntegrationLogService<ProductFocusContext,
+                    ProductFocusIntegrationCommandLogService,
+                    ProductFocusIntegrationEventLogService> atomicIntegrationLogService)
             {
                 _organizationRepository = organizationRepository;
                 _userRepository = userRepository;
                 _unitOfWork = unitOfWork;
+                _atomicIntegrationLogService = atomicIntegrationLogService;
             }
             public async Task<Result> Handle(AddOrganizationCommand request, CancellationToken cancellationToken)
             {
@@ -52,7 +62,11 @@ namespace ProductFocus.AppServices
                     
                     organization.AddMember(user, true);
 
-                    await _unitOfWork.CompleteAsync(cancellationToken);
+                    //OrganizationAddedIntegrationEvent
+                    OrganizationAddedIntegrationEvent @event = new(organization.Id, organization.Name);
+                    await _atomicIntegrationLogService.SaveAtomicallyWithDbContextChangesAsync();
+                    await _productFocusIntegrationEventService.PublishThroughEventBusAsync(@event);
+                    //await _unitOfWork.CompleteAsync(cancellationToken);
 
                     return Result.Success();
                 }

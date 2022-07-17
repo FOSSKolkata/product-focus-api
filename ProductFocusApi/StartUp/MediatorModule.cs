@@ -1,10 +1,11 @@
 ﻿using Autofac;
 using MediatR;
+using ProductFocus.AppServices;
 using ProductFocusApi.DomainEventHandlers;
 using ProductFocusApi.QueryHandlers;
 using System.Reflection;
 
-namespace ProductFocusApi.AutofacModules
+namespace ProductFocusApi.StartUp
 {
     public class MediatorModule
          : Autofac.Module
@@ -23,6 +24,9 @@ namespace ProductFocusApi.AutofacModules
             builder.RegisterAssemblyTypes(typeof(WorkItemBlockedDomainEventHandler).GetTypeInfo().Assembly)
               .AsClosedTypesOf(typeof(INotificationHandler<>));
 
+            builder.RegisterAssemblyTypes(typeof(AddOrganizationCommand).GetTypeInfo().Assembly)
+                .AsClosedTypesOf(typeof(IRequestHandler<,>));
+
             // Product Documentation registrations
             builder.RegisterAssemblyTypes(typeof(ProductDocumentations.Application.CommandHandlers.
                 AddProductDocumentation.AddProductDocumentationCommand).GetTypeInfo().Assembly)
@@ -34,9 +38,6 @@ namespace ProductFocusApi.AutofacModules
 
             builder.RegisterAssemblyTypes(typeof(GetOrganizationListByUserQuery).GetTypeInfo().Assembly)
               .AsClosedTypesOf(typeof(IRequestHandler<,>));
-
-            builder.RegisterAssemblyTypes(typeof(Releases.Application.CommandHandler.ReleaseCommands.AddReleaseCommand)
-                .GetTypeInfo().Assembly).AsClosedTypesOf(typeof(IRequestHandler<,>));
 
             builder.RegisterAssemblyTypes(typeof(BusinessRequirements.CommandHandlers.AddBusinessRequirementCommand)
                 .GetTypeInfo().Assembly).AsClosedTypesOf(typeof(IRequestHandler<,>));
