@@ -94,7 +94,7 @@ namespace ProductFocusApi.StartUp
         {
             services.AddTransient<IProductFocusIncomingIntegrationCommandLogService, ProductFocusIncomingIntegrationCommandLogService>();
 
-            services.AddTransient<Func<DbConnection, IProductFocusIntegrationCommandLogService>>(
+            services.AddTransient<Func<DbConnection, ProductFocusIntegrationCommandLogService>>(
                 sp => (DbConnection c) => new ProductFocusIntegrationCommandLogService(c, configuration));
 
             services.AddSingleton<ProductFocusCommandBusOwningService>();
@@ -116,11 +116,11 @@ namespace ProductFocusApi.StartUp
             });
 
             services.AddTransient<IProductFocusIntegrationEventService, ProductFocusIntegrationEventService>();
-            services.AddTransient<IProductFocusIncomingIntegrationEventLogService, ProductFocusIncomingIntegrationEventLogService>();
             services.AddTransient<IProductFocusIntegrationEventLogService, ProductFocusIntegrationEventLogService>();
-            services.AddTransient<Func<DbConnection, IProductFocusIntegrationEventLogService>>(
+            services.AddTransient<Func<DbConnection, ProductFocusIntegrationEventLogService>>(
              sp => (DbConnection c) => new ProductFocusIntegrationEventLogService(c, configuration));
 
+            services.AddTransient<IProductFocusIncomingIntegrationEventLogService, ProductFocusIncomingIntegrationEventLogService>();
 
             return services;
         }

@@ -1,8 +1,16 @@
 # Initial migration for ProductFocusContext, ProductFocusIntegrationEventLogContext, and ProductFocusIntegrationCommandLogContext
-EntityFrameworkCore\Add-Migration pflogcontext -Context ProductFocusIntegrationEventLogContext -Project ProductFocus.Persistence  -StartupProject ProductFocusApi
-EntityFrameworkCore\Add-Migration pfcontext -Context ProductFocusContext -Project ProductFocus.Persistence  -StartupProject ProductFocusApi
-EntityFrameworkCore\Add-Migration pfcommandcontext -Context ProductFocusIntegrationCommandLogContext -Project ProductFocus.Persistence  -StartupProject ProductFocusApi
+EntityFrameworkCore\Add-Migration [migration-name] -Context ProductFocusIntegrationEventLogContext -Project ProductFocus.Persistence  -StartupProject ProductFocusApi
+EntityFrameworkCore\Add-Migration  [migration-name] -Context ProductFocusContext -Project ProductFocus.Persistence  -StartupProject ProductFocusApi
+EntityFrameworkCore\Add-Migration  [migration-name] -Context ProductFocusIntegrationCommandLogContext -Project ProductFocus.Persistence  -StartupProject ProductFocusApi
 
 # Initial migration update for ProductFocusContext, ProductFocusIntegrationEventLogContext, and ProductFocusIntegrationCommandLogContext
-EntityFrameworkCore\Update-Database pfcontext -Context ProductFocusContext -Project ProductFocus.Persistence  -StartupProject ProductFocusApi
-EntityFrameworkCore\Update-Database pfcommandcontext -Context ProductFocusIntegrationCommandLogContext -Project ProductFocus.Persistence  -StartupProject ProductFocusApi
+EntityFrameworkCore\Update-Database -Context ProductFocusDbContext -Project ProductFocus.Persistence  -StartupProject ProductFocusApi
+EntityFrameworkCore\Update-Database -Context ProductFocusIntegrationCommandLogContext -Project ProductFocus.Persistence  -StartupProject ProductFocusApi
+EntityFrameworkCore\Update-Database -Context ProductFocusIntegrationEventLogContext -Project ProductFocus.Persistence  -StartupProject ProductFocusApi
+
+
+# Business Requirements 
+EntityFrameworkCore\Update-Database  -Context BusinessRequirementDbContext -Project BusinessRequirements.Infrastructure  -StartupProject ProductFocusApi
+
+
+

@@ -11,6 +11,7 @@ using ProductFocusApi.IntegrationEvents.Services;
 using ProductFocus.Persistence.DbContexts;
 using ProductFocusApi.IntegrationCommands.Services;
 using IntegrationCommon.Services;
+using ProductFocus.Persistence;
 
 namespace ProductFocus.AppServices
 {
@@ -34,7 +35,7 @@ namespace ProductFocus.AppServices
             public AddOrganizationCommandHandler(
                 IOrganizationRepository organizationRepository, IUserRepository userRepository,
                 IUnitOfWork unitOfWork,
-                AtomicIntegrationLogService<ProductFocusContext,
+                AtomicIntegrationLogService<ProductFocusDbContext,
                     ProductFocusIntegrationCommandLogService,
                     ProductFocusIntegrationEventLogService> atomicIntegrationLogService)
             {
