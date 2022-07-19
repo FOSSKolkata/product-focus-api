@@ -1,9 +1,9 @@
-# Initial migration for ProductFocusContext, ProductFocusIntegrationEventLogContext, and ProductFocusIntegrationCommandLogContext
+# Initial migration for ProductFocusDbContext, ProductFocusIntegrationEventLogContext, and ProductFocusIntegrationCommandLogContext
 EntityFrameworkCore\Add-Migration [migration-name] -Context ProductFocusIntegrationEventLogContext -Project ProductFocus.Persistence  -StartupProject ProductFocusApi
-EntityFrameworkCore\Add-Migration  [migration-name] -Context ProductFocusContext -Project ProductFocus.Persistence  -StartupProject ProductFocusApi
+EntityFrameworkCore\Add-Migration  [migration-name] -Context ProductFocusDbContext -Project ProductFocus.Persistence  -StartupProject ProductFocusApi
 EntityFrameworkCore\Add-Migration  [migration-name] -Context ProductFocusIntegrationCommandLogContext -Project ProductFocus.Persistence  -StartupProject ProductFocusApi
 
-# Initial migration update for ProductFocusContext, ProductFocusIntegrationEventLogContext, and ProductFocusIntegrationCommandLogContext
+# Initial migration update for ProductFocusDbContext, ProductFocusIntegrationEventLogContext, and ProductFocusIntegrationCommandLogContext
 EntityFrameworkCore\Update-Database -Context ProductFocusDbContext -Project ProductFocus.Persistence  -StartupProject ProductFocusApi
 EntityFrameworkCore\Update-Database -Context ProductFocusIntegrationCommandLogContext -Project ProductFocus.Persistence  -StartupProject ProductFocusApi
 EntityFrameworkCore\Update-Database -Context ProductFocusIntegrationEventLogContext -Project ProductFocus.Persistence  -StartupProject ProductFocusApi

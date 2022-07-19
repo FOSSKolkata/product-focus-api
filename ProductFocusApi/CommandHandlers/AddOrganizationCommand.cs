@@ -37,12 +37,14 @@ namespace ProductFocus.AppServices
                 IUnitOfWork unitOfWork,
                 AtomicIntegrationLogService<ProductFocusDbContext,
                     ProductFocusIntegrationCommandLogService,
-                    ProductFocusIntegrationEventLogService> atomicIntegrationLogService)
+                    ProductFocusIntegrationEventLogService> atomicIntegrationLogService,
+                IProductFocusIntegrationEventService productFocusIntegrationEventService)
             {
                 _organizationRepository = organizationRepository;
                 _userRepository = userRepository;
                 _unitOfWork = unitOfWork;
                 _atomicIntegrationLogService = atomicIntegrationLogService;
+                _productFocusIntegrationEventService = productFocusIntegrationEventService;
             }
             public async Task<Result> Handle(AddOrganizationCommand request, CancellationToken cancellationToken)
             {

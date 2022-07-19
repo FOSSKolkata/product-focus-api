@@ -39,8 +39,11 @@ namespace ProductFocus.Persistence
              .Property(o => o.Id).UseHiLo();
             modelbuilder.Entity<Sprint>()
              .Property(o => o.Id).UseHiLo();
-            modelbuilder.Entity<User>()
-             .Property(o => o.Id).UseHiLo();
+            modelbuilder.Entity<User>(entity =>
+            {
+                entity.Property(o => o.Id).UseHiLo();
+                entity.HasIndex(o => o.ObjectId).IsUnique();
+            });
             modelbuilder.Entity<UserToFeatureAssignment>()
              .Property(o => o.Id).UseHiLo();
             modelbuilder.Entity<Tag>()

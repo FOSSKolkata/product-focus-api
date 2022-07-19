@@ -5,7 +5,7 @@ namespace ProductFocusApi.IntegrationEvents.Services
 {
     public interface IProductFocusIntegrationEventService
     {
-        Task SaveEventAndProductFocusContextChangesAsync(IntegrationEvent evt);
+        Task SaveEventAndProductFocusDbContextChangesAsync(IntegrationEvent evt);
         Task PublishThroughEventBusAsync(IntegrationEvent evt);
     }
 }

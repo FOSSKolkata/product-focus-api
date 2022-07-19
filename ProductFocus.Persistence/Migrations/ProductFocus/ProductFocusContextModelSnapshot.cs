@@ -10,8 +10,8 @@ using ProductFocus.Persistence.DbContexts;
 
 namespace ProductFocus.Persistence.Migrations.ProductFocus
 {
-    [DbContext(typeof(ProductFocusContext))]
-    partial class ProductFocusContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(ProductFocusDbContext))]
+    partial class ProductFocusDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {

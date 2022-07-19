@@ -46,11 +46,11 @@ namespace ProductFocus.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-            services.AddProductFocus(Configuration);
-            services.AddReleases(Configuration);
-            services.AddBusinessRequirement(Configuration);
-            services.AddProductDocumentation(Configuration);
+            
+            services.AddProductFocus(Configuration)
+                .AddReleases(Configuration)
+                .AddBusinessRequirement(Configuration)
+                .AddProductDocumentation(Configuration);
 
             services.AddAutoMapper(typeof(Startup));
             services.AddControllersWithViews();
@@ -109,7 +109,7 @@ namespace ProductFocus.Api
 
             services.AddCommandBuses(Configuration)
                 .AddEventBus(Configuration);
-            //services.AddScoped<IValidator<AddSprintCommand>, AddSprintCommandValidator>());
+
         }
 
         // Register your own things directly with Autofac

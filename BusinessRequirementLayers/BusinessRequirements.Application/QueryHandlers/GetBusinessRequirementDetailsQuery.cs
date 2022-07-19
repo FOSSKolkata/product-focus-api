@@ -26,7 +26,7 @@ namespace BusinessRequirements.QueryHandlers
             {
                 GetBusinessRequirementDetailsDto businessRequirementDetails = new();
 
-                string sql = @"SELECT br.Id, br.title, br.ReceivedOn, br.SourceEnum, br.SourceInformation, Description FROM BusinessRequirements br WHERE Id = @Id";
+                string sql = @"SELECT br.Id, br.title, br.ReceivedOn, br.SourceEnum, br.SourceInformation, Description FROM [businessrequirement].[BusinessRequirements] br WHERE Id = @Id";
 
                 string sql1 = @"SELECT t.Name, t.Id, brt.BusinessRequirementId FROM Tags t
                                 INNER JOIN BusinessRequirementTags brt

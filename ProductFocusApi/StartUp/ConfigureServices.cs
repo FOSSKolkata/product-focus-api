@@ -54,7 +54,7 @@ namespace ProductFocusApi.StartUp
         private static IServiceCollection AddCustomDbContext(this IServiceCollection services, IConfiguration configuration)
         {
             var connection = configuration["QueriesConnectionString"];
-            services.AddDbContext<ProductFocusContext>(options =>
+            services.AddDbContext<ProductFocusDbContext>(options =>
             {
                 options
                 .UseLazyLoadingProxies()

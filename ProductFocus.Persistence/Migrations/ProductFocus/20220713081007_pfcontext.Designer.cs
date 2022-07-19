@@ -11,7 +11,7 @@ using ProductFocus.Persistence.DbContexts;
 
 namespace ProductFocus.Persistence.Migrations.ProductFocus
 {
-    [DbContext(typeof(ProductFocusContext))]
+    [DbContext(typeof(ProductFocusDbContext))]
     [Migration("20220713081007_pfcontext")]
     partial class pfcontext
     {
